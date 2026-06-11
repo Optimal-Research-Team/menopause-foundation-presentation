@@ -1,0 +1,263 @@
+/* ==========================================================================
+   Optimal Health — Design Tokens
+   Sourced from the "[Content Copy] Optimal Health Website" Figma file.
+   Two products share this system:
+     • Website (marketing) — cream + dark forest green, Castoro serif display
+     • Weight-Loss App    — same cream surface, navy UI chrome, Hanken Grotesk
+   ========================================================================== */
+
+/* -- Fonts ----------------------------------------------------------------- */
+/* All four typefaces are free on Google Fonts. If the user deploys offline,
+   download TTFs and drop them into fonts/ ; the imports below will keep
+   working as a fallback. */
+@import url('https://fonts.googleapis.com/css2?family=Castoro:ital@0;1&family=Public+Sans:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;700&family=Inter:wght@300;400;500&display=swap');
+
+:root {
+  /* =========================================================================
+     COLOR — base palette
+     ---------------------------------------------------------------------- */
+
+  /* Brand greens */
+  --forest-900: #1A500F;   /* deep accent, testimonial bylines, ring accents */
+  --forest-700: #2C4E25;   /* PRIMARY brand — dark forest, buttons, h2, nav */
+  --forest-500: #87A482;   /* sage, soft badges at 25% alpha */
+  --forest-grad-end: #1C3118; /* pricing card gradient terminal */
+
+  /* Navy (Weight-Loss app chrome) */
+  --navy-900: #182E6C;     /* app header bg, screen titles, primary buttons */
+
+  /* Neutral warm — cream / bone */
+  --cream-50:  #FFFCF7;    /* canvas background on both products */
+  --bone-100:  #E7E2D9;    /* streak-card empty cells, subtle surfaces */
+  --bone-200:  #DFD7CA;    /* quiet dividers */
+
+  /* Greys (warm) */
+  --grey-900:  #040504;    /* body default on light */
+  --grey-800:  #252525;    /* section headings on light */
+  --grey-700:  #333333;
+  --grey-600:  #474747;
+  --grey-500:  #76736D;    /* muted text, form placeholder */
+  --grey-300:  #DDDCDB;    /* hairline borders */
+  --grey-200:  #DADADA;    /* subtle card borders */
+  --grey-100:  #ECECEC;    /* quiet fills */
+
+  /* Pure */
+  --white:     #FFFFFF;
+  --black:     #000000;
+
+  /* Alpha helpers used in the designs */
+  --forest-ring-50: rgba(26, 80, 18, 0.5);   /* 1.3px ring accent circles */
+  --sage-25:        rgba(135,164,130, 0.25); /* "Grand opening" badge fill */
+  --white-25:       rgba(255,255,255, 0.25); /* carousel pager bg (blurred) */
+  --white-50:       rgba(255,255,255, 0.5);  /* hero chip border */
+  --white-90:       rgba(255,255,255, 0.9);  /* pricing body text */
+  --nav-blur-bg:    rgba(0,0,0,0.35);        /* hero nav backdrop */
+
+  /* =========================================================================
+     COLOR — semantic
+     ---------------------------------------------------------------------- */
+  --bg:            var(--cream-50);
+  --bg-alt:        var(--white);
+  --bg-inverse:    var(--forest-700);
+  --bg-app-header: var(--navy-900);
+
+  --fg:            var(--grey-900);
+  --fg-strong:     var(--grey-800);
+  --fg-muted:      var(--grey-500);
+  --fg-brand:      var(--forest-700);
+  --fg-accent:     var(--forest-900);
+  --fg-app:        var(--navy-900);
+  --fg-on-brand:   var(--white);
+
+  --border:        var(--forest-700);
+  --border-quiet:  var(--grey-300);
+  --border-hair:   rgba(118,115,109, 0.25);
+
+  --link:          var(--forest-700);
+  --link-app:      var(--navy-900);
+
+  /* =========================================================================
+     TYPOGRAPHY — families
+     ---------------------------------------------------------------------- */
+  --font-display:  'Castoro', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --font-sans:     'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  --font-ui-app:   'Hanken Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  --font-body-app: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  --font-status:   'Helvetica Neue', -apple-system, Helvetica, Arial, sans-serif;
+
+  /* =========================================================================
+     TYPOGRAPHY — role tokens (website)
+     The website compresses serif display (Castoro, tight tracking -0.04em,
+     line-height 1.0) against Public Sans body at relaxed 1.1–1.4 lh.
+     ---------------------------------------------------------------------- */
+  --h1-family: var(--font-display);  --h1-size: 96px; --h1-lh: 1.1;  --h1-track: -0.04em; --h1-weight: 400;
+  --h2-family: var(--font-display);  --h2-size: 64px; --h2-lh: 1.0;  --h2-track: -0.04em; --h2-weight: 400;
+  --h3-family: var(--font-display);  --h3-size: 48px; --h3-lh: 1.0;  --h3-track: -0.04em; --h3-weight: 400;
+  --h4-family: var(--font-display);  --h4-size: 40px; --h4-lh: 1.0;  --h4-track: -0.04em; --h4-weight: 400;
+  --h5-family: var(--font-display);  --h5-size: 28px; --h5-lh: 1.0;  --h5-track: -0.04em; --h5-weight: 400;
+  --h6-family: var(--font-display);  --h6-size: 24px; --h6-lh: 1.0;  --h6-track: -0.04em; --h6-weight: 400;
+
+  --lead-family: var(--font-sans); --lead-size: 24px; --lead-lh: 1.1;  --lead-track: -0.02em; --lead-weight: 400;
+  --p-family:    var(--font-sans); --p-size:    18px; --p-lh:    1.4;  --p-track:    -0.02em; --p-weight: 400;
+  --small-family:var(--font-sans); --small-size:16px; --small-lh: 1.1; --small-track:-0.02em; --small-weight:400;
+  --micro-family:var(--font-sans); --micro-size:14px; --micro-lh: 1.4; --micro-track:-0.02em; --micro-weight:400;
+
+  --button-family: var(--font-sans); --button-size: 20px; --button-lh: 1.1; --button-track: -0.02em; --button-weight: 500;
+  --nav-family:    var(--font-sans); --nav-size:    20px; --nav-lh:    1.1; --nav-track:    -0.02em; --nav-weight:    400;
+  --label-family:  var(--font-sans); --label-size:  14px; --label-lh:  1.4; --label-track:  -0.02em; --label-weight:  400;
+  --eyebrow-family:var(--font-sans); --eyebrow-size:18px; --eyebrow-lh:1.4; --eyebrow-track:0;       --eyebrow-weight:700;
+
+  /* =========================================================================
+     TYPOGRAPHY — role tokens (weight-loss app)
+     App uses Hanken Grotesk Bold for section labels (tight -0.03 to -0.04),
+     Castoro italic for screen titles outside the device, Inter for body.
+     ---------------------------------------------------------------------- */
+  --app-title-family:      var(--font-display); --app-title-size: 64px; --app-title-lh: 1.4; --app-title-track: -0.04em; --app-title-style: italic;
+  --app-header-family:     var(--font-ui-app);  --app-header-size: 32px; --app-header-lh: 1.4; --app-header-track: -0.04em; --app-header-weight: 700;
+  --app-section-family:    var(--font-ui-app);  --app-section-size: 20px; --app-section-lh: 1.4; --app-section-track: -0.03em; --app-section-weight: 700;
+  --app-subtitle-family:   var(--font-ui-app);  --app-subtitle-size: 24px; --app-subtitle-lh: 1.4; --app-subtitle-track: -0.03em; --app-subtitle-weight: 500;
+  --app-body-family:       var(--font-body-app);--app-body-size: 16px; --app-body-lh: 1.4; --app-body-track: -0.03em; --app-body-weight: 400;
+  --app-caption-family:    var(--font-body-app);--app-caption-size: 14px; --app-caption-lh: 1.4; --app-caption-track: -0.03em; --app-caption-weight: 400;
+  --app-tab-family:        var(--font-body-app);--app-tab-size: 12px; --app-tab-lh: 1.4; --app-tab-track: -0.03em; --app-tab-weight: 500;
+
+  /* =========================================================================
+     SHAPE — radii, shadows, spacing
+     ---------------------------------------------------------------------- */
+  --radius-pill:  48px;     /* CTAs and nav pill */
+  --radius-card:  8px;      /* pricing card, module card, lessons search */
+  --radius-xs:    4px;      /* streak cell, tab chip, pill highlight on nav */
+  --radius-full:  9999px;
+
+  --border-width: 1px;      /* near-universal — crisp hairlines */
+  --border-benefit: 1px solid var(--forest-700);
+  --border-app-card: 1px solid var(--grey-500);
+
+  --shadow-cta:    0px 4px 25px rgba(0,0,0,0.16);
+  --shadow-card:   0px 4px 25px rgba(0,0,0,0.15);
+  --shadow-heavy:  0px 4px 25px rgba(0,0,0,0.25);
+  --shadow-chip:   0px 4px 13.5px rgba(135,164,130,0.25);
+
+  --blur-nav: blur(21px);
+  --blur-pager: blur(4.945px);
+
+  /* spacing scale (from observed gap/padding values in Figma) */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --s-10: 48px;
+  --s-12: 64px;
+  --s-14: 84px;
+  --s-16: 96px;
+
+  /* =========================================================================
+     MOTION (designs show no custom timing; defaults stay conservative)
+     ---------------------------------------------------------------------- */
+  --ease-standard: cubic-bezier(.2,.7,.2,1);
+  --dur-fast: 150ms;
+  --dur-slow: 300ms;
+}
+
+/* ==========================================================================
+   SEMANTIC ELEMENT STYLES
+   Apply by adding `class="oh"` to a container, or by importing this file into
+   a page that already uses these tokens.
+   ========================================================================== */
+
+.oh, .oh * { box-sizing: border-box; }
+
+.oh body, body.oh {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--p-family);
+  font-size: var(--p-size);
+  line-height: var(--p-lh);
+  letter-spacing: var(--p-track);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.oh h1, .oh .h1 {
+  font-family: var(--h1-family); font-size: var(--h1-size); line-height: var(--h1-lh);
+  letter-spacing: var(--h1-track); font-weight: var(--h1-weight); margin: 0;
+  color: var(--fg-strong);
+}
+.oh h2, .oh .h2 {
+  font-family: var(--h2-family); font-size: var(--h2-size); line-height: var(--h2-lh);
+  letter-spacing: var(--h2-track); font-weight: var(--h2-weight); margin: 0;
+  color: var(--fg-strong);
+}
+.oh h3, .oh .h3 {
+  font-family: var(--h3-family); font-size: var(--h3-size); line-height: var(--h3-lh);
+  letter-spacing: var(--h3-track); font-weight: var(--h3-weight); margin: 0;
+  color: var(--fg-strong);
+}
+.oh h4, .oh .h4 {
+  font-family: var(--h4-family); font-size: var(--h4-size); line-height: var(--h4-lh);
+  letter-spacing: var(--h4-track); font-weight: var(--h4-weight); margin: 0;
+  color: var(--fg-brand);
+}
+.oh h5, .oh .h5 {
+  font-family: var(--h5-family); font-size: var(--h5-size); line-height: var(--h5-lh);
+  letter-spacing: var(--h5-track); font-weight: var(--h5-weight); margin: 0;
+  color: var(--fg-brand);
+}
+.oh h6, .oh .h6 {
+  font-family: var(--h6-family); font-size: var(--h6-size); line-height: var(--h6-lh);
+  letter-spacing: var(--h6-track); font-weight: var(--h6-weight); margin: 0;
+  color: var(--fg-brand);
+}
+
+.oh p, .oh .p {
+  font-family: var(--p-family); font-size: var(--p-size); line-height: var(--p-lh);
+  letter-spacing: var(--p-track); font-weight: var(--p-weight); margin: 0;
+}
+
+.oh .lead {
+  font-family: var(--lead-family); font-size: var(--lead-size); line-height: var(--lead-lh);
+  letter-spacing: var(--lead-track); font-weight: var(--lead-weight);
+  color: var(--fg-brand);
+}
+
+.oh .eyebrow {
+  font-family: var(--eyebrow-family); font-size: var(--eyebrow-size); line-height: var(--eyebrow-lh);
+  letter-spacing: var(--eyebrow-track); font-weight: var(--eyebrow-weight);
+  text-transform: uppercase; color: var(--fg-brand);
+}
+
+.oh small, .oh .small {
+  font-family: var(--small-family); font-size: var(--small-size); line-height: var(--small-lh);
+  letter-spacing: var(--small-track); font-weight: var(--small-weight);
+}
+
+.oh .micro {
+  font-family: var(--micro-family); font-size: var(--micro-size); line-height: var(--micro-lh);
+  letter-spacing: var(--micro-track); font-weight: var(--micro-weight);
+  color: var(--fg-muted);
+}
+
+.oh a { color: var(--link); text-decoration: underline; text-underline-offset: 3px; }
+.oh a:hover { color: var(--forest-900); }
+
+/* --- App-specific text roles (use inside device frames) ------------------- */
+.oh-app-title { font-family: var(--app-title-family); font-style: var(--app-title-style);
+  font-size: var(--app-title-size); line-height: var(--app-title-lh);
+  letter-spacing: var(--app-title-track); color: var(--navy-900); }
+
+.oh-app-header { font-family: var(--app-header-family); font-size: var(--app-header-size);
+  line-height: var(--app-header-lh); letter-spacing: var(--app-header-track);
+  font-weight: var(--app-header-weight); color: var(--cream-50); }
+
+.oh-app-section { font-family: var(--app-section-family); font-size: var(--app-section-size);
+  line-height: var(--app-section-lh); letter-spacing: var(--app-section-track);
+  font-weight: var(--app-section-weight); color: var(--grey-900); }
+
+.oh-app-body { font-family: var(--app-body-family); font-size: var(--app-body-size);
+  line-height: var(--app-body-lh); letter-spacing: var(--app-body-track); color: var(--grey-900); }
+
+.oh-app-caption { font-family: var(--app-caption-family); font-size: var(--app-caption-size);
+  line-height: var(--app-caption-lh); letter-spacing: var(--app-caption-track); color: var(--grey-500); }
