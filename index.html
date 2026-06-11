@@ -1150,6 +1150,28 @@
     .shmap .legend .lg-row { opacity: 1; transform: none; animation: none; }
   }
 
+  /* ================= Slide entrance reveals (deck-wide) ================= */
+  /* Targets are tagged .rv by script at load: title block first, then content
+     blocks; grids stagger per card. Animations replay on each slide visit.
+     Without .in-view the elements render at rest, so print/PPTX export and
+     non-animated contexts see the finished slide. */
+  deck-stage > section.in-view .rv {
+    animation: rv-rise 0.55s var(--ease-standard) both;
+    animation-delay: calc(var(--rv, 0) * 90ms);
+  }
+  @keyframes rv-rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: none; }
+  }
+  @media print {
+    deck-stage > section .rv { animation: none !important; opacity: 1 !important; transform: none !important; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    deck-stage > section.in-view .rv { animation-duration: 0.01s; animation-delay: 0s; }
+    .shmap .hormone-map-svg path { animation-duration: 0.01s; animation-delay: 0s !important; }
+    .shmap.in-view .legend .lg-row { animation-duration: 0.01s; animation-delay: 0s !important; }
+  }
+
   /* Section section-progress dots (top right) */
   .progress {
     position: absolute; top: 44px; right: 120px;
@@ -2105,27 +2127,53 @@
 </deck-stage>
 
 <script>
-  // Hormone-map slide: replay the line-draw + legend-rise animation on every visit.
-  // deck-stage keeps non-active slides mounted (visibility:hidden), so the CSS
-  // animations are paused by default and restarted here when the slide activates.
+  // Slide entrance reveals — every slide's content rises in with a small
+  // stagger when it becomes active, and replays on each visit. deck-stage
+  // keeps non-active slides mounted (visibility:hidden), so animations are
+  // gated on .in-view and restarted here when a slide activates. The
+  // hormone-map slide keeps its own line-draw/legend animations and only
+  // its title block joins the generic reveal.
   (() => {
+    // Tag reveal targets once: title block as one unit, then content blocks;
+    // a block with a handful of children (cards, columns) staggers per child.
+    document.querySelectorAll('deck-stage > section').forEach((slide) => {
+      let tops;
+      if (slide.classList.contains('shmap')) {
+        tops = [slide.querySelector('.title-block')];
+      } else {
+        const root = slide.querySelector('.slide-frame') || slide;
+        tops = [...root.children].filter((el) =>
+          !el.classList.contains('footer-bar') && !el.classList.contains('progress'));
+      }
+      const targets = tops.flatMap((el) => {
+        if (!el) return [];
+        if (el.classList.contains('title-block')) return [el];
+        const kids = [...el.children];
+        return kids.length >= 2 && kids.length <= 9 ? kids : [el];
+      });
+      targets.forEach((el, i) => {
+        el.classList.add('rv');
+        el.style.setProperty('--rv', i);
+      });
+    });
+
     const replay = (slide) => {
-      slide.querySelectorAll('.hormone-map-svg path, .legend .lg-row').forEach((el) => {
+      slide.querySelectorAll('.rv, .hormone-map-svg path, .legend .lg-row').forEach((el) => {
         el.style.animation = 'none';
-        void el.getBoundingClientRect(); // force reflow so the animation restarts
+        void el.getBoundingClientRect(); // force reflow so animations restart
         el.style.animation = '';
       });
       slide.classList.add('in-view');
     };
+
     document.querySelector('deck-stage').addEventListener('slidechange', (e) => {
-      document.querySelectorAll('deck-stage > section.shmap').forEach((slide) => {
-        slide.classList.remove('in-view');
-        if (slide === e.detail.slide) replay(slide);
-      });
+      document.querySelectorAll('deck-stage > section').forEach((s) => s.classList.remove('in-view'));
+      if (e.detail.slide) replay(e.detail.slide);
     });
-    // Deep link / reload: the deck may have initialized on this slide before the
+
+    // Deep link / reload: the deck may have initialized on a slide before the
     // listener attached, and navigating to the current slide re-fires no event.
-    const active = document.querySelector('deck-stage > section.shmap[data-deck-active]');
+    const active = document.querySelector('deck-stage > section[data-deck-active]');
     if (active) replay(active);
   })();
 </script>
