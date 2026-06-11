@@ -1097,6 +1097,59 @@
   .s11 .contact-bar span { display: inline-flex; align-items: center; gap: 12px; }
   .s11 .contact-bar .dot { width: 4px; height: 4px; background: var(--forest-700); border-radius: 50%; opacity: 0.6; }
 
+  /* ================= Slide 3 — Hormone–symptom map ================= */
+  .shmap .body-grid { display: grid; grid-template-columns: auto 1fr; gap: 72px; flex: 1; min-height: 0; margin-top: 44px; align-items: start; }
+  .shmap .map-card {
+    width: 1020px;
+    border-radius: 12px; overflow: hidden;
+    box-shadow: 0 1px 0 rgba(28,49,24,0.04);
+  }
+  .shmap .hormone-map-svg { width: 100%; height: auto; display: block; }
+
+  /* Connection lines draw on each time the slide becomes active */
+  .shmap .hormone-map-svg path {
+    stroke-dasharray: 600; stroke-dashoffset: 600;
+    animation: shmap-draw 0.6s ease forwards;
+    animation-play-state: paused;
+  }
+  .shmap.in-view .hormone-map-svg path { animation-play-state: running; }
+  @keyframes shmap-draw { to { stroke-dashoffset: 0; } }
+
+  /* Right column — hormone legend at projection scale */
+  .shmap .legend { display: flex; flex-direction: column; align-self: stretch; min-height: 0; }
+  .shmap .legend .lg-row {
+    display: grid; grid-template-columns: 16px 1fr; gap: 22px; align-items: baseline;
+    padding: 17px 0;
+    border-bottom: 1px solid var(--bone-200, #E8E1CC);
+    opacity: 0; transform: translateY(10px);
+  }
+  .shmap .legend .lg-row:first-child { padding-top: 4px; }
+  .shmap.in-view .legend .lg-row { animation: shmap-rise 0.5s var(--ease-standard) forwards; }
+  .shmap.in-view .legend .lg-row:nth-child(1) { animation-delay: 0.15s; }
+  .shmap.in-view .legend .lg-row:nth-child(2) { animation-delay: 0.30s; }
+  .shmap.in-view .legend .lg-row:nth-child(3) { animation-delay: 0.45s; }
+  .shmap.in-view .legend .lg-row:nth-child(4) { animation-delay: 0.60s; }
+  .shmap.in-view .legend .lg-row:nth-child(5) { animation-delay: 0.75s; }
+  @keyframes shmap-rise { to { opacity: 1; transform: translateY(0); } }
+
+  .shmap .legend .lg-swatch { width: 14px; height: 14px; border-radius: 50%; position: relative; top: 1px; }
+  .shmap .legend .lg-name {
+    font-family: var(--font-display); font-size: 32px; line-height: 1.1;
+    letter-spacing: -0.02em; color: var(--grey-800);
+  }
+  .shmap .legend .lg-name .dir { font-family: var(--font-sans); font-size: 24px; color: var(--forest-700); }
+  .shmap .legend .lg-status { font-family: var(--font-sans); font-size: 18px; line-height: 1.35; color: var(--grey-500); margin-top: 6px; white-space: nowrap; }
+  .shmap .legend .lg-source {
+    margin-top: auto; padding-top: 24px;
+    font-family: var(--font-sans); font-size: 13px; line-height: 1.55; color: var(--grey-500);
+  }
+
+  /* Print / PPTX export: show everything fully drawn, no pending animation */
+  @media print {
+    .shmap .hormone-map-svg path { stroke-dashoffset: 0; animation: none; }
+    .shmap .legend .lg-row { opacity: 1; transform: none; animation: none; }
+  }
+
   /* Section section-progress dots (top right) */
   .progress {
     position: absolute; top: 44px; right: 120px;
@@ -1193,12 +1246,181 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>02 / 12</span><span style="">Foundation Program: Menopause &amp; Perimenopause Care</span></div>
+      <div class="footer-meta"><span>02 / 13</span><span style="">Foundation Program: Menopause &amp; Perimenopause Care</span></div>
     </div>
   </section>
 
-  <!-- ============ SLIDE 3 — Who it's for ============ -->
-  <section data-label="03 Who this protocol is for" class="s3">
+  <!-- ============ SLIDE 3 — Hormone–symptom map ============ -->
+  <section data-label="03 The biology behind your symptoms" class="shmap">
+    <div class="slide-frame">
+      <div class="title-block">
+        <div class="eyebrow">WHAT'S DRIVING YOUR SYMPTOMS</div>
+        <h2 class="display display-md">The biology behind your <span class="italic ring-word">symptoms</span>.</h2>
+        <p class="lead">Five hormones work in concert. When one or more shift — as they naturally do through perimenopause — the effects ripple across your whole wellbeing.</p>
+      </div>
+
+      <div class="body-grid">
+        <div class="map-card">
+          <svg viewBox="0 0 900 510" xmlns="http://www.w3.org/2000/svg" class="hormone-map-svg" role="img" aria-label="Diagram connecting perimenopause symptoms to their hormonal drivers">
+
+            <!-- Background -->
+            <rect width="900" height="510" fill="#2C4E25"/>
+
+            <!-- Subtle row guides -->
+            <g stroke="#ffffff" stroke-opacity="0.025" stroke-width="0.5">
+              <line x1="0" y1="62"  x2="900" y2="62"/>
+              <line x1="0" y1="117" x2="900" y2="117"/>
+              <line x1="0" y1="172" x2="900" y2="172"/>
+              <line x1="0" y1="227" x2="900" y2="227"/>
+              <line x1="0" y1="282" x2="900" y2="282"/>
+              <line x1="0" y1="337" x2="900" y2="337"/>
+              <line x1="0" y1="392" x2="900" y2="392"/>
+              <line x1="0" y1="447" x2="900" y2="447"/>
+            </g>
+
+            <!-- Column headers -->
+            <text x="156" y="28" text-anchor="middle" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="2.5" fill="#87A482" fill-opacity="0.95">SYMPTOMS</text>
+            <text x="739" y="28" text-anchor="middle" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="14" font-weight="700" letter-spacing="2.5" fill="#87A482" fill-opacity="0.95">HORMONAL DRIVER</text>
+
+            <!-- Column dividers -->
+            <line x1="312" y1="33" x2="312" y2="478" stroke="#ffffff" stroke-opacity="0.05" stroke-width="1"/>
+            <line x1="578" y1="33" x2="578" y2="478" stroke="#ffffff" stroke-opacity="0.05" stroke-width="1"/>
+
+            <!-- ── Bezier connections ── -->
+            <!-- Estrogen #5db882 -->
+            <path d="M 312 62  C 440 62  440 85  578 85"  stroke="#5db882" stroke-opacity="0.68" stroke-width="1.5" fill="none" style="animation-delay:0s"/>
+            <path d="M 312 117 C 440 117 440 85  578 85"  stroke="#5db882" stroke-opacity="0.55" stroke-width="1.5" fill="none" style="animation-delay:0.07s"/>
+            <path d="M 312 337 C 440 337 440 85  578 85"  stroke="#5db882" stroke-opacity="0.32" stroke-width="1.5" fill="none" style="animation-delay:0.14s"/>
+            <path d="M 312 447 C 440 447 440 85  578 85"  stroke="#5db882" stroke-opacity="0.22" stroke-width="1.5" fill="none" style="animation-delay:0.21s"/>
+
+            <!-- Progesterone #70b8b0 -->
+            <path d="M 312 172 C 440 172 440 185 578 185" stroke="#70b8b0" stroke-opacity="0.68" stroke-width="1.5" fill="none" style="animation-delay:0.28s"/>
+            <path d="M 312 227 C 440 227 440 185 578 185" stroke="#70b8b0" stroke-opacity="0.58" stroke-width="1.5" fill="none" style="animation-delay:0.35s"/>
+
+            <!-- Testosterone #c8a840 -->
+            <path d="M 312 337 C 440 337 440 280 578 280" stroke="#c8a840" stroke-opacity="0.68" stroke-width="1.5" fill="none" style="animation-delay:0.42s"/>
+            <path d="M 312 392 C 440 392 440 280 578 280" stroke="#c8a840" stroke-opacity="0.58" stroke-width="1.5" fill="none" style="animation-delay:0.49s"/>
+            <path d="M 312 447 C 440 447 440 280 578 280" stroke="#c8a840" stroke-opacity="0.42" stroke-width="1.5" fill="none" style="animation-delay:0.56s"/>
+
+            <!-- Thyroid #c88040 -->
+            <path d="M 312 117 C 440 117 440 370 578 370" stroke="#c88040" stroke-opacity="0.38" stroke-width="1.5" fill="none" style="animation-delay:0.63s"/>
+            <path d="M 312 282 C 440 282 440 370 578 370" stroke="#c88040" stroke-opacity="0.62" stroke-width="1.5" fill="none" style="animation-delay:0.70s"/>
+            <path d="M 312 392 C 440 392 440 370 578 370" stroke="#c88040" stroke-opacity="0.55" stroke-width="1.5" fill="none" style="animation-delay:0.77s"/>
+
+            <!-- Cortisol #c06060 -->
+            <path d="M 312 172 C 440 172 440 450 578 450" stroke="#c06060" stroke-opacity="0.38" stroke-width="1.5" fill="none" style="animation-delay:0.84s"/>
+            <path d="M 312 227 C 440 227 440 450 578 450" stroke="#c06060" stroke-opacity="0.35" stroke-width="1.5" fill="none" style="animation-delay:0.91s"/>
+            <path d="M 312 282 C 440 282 440 450 578 450" stroke="#c06060" stroke-opacity="0.45" stroke-width="1.5" fill="none" style="animation-delay:0.98s"/>
+
+            <!-- Symptom dots (left) -->
+            <g fill="#f0ece4" fill-opacity="0.38">
+              <circle cx="312" cy="62"  r="2.5"/>
+              <circle cx="312" cy="117" r="2.5"/>
+              <circle cx="312" cy="172" r="2.5"/>
+              <circle cx="312" cy="227" r="2.5"/>
+              <circle cx="312" cy="282" r="2.5"/>
+              <circle cx="312" cy="337" r="2.5"/>
+              <circle cx="312" cy="392" r="2.5"/>
+              <circle cx="312" cy="447" r="2.5"/>
+            </g>
+
+            <!-- Hormone dots (right) -->
+            <circle cx="578" cy="85"  r="5.5" fill="#5db882"/>
+            <circle cx="578" cy="185" r="5.5" fill="#70b8b0"/>
+            <circle cx="578" cy="280" r="5.5" fill="#c8a840"/>
+            <circle cx="578" cy="370" r="5.5" fill="#c88040"/>
+            <circle cx="578" cy="450" r="5.5" fill="#c06060"/>
+
+            <!-- Symptom labels (left column) -->
+            <text x="300" y="57"  text-anchor="end" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="12" font-weight="500" fill="#f0ece4">Hot flashes</text>
+            <text x="300" y="72"  text-anchor="end" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="10" fill="#b0c8b0">night sweats</text>
+
+            <text x="300" y="112" text-anchor="end" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="12" font-weight="500" fill="#f0ece4">Brain fog</text>
+            <text x="300" y="127" text-anchor="end" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="10" fill="#b0c8b0">poor memory</text>
+
+            <text x="300" y="167" text-anchor="end" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="12" font-weight="500" fill="#f0ece4">Mood shifts</text>
+            <text x="300" y="182" text-anchor="end" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="10" fill="#b0c8b0">anxiety</text>
+
+            <text x="300" y="231" text-anchor="end" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="12" font-weight="500" fill="#f0ece4">Sleep disruption</text>
+
+            <text x="300" y="286" text-anchor="end" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="12" font-weight="500" fill="#f0ece4">Weight changes</text>
+
+            <text x="300" y="332" text-anchor="end" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="12" font-weight="500" fill="#f0ece4">Low libido</text>
+            <text x="300" y="347" text-anchor="end" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="10" fill="#b0c8b0">vaginal dryness</text>
+
+            <text x="300" y="396" text-anchor="end" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="12" font-weight="500" fill="#f0ece4">Fatigue</text>
+
+            <text x="300" y="442" text-anchor="end" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="12" font-weight="500" fill="#f0ece4">Muscle loss</text>
+            <text x="300" y="457" text-anchor="end" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="10" fill="#b0c8b0">bone density</text>
+
+            <!-- Hormone labels (right column) -->
+            <text x="590" y="81"  font-family="Public Sans, Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="#5db882">Estrogen ↓</text>
+            <text x="590" y="96"  font-family="Public Sans, Inter, system-ui, sans-serif" font-size="9.5" fill="#a0c0a8">Declining through perimenopause</text>
+
+            <text x="590" y="181" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="#70b8b0">Progesterone ↓</text>
+            <text x="590" y="196" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="9.5" fill="#a0c0a8">Often the first hormone to drop</text>
+
+            <text x="590" y="276" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="#c8a840">Testosterone ↓</text>
+            <text x="590" y="291" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="9.5" fill="#a0c0a8">Declines with age &amp; stress</text>
+
+            <text x="590" y="366" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="#c88040">Thyroid (T3/T4)</text>
+            <text x="590" y="381" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="9.5" fill="#a0c0a8">Often missed on standard panels</text>
+
+            <text x="590" y="446" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="13" font-weight="600" fill="#c06060">Cortisol ↑</text>
+            <text x="590" y="461" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="9.5" fill="#a0c0a8">Elevated by chronic stress</text>
+
+          </svg>
+        </div>
+
+        <div class="legend">
+          <div class="lg-row">
+            <span class="lg-swatch" style="background:#5db882;"></span>
+            <div>
+              <div class="lg-name">Estrogen <span class="dir">↓</span></div>
+              <div class="lg-status">Declining — the primary driver of menopausal symptoms</div>
+            </div>
+          </div>
+          <div class="lg-row">
+            <span class="lg-swatch" style="background:#70b8b0;"></span>
+            <div>
+              <div class="lg-name">Progesterone <span class="dir">↓</span></div>
+              <div class="lg-status">Often the first to drop — affects sleep &amp; mood</div>
+            </div>
+          </div>
+          <div class="lg-row">
+            <span class="lg-swatch" style="background:#c8a840;"></span>
+            <div>
+              <div class="lg-name">Testosterone <span class="dir">↓</span></div>
+              <div class="lg-status">Declines with age &amp; stress — yet rarely tested</div>
+            </div>
+          </div>
+          <div class="lg-row">
+            <span class="lg-swatch" style="background:#c88040;"></span>
+            <div>
+              <div class="lg-name">Thyroid (T3/T4)</div>
+              <div class="lg-status">Often missed on standard panels</div>
+            </div>
+          </div>
+          <div class="lg-row" style="border-bottom: 0;">
+            <span class="lg-swatch" style="background:#c06060;"></span>
+            <div>
+              <div class="lg-name">Cortisol <span class="dir">↑</span></div>
+              <div class="lg-status">Elevated by chronic stress — disrupts the rest</div>
+            </div>
+          </div>
+          <div class="lg-source">Sources: NAMS 2022 Hormone Therapy Position Statement · Endocrine Society Clinical Practice Guidelines · ACOG Practice Bulletin on Menopausal Hormone Therapy</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bar">
+      <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
+      <div class="footer-meta"><span>03 / 13</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 4 — Who it's for ============ -->
+  <section data-label="04 Who this protocol is for" class="s3">
     <div class="slide-frame">
       <div class="title-block">
         <div class="eyebrow">Is this protocol right for you?</div>
@@ -1263,12 +1485,12 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>03 / 12</span><span style=""><span style="display: inline !important;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
+      <div class="footer-meta"><span>04 / 13</span><span style=""><span style="display: inline !important;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
     </div>
   </section>
 
   <!-- ============ SLIDE 4 — Lesser-known symptoms ============ -->
-  <section data-label="04 The fuller symptom picture" class="s3b">
+  <section data-label="05 The fuller symptom picture" class="s3b">
     <div class="slide-frame">
       <div class="title-block">
         <div class="eyebrow">The fuller symptom picture</div>
@@ -1343,12 +1565,12 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>04 / 12</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
+      <div class="footer-meta"><span>05 / 13</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
     </div>
   </section>
 
   <!-- ============ SLIDE 5 — Journey ============ -->
-  <section data-label="05 Your 6-step journey" class="s5">
+  <section data-label="06 Your 6-step journey" class="s5">
     <div class="slide-frame">
       <div class="title-block">
         <div class="eyebrow">Your 6-step journey</div>
@@ -1437,12 +1659,12 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>05 / 12</span><span style=""><span style="display: inline !important;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
+      <div class="footer-meta"><span>06 / 13</span><span style=""><span style="display: inline !important;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
     </div>
   </section>
 
   <!-- ============ SLIDE 6 — Therapy options ============ -->
-  <section data-label="06 Hormone therapy options" class="s6">
+  <section data-label="07 Hormone therapy options" class="s6">
     <div class="slide-frame">
       <div class="title-block">
         <div class="eyebrow">Understanding your options</div>
@@ -1497,12 +1719,12 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>06 / 12</span><span style=""><span style="display: inline !important;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
+      <div class="footer-meta"><span>07 / 13</span><span style=""><span style="display: inline !important;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
     </div>
   </section>
 
   <!-- ============ SLIDE 7 — Benefits ============ -->
-  <section data-label="07 Benefits of treatment" class="s7">
+  <section data-label="08 Benefits of treatment" class="s7">
     <div class="slide-frame">
       <div class="title-block">
         <div class="eyebrow">What treatment can do for you</div>
@@ -1551,12 +1773,12 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>07 / 12</span><span style=""><span style="color: rgb(118, 115, 109); font-family: &quot;Public Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Arial, sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 252, 247); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
+      <div class="footer-meta"><span>08 / 13</span><span style=""><span style="color: rgb(118, 115, 109); font-family: &quot;Public Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Arial, sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 252, 247); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
     </div>
   </section>
 
   <!-- ============ SLIDE 8 — Safety ============ -->
-  <section data-label="08 Safety and risk information" class="s8">
+  <section data-label="09 Safety and risk information" class="s8">
     <div class="slide-frame">
       <div class="title-block">
         <div class="eyebrow">Safety &amp; risk information</div>
@@ -1606,12 +1828,12 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>08 / 12</span><span style=""><span style="color: rgb(118, 115, 109); font-family: &quot;Public Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Arial, sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 252, 247); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
+      <div class="footer-meta"><span>09 / 13</span><span style=""><span style="color: rgb(118, 115, 109); font-family: &quot;Public Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Arial, sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 252, 247); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
     </div>
   </section>
 
   <!-- ============ SLIDE 10 — Incidental findings outside scope ============ -->
-  <section data-label="09 If we find something outside our scope" class="sinc">
+  <section data-label="10 If we find something outside our scope" class="sinc">
     <div class="slide-frame">
       <div class="title-block">
         <div class="eyebrow">Findings outside the scope of this program</div>
@@ -1648,12 +1870,12 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>09 / 12</span><span style=""><span style="color: rgb(118, 115, 109); font-family: &quot;Public Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Arial, sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 252, 247); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
+      <div class="footer-meta"><span>10 / 13</span><span style=""><span style="color: rgb(118, 115, 109); font-family: &quot;Public Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Arial, sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 252, 247); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
     </div>
   </section>
 
   <!-- ============ SLIDE 11 — Urgent care ============ -->
-  <section data-label="10 When to seek urgent care" class="s10 on-dark">
+  <section data-label="11 When to seek urgent care" class="s10 on-dark">
     <div class="frame">
       <div class="title-block">
         <div class="eyebrow">When to seek urgent care</div>
@@ -1675,12 +1897,12 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Opposite.png" class="logo" alt="">
-      <div class="footer-meta"><span>10 / 12</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
+      <div class="footer-meta"><span>11 / 13</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
     </div>
   </section>
 
   <!-- ============ SLIDE 12 — Pricing & next steps ============ -->
-  <section data-label="11 Pricing and next steps" class="s11">
+  <section data-label="12 Pricing and next steps" class="s11">
     <div class="slide-frame">
       <div class="title-block">
         <div class="eyebrow" style="">Pricing &amp; immediate next steps</div>
@@ -1749,12 +1971,12 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>11 / 12</span><span style=""><span style="display: inline !important;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
+      <div class="footer-meta"><span>12 / 13</span><span style=""><span style="display: inline !important;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
     </div>
   </section>
 
     <!-- ============ SLIDE 6 — Lab work & optional add-ons ============ -->
-  <section data-label="12 Lab work &amp; optional add-ons" class="slabs">
+  <section data-label="13 Lab work &amp; optional add-ons" class="slabs">
     <div class="slide-frame">
       <div class="title-block">
         <div class="eyebrow">Lab work &amp; optional add-ons</div>
@@ -1874,12 +2096,36 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>12 / 12</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
+      <div class="footer-meta"><span>13 / 13</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
     </div>
   </section>
 
 </deck-stage>
 
-
+<script>
+  // Hormone-map slide: replay the line-draw + legend-rise animation on every visit.
+  // deck-stage keeps non-active slides mounted (visibility:hidden), so the CSS
+  // animations are paused by default and restarted here when the slide activates.
+  (() => {
+    const replay = (slide) => {
+      slide.querySelectorAll('.hormone-map-svg path, .legend .lg-row').forEach((el) => {
+        el.style.animation = 'none';
+        void el.getBoundingClientRect(); // force reflow so the animation restarts
+        el.style.animation = '';
+      });
+      slide.classList.add('in-view');
+    };
+    document.querySelector('deck-stage').addEventListener('slidechange', (e) => {
+      document.querySelectorAll('deck-stage > section.shmap').forEach((slide) => {
+        slide.classList.remove('in-view');
+        if (slide === e.detail.slide) replay(slide);
+      });
+    });
+    // Deep link / reload: the deck may have initialized on this slide before the
+    // listener attached, and navigating to the current slide re-fires no event.
+    const active = document.querySelector('deck-stage > section.shmap[data-deck-active]');
+    if (active) replay(active);
+  })();
+</script>
 
 </body></html>
