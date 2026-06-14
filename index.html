@@ -1211,23 +1211,30 @@
   .canopy[hidden] { display: none; }
   .canopy.fade-out { opacity: 0; pointer-events: none; }
 
-  /* Photographic canopy backdrop with slow "bloom" drift */
+  /* Branded canopy backdrop (Optimal "Leaves Overhead" wallpaper — the
+     Optimal logo is composited into the centre of this image, so it serves
+     as the welcome screen's brand mark). Very gentle drift keeps it crisp. */
   .canopy::before {
     content: ""; position: absolute; inset: 0;
-    background: url('assets/welcome-canopy.jpg') center center / cover no-repeat;
-    transform: scale(1.04);
-    animation: canopy-drift 32s ease-in-out infinite alternate;
+    background: url('assets/leaves-overhead.jpg') center center / cover no-repeat;
+    transform: scale(1.0);
+    animation: canopy-drift 34s ease-in-out infinite alternate;
   }
   @keyframes canopy-drift {
-    from { transform: scale(1.04); }
-    to   { transform: scale(1.09); }
+    from { transform: scale(1.0); }
+    to   { transform: scale(1.035); }
   }
-  /* Legibility wash — keeps the bloom but lets type sit cleanly */
+  /* Legibility wash (preparation screen — even darkening behind the glass card) */
   .canopy::after {
     content: ""; position: absolute; inset: 0;
     background:
-      radial-gradient(115% 95% at 50% 40%, rgba(20,37,15,0.05) 0%, rgba(20,37,15,0.52) 56%, rgba(13,24,11,0.90) 100%),
-      linear-gradient(180deg, rgba(20,37,15,0.55) 0%, rgba(20,37,15,0.12) 32%, rgba(13,24,11,0.82) 100%);
+      radial-gradient(120% 100% at 50% 45%, rgba(13,24,11,0.18) 0%, rgba(13,24,11,0.45) 60%, rgba(11,20,9,0.84) 100%);
+  }
+  /* Welcome screen wash — keep the centred logo bright, darken the lower
+     band where the greeting sits so white type stays legible. */
+  #welcome-screen::after {
+    background:
+      linear-gradient(180deg, rgba(11,20,9,0.34) 0%, rgba(11,20,9,0.04) 26%, rgba(11,20,9,0.06) 46%, rgba(11,20,9,0.52) 74%, rgba(9,17,8,0.86) 100%);
   }
   .opt-logo { display: block; }
 
@@ -1310,32 +1317,26 @@
   .prep-card > *:nth-child(5) { animation-delay: 0.34s; }
 
   /* ── Welcome screen ── */
+  /* The wallpaper's centred Optimal logo is the brand mark; the greeting sits
+     in the lower band beneath it. */
+  #welcome-screen { align-items: flex-end; justify-content: center; }
   .welcome-inner {
-    position: relative; z-index: 1; text-align: center; padding: 0 6vw;
-    text-shadow: 0 1px 36px rgba(11,21,9,0.55);
-  }
-  .welcome-inner .opt-logo {
-    height: 34px; margin: 0 auto 40px; opacity: 0.96;
-    filter: drop-shadow(0 1px 18px rgba(11,21,9,0.55));
-  }
-  .welcome-eyebrow {
-    font-family: var(--font-sans); font-size: 15px; font-weight: 700;
-    letter-spacing: 0.26em; text-transform: uppercase; color: #C7D6B7;
-    margin-bottom: 26px;
+    position: relative; z-index: 1; text-align: center; padding: 0 6vw 80px;
+    text-shadow: 0 1px 36px rgba(9,17,8,0.6);
   }
   .welcome-title {
     font-family: var(--font-display); font-weight: 400;
-    font-size: 116px; line-height: 1.0; letter-spacing: -0.035em; color: #fff;
+    font-size: 64px; line-height: 1.02; letter-spacing: -0.03em; color: #fff;
   }
   .welcome-title .w-comma { color: #fff; }
   .welcome-title.no-name .w-comma, .welcome-title.no-name .welcome-name { display: none; }
   .welcome-name { font-style: italic; color: #E7EFDD; }
   .welcome-date {
-    font-family: var(--font-sans); font-size: 18px; letter-spacing: 0.02em;
-    color: rgba(255,255,255,0.66); margin-top: 30px;
+    font-family: var(--font-sans); font-size: 17px; letter-spacing: 0.02em;
+    color: rgba(255,255,255,0.66); margin-top: 22px;
   }
   .welcome-begin {
-    display: inline-flex; align-items: center; gap: 11px; margin-top: 46px;
+    display: inline-flex; align-items: center; gap: 11px; margin-top: 32px;
     font-family: var(--font-sans); font-size: 18px; font-weight: 600; letter-spacing: 0.01em;
     background: var(--cream-50); color: var(--forest-700);
     border: none; border-radius: 999px; padding: 16px 34px; cursor: pointer;
@@ -1398,7 +1399,7 @@
   #export-fab svg { width: 15px; height: 15px; }
 
   @media (prefers-reduced-motion: reduce) {
-    .canopy::before { animation: none; transform: scale(1.04); }
+    .canopy::before { animation: none; transform: scale(1.0); }
     .prep-card, .prep-card > *,
     #welcome-screen.is-on .welcome-inner > * { animation-duration: 0.01s !important; animation-delay: 0s !important; }
   }
@@ -1424,7 +1425,7 @@
     /* The Begin button + keyboard hint are live affordances — drop them from
        the static record page. */
     #welcome-screen .welcome-begin, #welcome-screen .welcome-hint, #welcome-screen .welcome-back { display: none !important; }
-    .canopy::before { animation: none !important; transform: scale(1.04) !important; }
+    .canopy::before { animation: none !important; transform: scale(1.0) !important; }
   }
 </style>
 </head>
@@ -1437,7 +1438,7 @@
     <!-- Preparation screen (enter patient name) -->
     <div id="prep-screen" class="canopy">
       <div class="prep-card">
-        <img class="opt-logo" src="assets/logos/OptimalLogo-White.png" alt="Optimal" width="160">
+        <img class="opt-logo" src="assets/logos/Optimal-Logo-Inverted.png" alt="Optimal" width="160">
         <div>
           <div class="prep-eyebrow">Patient Briefing · Preparation</div>
           <h1 class="prep-title">Let's set up <span class="italic">this session</span>.</h1>
@@ -1465,8 +1466,6 @@
     <div id="welcome-screen" class="canopy" hidden>
       <button type="button" id="welcome-back" class="welcome-back"><span class="arr">←</span> Edit name</button>
       <div class="welcome-inner">
-        <img class="opt-logo" src="assets/logos/OptimalLogo-White.png" alt="Optimal" width="170">
-        <div class="welcome-eyebrow">Menopause &amp; Perimenopause Foundation Program</div>
         <h1 class="welcome-title"><span class="w-greet">Welcome</span><span class="w-comma">,</span><br><span class="welcome-name" id="welcome-name"></span></h1>
         <p class="welcome-date" id="welcome-date"></p>
         <button type="button" id="welcome-begin" class="welcome-begin">Begin <span class="arr">→</span></button>
@@ -2508,6 +2507,9 @@
     };
     fitCover();
     window.addEventListener('resize', fitCover);
+    // Belt-and-suspenders: refit on any viewport change, even those that don't
+    // fire a window 'resize' event (some embeds, fullscreen transitions).
+    if (window.ResizeObserver) new ResizeObserver(fitCover).observe(document.documentElement);
 
     // Default the date to today (local), pre-filled and editable.
     const now = new Date();
