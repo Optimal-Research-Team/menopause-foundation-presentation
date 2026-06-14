@@ -1236,7 +1236,7 @@
     background:
       linear-gradient(180deg, rgba(11,20,9,0.34) 0%, rgba(11,20,9,0.04) 26%, rgba(11,20,9,0.06) 46%, rgba(11,20,9,0.52) 74%, rgba(9,17,8,0.86) 100%);
   }
-  .opt-logo { display: block; }
+  .opt-logo { display: block; width: auto; }
 
   /* ── Preparation card (glass over canopy) ── */
   .prep-card {
@@ -1255,7 +1255,7 @@
     from { opacity: 0; transform: translateY(18px) scale(0.985); }
     to   { opacity: 1; transform: none; }
   }
-  .prep-card .opt-logo { height: 34px; margin-bottom: 34px; opacity: 0.96; }
+  .prep-card .opt-logo { height: 34px; width: auto; margin-bottom: 34px; opacity: 0.96; }
   .prep-eyebrow {
     font-family: var(--font-sans); font-size: 14px; font-weight: 700;
     letter-spacing: 0.22em; text-transform: uppercase;
@@ -1321,7 +1321,7 @@
      in the lower band beneath it. */
   #welcome-screen { align-items: flex-end; justify-content: center; }
   .welcome-inner {
-    position: relative; z-index: 1; text-align: center; padding: 0 6vw 80px;
+    position: relative; z-index: 1; text-align: center; padding: 0 120px 96px;
     text-shadow: 0 1px 36px rgba(9,17,8,0.6);
   }
   .welcome-title {
@@ -1438,7 +1438,7 @@
     <!-- Preparation screen (enter patient name) -->
     <div id="prep-screen" class="canopy">
       <div class="prep-card">
-        <img class="opt-logo" src="assets/logos/Optimal-Logo-Inverted.png" alt="Optimal" width="160">
+        <img class="opt-logo" src="assets/logos/Optimal-Logo-Inverted.png" alt="Optimal">
         <div>
           <div class="prep-eyebrow">Patient Briefing · Preparation</div>
           <h1 class="prep-title">Let's set up <span class="italic">this session</span>.</h1>
