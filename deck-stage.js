@@ -561,6 +561,8 @@
       const t = e.target;
       if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
+      // A cover screen (preparation / welcome) is up — don't navigate beneath it.
+      if (window.__deckLocked) return;
 
       const key = e.key;
       let handled = true;

@@ -1179,9 +1179,260 @@
     font-family: var(--font-sans); font-size: 16px; color: var(--grey-500); letter-spacing: 0.18em; text-transform: uppercase;
   }
   .on-dark .progress { color: rgba(255,255,255,0.7); }
+
+  /* ============================================================
+     Patient preparation + welcome screens (pre-deck takeover)
+     These full-viewport layers sit above <deck-stage> and never
+     affect the 13-slide numbering. In print, prep is dropped and
+     the welcome becomes the first PDF page (the record stamp).
+     ============================================================ */
+  .canopy {
+    position: fixed; inset: 0; z-index: 2147483600;
+    display: flex; align-items: center; justify-content: center;
+    background: #14250F; color: var(--cream-50);
+    opacity: 1; transition: opacity 620ms var(--ease-standard);
+  }
+  .canopy[hidden] { display: none; }
+  .canopy.fade-out { opacity: 0; pointer-events: none; }
+
+  /* Photographic canopy backdrop with slow "bloom" drift */
+  .canopy::before {
+    content: ""; position: absolute; inset: 0;
+    background: url('assets/welcome-canopy.jpg') center 30% / cover no-repeat;
+    transform: scale(1.06);
+    animation: canopy-drift 30s ease-in-out infinite alternate;
+  }
+  @keyframes canopy-drift {
+    from { transform: scale(1.06) translateY(0); }
+    to   { transform: scale(1.13) translateY(-1.6%); }
+  }
+  /* Legibility wash — keeps the bloom but lets type sit cleanly */
+  .canopy::after {
+    content: ""; position: absolute; inset: 0;
+    background:
+      radial-gradient(115% 95% at 50% 40%, rgba(20,37,15,0.05) 0%, rgba(20,37,15,0.52) 56%, rgba(13,24,11,0.90) 100%),
+      linear-gradient(180deg, rgba(20,37,15,0.55) 0%, rgba(20,37,15,0.12) 32%, rgba(13,24,11,0.82) 100%);
+  }
+  .opt-logo { display: block; }
+
+  /* ── Preparation card (glass over canopy) ── */
+  .prep-card {
+    position: relative; z-index: 1;
+    width: min(640px, 92vw);
+    padding: 54px 56px 46px;
+    border-radius: 24px;
+    background: rgba(16, 30, 12, 0.46);
+    border: 1px solid rgba(255,255,255,0.16);
+    -webkit-backdrop-filter: blur(26px) saturate(118%);
+    backdrop-filter: blur(26px) saturate(118%);
+    box-shadow: 0 36px 90px rgba(0,0,0,0.50);
+    animation: welcome-pop 0.75s var(--ease-standard) both;
+  }
+  @keyframes welcome-pop {
+    from { opacity: 0; transform: translateY(18px) scale(0.985); }
+    to   { opacity: 1; transform: none; }
+  }
+  .prep-card .opt-logo { height: 30px; margin-bottom: 30px; opacity: 0.96; }
+  .prep-eyebrow {
+    font-family: var(--font-sans); font-size: 13px; font-weight: 700;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--forest-500); margin-bottom: 16px;
+  }
+  .prep-title {
+    font-family: var(--font-display); font-weight: 400; font-size: 52px;
+    line-height: 1.0; letter-spacing: -0.03em; color: #fff; margin-bottom: 16px;
+  }
+  .prep-title .italic { font-style: italic; color: #DDE7D2; }
+  .prep-sub {
+    font-family: var(--font-sans); font-size: 17px; line-height: 1.5;
+    color: rgba(255,255,255,0.72); margin-bottom: 34px; max-width: 48ch;
+  }
+  .prep-form { display: flex; flex-direction: column; gap: 22px; }
+  .prep-form .field { display: flex; flex-direction: column; gap: 9px; }
+  .prep-form .field-label {
+    font-family: var(--font-sans); font-size: 12px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.58);
+  }
+  .prep-form input {
+    font-family: var(--font-display); font-size: 26px; letter-spacing: -0.01em;
+    color: #fff; background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.20); border-radius: 13px;
+    padding: 14px 18px; outline: none; width: 100%;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  }
+  .prep-form input::placeholder { color: rgba(255,255,255,0.42); font-style: italic; }
+  .prep-form input:focus {
+    border-color: var(--forest-500); background: rgba(255,255,255,0.10);
+    box-shadow: 0 0 0 4px rgba(135,164,130,0.18);
+  }
+  .prep-form .field--date input {
+    font-family: var(--font-sans); font-size: 18px; max-width: 280px;
+    color-scheme: dark;
+  }
+  .prep-form .field--date input::-webkit-calendar-picker-indicator {
+    filter: invert(1); opacity: 0.65; cursor: pointer;
+  }
+  .prep-actions { display: flex; align-items: center; gap: 14px; margin-top: 10px; flex-wrap: wrap; }
+  .prep-btn {
+    font-family: var(--font-sans); font-size: 17px; font-weight: 600; letter-spacing: 0.01em;
+    border-radius: 999px; padding: 15px 30px; cursor: pointer;
+    border: 1px solid transparent;
+    transition: transform 0.15s var(--ease-standard), background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .prep-btn.primary { background: var(--cream-50); color: var(--forest-700); }
+  .prep-btn.primary:hover { background: #fff; transform: translateY(-1px); }
+  .prep-btn.ghost { background: transparent; color: rgba(255,255,255,0.88); border-color: rgba(255,255,255,0.32); }
+  .prep-btn.ghost:hover { border-color: rgba(255,255,255,0.62); color: #fff; }
+  .prep-btn.ghost svg { width: 15px; height: 15px; margin-right: 8px; vertical-align: -2px; }
+
+  /* Stagger the prep card's contents in */
+  .prep-card > * { animation: rv-rise 0.62s var(--ease-standard) both; }
+  .prep-card > *:nth-child(1) { animation-delay: 0.10s; }
+  .prep-card > *:nth-child(2) { animation-delay: 0.16s; }
+  .prep-card > *:nth-child(3) { animation-delay: 0.22s; }
+  .prep-card > *:nth-child(4) { animation-delay: 0.28s; }
+  .prep-card > *:nth-child(5) { animation-delay: 0.34s; }
+
+  /* ── Welcome screen ── */
+  .welcome-inner {
+    position: relative; z-index: 1; text-align: center; padding: 0 6vw;
+    text-shadow: 0 1px 36px rgba(11,21,9,0.55);
+  }
+  .welcome-inner .opt-logo {
+    height: 34px; margin: 0 auto 40px; opacity: 0.96;
+    filter: drop-shadow(0 1px 18px rgba(11,21,9,0.55));
+  }
+  .welcome-eyebrow {
+    font-family: var(--font-sans); font-size: 15px; font-weight: 700;
+    letter-spacing: 0.26em; text-transform: uppercase; color: #C7D6B7;
+    margin-bottom: 26px;
+  }
+  .welcome-title {
+    font-family: var(--font-display); font-weight: 400;
+    font-size: clamp(58px, 8vw, 112px); line-height: 1.0; letter-spacing: -0.035em; color: #fff;
+  }
+  .welcome-title .w-comma { color: #fff; }
+  .welcome-title.no-name .w-comma, .welcome-title.no-name .welcome-name { display: none; }
+  .welcome-name { font-style: italic; color: #E7EFDD; }
+  .welcome-date {
+    font-family: var(--font-sans); font-size: 18px; letter-spacing: 0.02em;
+    color: rgba(255,255,255,0.66); margin-top: 30px;
+  }
+  .welcome-begin {
+    display: inline-flex; align-items: center; gap: 11px; margin-top: 46px;
+    font-family: var(--font-sans); font-size: 18px; font-weight: 600; letter-spacing: 0.01em;
+    background: var(--cream-50); color: var(--forest-700);
+    border: none; border-radius: 999px; padding: 16px 34px; cursor: pointer;
+    transition: transform 0.15s var(--ease-standard), background 0.2s;
+  }
+  .welcome-begin:hover { background: #fff; transform: translateY(-1px); }
+  .welcome-begin .arr { font-size: 19px; transition: transform 0.2s var(--ease-standard); }
+  .welcome-begin:hover .arr { transform: translateX(3px); }
+  .welcome-hint {
+    margin-top: 24px; font-family: var(--font-sans); font-size: 12px;
+    letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.5);
+  }
+  .welcome-hint kbd {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12px;
+    padding: 2px 7px; border-radius: 5px; color: rgba(255,255,255,0.85);
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18);
+  }
+  /* Welcome content rises in when the screen is shown */
+  #welcome-screen .welcome-inner > * { opacity: 0; transform: translateY(20px); }
+  #welcome-screen.is-on .welcome-inner > * { animation: rv-rise 0.7s var(--ease-standard) both; }
+  #welcome-screen.is-on .welcome-inner > *:nth-child(1) { animation-delay: 0.05s; }
+  #welcome-screen.is-on .welcome-inner > *:nth-child(2) { animation-delay: 0.16s; }
+  #welcome-screen.is-on .welcome-inner > *:nth-child(3) { animation-delay: 0.30s; }
+  #welcome-screen.is-on .welcome-inner > *:nth-child(4) { animation-delay: 0.46s; }
+  #welcome-screen.is-on .welcome-inner > *:nth-child(5) { animation-delay: 0.58s; }
+  #welcome-screen.is-on .welcome-inner > *:nth-child(6) { animation-delay: 0.68s; }
+
+  /* ── Floating export control (in-deck, fades like the nav) ── */
+  #export-fab {
+    position: fixed; right: 22px; bottom: 20px; z-index: 2147483500;
+    display: inline-flex; align-items: center; gap: 9px;
+    font-family: var(--font-sans); font-size: 13px; font-weight: 600; letter-spacing: 0.01em;
+    color: rgba(255,255,255,0.92);
+    background: rgba(18,32,12,0.66); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.20); border-radius: 999px;
+    padding: 10px 17px; cursor: pointer;
+    opacity: 0; transform: translateY(6px); pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s, background 0.2s;
+  }
+  #export-fab[hidden] { display: none; }
+  #export-fab.avail { opacity: 0.5; transform: none; pointer-events: auto; }
+  #export-fab.avail:hover { opacity: 1; background: rgba(18,32,12,0.88); }
+  #export-fab svg { width: 15px; height: 15px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .canopy::before { animation: none; transform: scale(1.04); }
+    .prep-card, .prep-card > *,
+    #welcome-screen.is-on .welcome-inner > * { animation-duration: 0.01s !important; animation-delay: 0s !important; }
+  }
+
+  /* ── Print: prep hidden, welcome becomes the first PDF page ── */
+  @media print {
+    #prep-screen, #export-fab { display: none !important; }
+    #welcome-screen {
+      display: flex !important; position: relative !important; inset: auto !important;
+      width: 1920px !important; height: 1080px !important;
+      opacity: 1 !important; transform: none !important;
+      z-index: auto !important; overflow: hidden;
+      break-after: page; page-break-after: always;
+    }
+    #welcome-screen .welcome-inner > * { opacity: 1 !important; transform: none !important; animation: none !important; }
+    /* The Begin button + keyboard hint are live affordances — drop them from
+       the static record page. */
+    #welcome-screen .welcome-begin, #welcome-screen .welcome-hint { display: none !important; }
+    .canopy::before { animation: none !important; transform: scale(1.04) !important; }
+  }
 </style>
 </head>
 <body style="">
+
+<!-- ============ PREPARATION SCREEN (enter patient name) ============ -->
+<div id="prep-screen" class="canopy">
+  <div class="prep-card">
+    <img class="opt-logo" src="assets/logos/OptimalLogo-White.png" alt="Optimal" width="160">
+    <div>
+      <div class="prep-eyebrow">Patient Briefing · Preparation</div>
+      <h1 class="prep-title">Let's set up <span class="italic">this session</span>.</h1>
+      <p class="prep-sub">Enter the patient's name to personalise their welcome screen. The name and date are also stamped onto the PDF you can export for the chart.</p>
+    </div>
+    <form id="prep-form" class="prep-form" autocomplete="off">
+      <label class="field">
+        <span class="field-label">Patient name</span>
+        <input id="patient-name" type="text" placeholder="e.g. Sarah Thompson" autocomplete="off" spellcheck="false">
+      </label>
+      <label class="field field--date">
+        <span class="field-label">Date of session</span>
+        <input id="session-date" type="date">
+      </label>
+      <div class="prep-actions">
+        <button type="submit" class="prep-btn primary">Begin presentation →</button>
+        <button type="button" id="prep-export" class="prep-btn ghost">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>Export PDF for records</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ WELCOME SCREEN (Welcome, Name) ============ -->
+<div id="welcome-screen" class="canopy" hidden>
+  <div class="welcome-inner">
+    <img class="opt-logo" src="assets/logos/OptimalLogo-White.png" alt="Optimal" width="170">
+    <div class="welcome-eyebrow">Menopause &amp; Perimenopause Foundation Program</div>
+    <h1 class="welcome-title"><span class="w-greet">Welcome</span><span class="w-comma">,</span><br><span class="welcome-name" id="welcome-name"></span></h1>
+    <p class="welcome-date" id="welcome-date"></p>
+    <button type="button" id="welcome-begin" class="welcome-begin">Begin <span class="arr">→</span></button>
+    <div class="welcome-hint">Press <kbd>→</kbd> to continue</div>
+  </div>
+</div>
+
+<!-- Floating export control during the presentation -->
+<button id="export-fab" type="button" aria-label="Export presentation as PDF" hidden>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>Export PDF
+</button>
 
 <deck-stage width="1920" height="1080">
 
@@ -2175,6 +2426,134 @@
     // listener attached, and navigating to the current slide re-fires no event.
     const active = document.querySelector('deck-stage > section[data-deck-active]');
     if (active) replay(active);
+
+    // Exposed so the welcome screen can re-trigger slide 1's entrance at the
+    // moment the presentation actually begins (its init reveal played hidden
+    // underneath the cover screens).
+    window.__replayActiveSlide = () => {
+      const a = document.querySelector('deck-stage > section[data-deck-active]');
+      if (a) replay(a);
+    };
+  })();
+
+  // ── Patient preparation, welcome screen, and PDF export ──
+  (() => {
+    const prep        = document.getElementById('prep-screen');
+    const welcome     = document.getElementById('welcome-screen');
+    const nameInput   = document.getElementById('patient-name');
+    const dateInput   = document.getElementById('session-date');
+    const welcomeName = document.getElementById('welcome-name');
+    const welcomeDate = document.getElementById('welcome-date');
+    const welcomeTtl  = welcome.querySelector('.welcome-title');
+    const beginBtn    = document.getElementById('welcome-begin');
+    const fab         = document.getElementById('export-fab');
+    const deck        = document.querySelector('deck-stage');
+
+    // Default the date to today (local), pre-filled and editable.
+    const now = new Date();
+    const iso = (d) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    dateInput.value = iso(now);
+
+    // Lock deck keyboard nav while a cover screen is up (deck-stage checks this).
+    window.__deckLocked = true;
+
+    const getName = () => (nameInput.value || '').trim();
+    const fmtDate = (s) => {
+      const [y, m, d] = (s || '').split('-').map(Number);
+      if (!y) return '';
+      return new Date(y, m - 1, d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    };
+
+    // Keep the welcome page (and therefore any print/export) in sync with the
+    // inputs at all times, so even a native Cmd/Ctrl-P yields a stamped record.
+    const syncWelcome = () => {
+      const name = getName();
+      welcomeName.textContent = name;
+      welcomeDate.textContent = fmtDate(dateInput.value);
+      welcomeTtl.classList.toggle('no-name', !name);
+    };
+    nameInput.addEventListener('input', syncWelcome);
+    dateInput.addEventListener('input', syncWelcome);
+    syncWelcome();
+
+    let started = false;
+
+    const openWelcome = () => {
+      syncWelcome();
+      prep.classList.add('fade-out');
+      setTimeout(() => { prep.hidden = true; }, 640);
+      welcome.hidden = false;
+      welcome.classList.remove('fade-out', 'is-on');
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        welcome.classList.add('is-on');
+        beginBtn.focus({ preventScroll: true });
+      }));
+    };
+
+    const backToPrep = () => {
+      welcome.classList.add('fade-out');
+      setTimeout(() => { welcome.hidden = true; welcome.classList.remove('is-on'); }, 640);
+      prep.hidden = false;
+      prep.classList.remove('fade-out');
+      requestAnimationFrame(() => nameInput.focus({ preventScroll: true }));
+    };
+
+    const beginPresentation = () => {
+      if (started) return;
+      started = true;
+      window.__deckLocked = false;          // hand keyboard control to the deck
+      welcome.classList.add('fade-out');
+      setTimeout(() => { welcome.hidden = true; }, 640);
+      if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+      fab.hidden = false;
+      // Always open on the title slide, then re-run its entrance now that it's
+      // truly on screen (goTo(0) is a no-op if already there).
+      if (deck && deck.index !== 0) deck.goTo(0);
+      if (window.__replayActiveSlide) window.__replayActiveSlide();
+    };
+
+    document.getElementById('prep-form').addEventListener('submit', (e) => { e.preventDefault(); openWelcome(); });
+    // Click anywhere on the welcome layer (including the Begin button) to start.
+    welcome.addEventListener('click', beginPresentation);
+
+    // Welcome-screen keyboard affordance. The deck itself is already inert via
+    // window.__deckLocked, so this only drives the cover screens and stops the
+    // page from scrolling on Space / arrows.
+    window.addEventListener('keydown', (e) => {
+      const welcomeUp = !welcome.hidden && !welcome.classList.contains('fade-out');
+      if (!welcomeUp) return;
+      if (['ArrowRight', 'Enter', ' ', 'Spacebar', 'PageDown'].includes(e.key)) {
+        e.preventDefault(); beginPresentation();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault(); backToPrep();
+      }
+    });
+
+    // ── Export to PDF (print → Save as PDF, one page per slide) ──
+    const exportPDF = () => {
+      syncWelcome();
+      const name = getName() || 'Patient';
+      const isoStr = dateInput.value || iso(now);
+      const prev = document.title;
+      document.title = 'Optimal Foundation Program — ' + name + ' — ' + isoStr;
+      const cleanup = () => { document.title = prev; window.removeEventListener('afterprint', cleanup); };
+      window.addEventListener('afterprint', cleanup);
+      setTimeout(() => window.print(), 60);
+    };
+    document.getElementById('prep-export').addEventListener('click', exportPDF);
+    fab.addEventListener('click', exportPDF);
+
+    // Reveal the floating export control on mouse activity once presenting.
+    let fabTimer;
+    window.addEventListener('mousemove', () => {
+      if (!started) return;
+      fab.classList.add('avail');
+      clearTimeout(fabTimer);
+      fabTimer = setTimeout(() => fab.classList.remove('avail'), 2600);
+    }, { passive: true });
+
+    // Land on the name field, ready to type.
+    requestAnimationFrame(() => nameInput.focus({ preventScroll: true }));
   })();
 </script>
 
