@@ -1198,13 +1198,13 @@
   /* Photographic canopy backdrop with slow "bloom" drift */
   .canopy::before {
     content: ""; position: absolute; inset: 0;
-    background: url('assets/welcome-canopy.jpg') center 30% / cover no-repeat;
-    transform: scale(1.06);
-    animation: canopy-drift 30s ease-in-out infinite alternate;
+    background: url('assets/welcome-canopy.jpg') center center / cover no-repeat;
+    transform: scale(1.04);
+    animation: canopy-drift 32s ease-in-out infinite alternate;
   }
   @keyframes canopy-drift {
-    from { transform: scale(1.06) translateY(0); }
-    to   { transform: scale(1.13) translateY(-1.6%); }
+    from { transform: scale(1.04); }
+    to   { transform: scale(1.09); }
   }
   /* Legibility wash — keeps the bloom but lets type sit cleanly */
   .canopy::after {
@@ -1337,6 +1337,23 @@
     padding: 2px 7px; border-radius: 5px; color: rgba(255,255,255,0.85);
     background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.18);
   }
+  /* Back to the preparation screen to revise the name */
+  .welcome-back {
+    position: absolute; top: 38px; left: 44px; z-index: 2;
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font-sans); font-size: 14px; font-weight: 600; letter-spacing: 0.01em;
+    color: rgba(255,255,255,0.82);
+    background: rgba(18,32,12,0.42);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.22); border-radius: 999px;
+    padding: 10px 18px 10px 16px; cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .welcome-back:hover { background: rgba(18,32,12,0.72); color: #fff; border-color: rgba(255,255,255,0.5); }
+  .welcome-back .arr { font-size: 15px; transition: transform 0.2s var(--ease-standard); }
+  .welcome-back:hover .arr { transform: translateX(-3px); }
+  #welcome-screen .welcome-back { opacity: 0; }
+  #welcome-screen.is-on .welcome-back { animation: rv-rise 0.6s var(--ease-standard) 0.12s both; }
   /* Welcome content rises in when the screen is shown */
   #welcome-screen .welcome-inner > * { opacity: 0; transform: translateY(20px); }
   #welcome-screen.is-on .welcome-inner > * { animation: rv-rise 0.7s var(--ease-standard) both; }
@@ -1383,7 +1400,7 @@
     #welcome-screen .welcome-inner > * { opacity: 1 !important; transform: none !important; animation: none !important; }
     /* The Begin button + keyboard hint are live affordances — drop them from
        the static record page. */
-    #welcome-screen .welcome-begin, #welcome-screen .welcome-hint { display: none !important; }
+    #welcome-screen .welcome-begin, #welcome-screen .welcome-hint, #welcome-screen .welcome-back { display: none !important; }
     .canopy::before { animation: none !important; transform: scale(1.04) !important; }
   }
 </style>
@@ -1419,6 +1436,7 @@
 
 <!-- ============ WELCOME SCREEN (Welcome, Name) ============ -->
 <div id="welcome-screen" class="canopy" hidden>
+  <button type="button" id="welcome-back" class="welcome-back"><span class="arr">←</span> Edit name</button>
   <div class="welcome-inner">
     <img class="opt-logo" src="assets/logos/OptimalLogo-White.png" alt="Optimal" width="170">
     <div class="welcome-eyebrow">Menopause &amp; Perimenopause Foundation Program</div>
@@ -2477,13 +2495,15 @@
     syncWelcome();
 
     let started = false;
+    let coverTimer;   // last cover transition wins (guards rapid back-and-forth)
 
     const openWelcome = () => {
+      clearTimeout(coverTimer);
       syncWelcome();
       prep.classList.add('fade-out');
-      setTimeout(() => { prep.hidden = true; }, 640);
       welcome.hidden = false;
       welcome.classList.remove('fade-out', 'is-on');
+      coverTimer = setTimeout(() => { prep.hidden = true; }, 640);
       requestAnimationFrame(() => requestAnimationFrame(() => {
         welcome.classList.add('is-on');
         beginBtn.focus({ preventScroll: true });
@@ -2491,19 +2511,22 @@
     };
 
     const backToPrep = () => {
+      clearTimeout(coverTimer);
       welcome.classList.add('fade-out');
-      setTimeout(() => { welcome.hidden = true; welcome.classList.remove('is-on'); }, 640);
       prep.hidden = false;
       prep.classList.remove('fade-out');
-      requestAnimationFrame(() => nameInput.focus({ preventScroll: true }));
+      coverTimer = setTimeout(() => { welcome.hidden = true; welcome.classList.remove('is-on'); }, 640);
+      // Defer so the just-unhidden input is focusable, then select all for quick revision.
+      setTimeout(() => { nameInput.focus({ preventScroll: true }); nameInput.select(); }, 60);
     };
 
     const beginPresentation = () => {
       if (started) return;
       started = true;
+      clearTimeout(coverTimer);
       window.__deckLocked = false;          // hand keyboard control to the deck
       welcome.classList.add('fade-out');
-      setTimeout(() => { welcome.hidden = true; }, 640);
+      coverTimer = setTimeout(() => { welcome.hidden = true; }, 640);
       if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
       fab.hidden = false;
       // Always open on the title slide, then re-run its entrance now that it's
@@ -2515,6 +2538,8 @@
     document.getElementById('prep-form').addEventListener('submit', (e) => { e.preventDefault(); openWelcome(); });
     // Click anywhere on the welcome layer (including the Begin button) to start.
     welcome.addEventListener('click', beginPresentation);
+    // "Edit name" returns to the preparation screen (must not also "begin").
+    document.getElementById('welcome-back').addEventListener('click', (e) => { e.stopPropagation(); backToPrep(); });
 
     // Welcome-screen keyboard affordance. The deck itself is already inert via
     // window.__deckLocked, so this only drives the cover screens and stops the
