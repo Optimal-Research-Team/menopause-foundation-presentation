@@ -517,43 +517,51 @@
     line-height: 1.22; letter-spacing: -0.02em; color: var(--grey-800);
   }
 
-  /* ════════════ Slide 4 — Hormone picture (dark slope chart + legend,
-     mirrors the main deck's hormone-map slide) ════════════ */
-  .g4 .body-grid { margin-top: 36px; flex: 1; min-height: 0; display: grid; grid-template-columns: 1.28fr 1fr; gap: 56px; align-items: stretch; }
+  /* ════════════ Slide 4 — Hormone picture (full-width animated slope map,
+     mirrors the main deck's hormone-map card) ════════════ */
   .g4 .map-card {
+    margin-top: 36px; flex: 1; min-height: 0;
     position: relative; border-radius: 14px; overflow: hidden;
     background: var(--forest-700);
     box-shadow: 0 1px 0 rgba(28,49,24,0.06);
     display: flex;
   }
   .g4 .map-card svg { width: 100%; height: 100%; display: block; }
-  .g4 .legend { display: flex; flex-direction: column; min-height: 0; }
-  .g4 .col-label {
-    font-family: var(--font-sans); font-size: 15px; font-weight: 700;
-    letter-spacing: 0.2em; text-transform: uppercase; color: var(--forest-500);
-    margin-bottom: 8px;
-  }
-  .g4 .lg-rows { flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; }
-  .g4 .lg-row {
-    display: flex; align-items: center; gap: 20px;
-    padding: 16px 0; border-bottom: 1px solid var(--border-hair);
-  }
-  .g4 .lg-row:last-child { border-bottom: 0; }
-  .g4 .lg-swatch { width: 14px; height: 14px; border-radius: 50%; flex: none; }
-  .g4 .lg-body { flex: 1; min-width: 0; }
-  .g4 .lg-name { font-family: var(--font-display); font-size: 28px; letter-spacing: -0.02em; color: var(--grey-800); }
-  .g4 .lg-move { display: flex; align-items: center; gap: 10px; margin-top: 7px; }
-  .g4 .lg-move .arrow { color: var(--grey-500); font-size: 16px; }
-  .g4 .lg-move .g-sev { font-size: 13px; padding: 4px 12px; }
-  .g4 .lg-pcts { font-size: 15px; color: var(--grey-500); margin-left: 8px; font-variant-numeric: tabular-nums; }
-  .g4 .lg-note {
-    padding-top: 16px; border-top: 1px solid var(--border-hair);
-    font-family: var(--font-sans); font-size: 15px; color: var(--grey-500);
-  }
   .g4 .caption {
     margin-top: 20px;
     font-family: var(--font-sans); font-size: 20px; color: var(--grey-500); font-style: italic;
   }
+  /* draw-in animation (curves carry pathLength="1") */
+  .g4 .sl-path { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .g4.play .sl-path { animation: slDraw 1100ms cubic-bezier(.3,.6,.2,1) forwards; animation-delay: var(--d, 0s); }
+  @keyframes slDraw { to { stroke-dashoffset: 0; } }
+  .g4 .sl-dot { opacity: 0; transform: scale(0); transform-box: fill-box; transform-origin: center; }
+  .g4.play .sl-dot { animation: slPop 480ms cubic-bezier(.34,1.45,.4,1) forwards; animation-delay: var(--d, 0s); }
+  @keyframes slPop { to { opacity: 1; transform: scale(1); } }
+  .g4 .sl-lab { opacity: 0; }
+  .g4.play .sl-lab { animation: slFade 600ms ease forwards; animation-delay: var(--d, 0s); }
+  @keyframes slFade { to { opacity: 1; } }
+
+  /* ════════════ Infographic entry animations (slides 2 & 3) ════════════ */
+  .g2 .waffle i { opacity: 0; transform: scale(0.4); }
+  .g2.play .waffle i {
+    animation: wfPop 300ms cubic-bezier(.34,1.35,.4,1) forwards;
+    animation-delay: calc(var(--i, 0) * 13ms + 180ms);
+  }
+  @keyframes wfPop { to { opacity: 1; transform: scale(1); } }
+  .g2 .stat-num { opacity: 0; transform: translateY(10px); }
+  .g2.play .stat-num { animation: riseIn 600ms cubic-bezier(.2,.7,.2,1) forwards; }
+  @keyframes riseIn { to { opacity: 1; transform: translateY(0); } }
+
+  .g3 .track .span { transform: scaleX(0); transform-origin: left center; }
+  .g3.play .track .span { animation: spanGrow 650ms cubic-bezier(.3,.6,.2,1) forwards; animation-delay: calc(var(--d, 0s) + 350ms); }
+  @keyframes spanGrow { to { transform: scaleX(1); } }
+  .g3 .track .pip.was, .g3 .track .pip.is { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+  .g3.play .track .pip.was { animation: pipPop 420ms cubic-bezier(.34,1.45,.4,1) forwards; animation-delay: var(--d, 0s); }
+  .g3.play .track .pip.is { animation: pipPop 420ms cubic-bezier(.34,1.45,.4,1) forwards; animation-delay: calc(var(--d, 0s) + 850ms); }
+  @keyframes pipPop { to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+  .g3 .delta-stat { opacity: 0; transform: translateY(10px); }
+  .g3.play .delta-stat { animation: riseIn 600ms cubic-bezier(.2,.7,.2,1) forwards; animation-delay: 150ms; }
 
   /* ════════════ Slide 5 — What made this work ════════════ */
   .g5 .pillars { margin-top: 44px; flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-content: center; }
@@ -804,6 +812,16 @@
     #prep, #navzones { display: none !important; }
     .print-foot { display: block; }
     deck-stage { visibility: visible; }
+    /* infographic animations must never hide content on paper */
+    .g2 .waffle i, .g2 .stat-num, .g3 .delta-stat,
+    .g3 .track .span, .g3 .track .pip.was, .g3 .track .pip.is,
+    .g4 .sl-path, .g4 .sl-dot, .g4 .sl-lab {
+      animation: none !important; opacity: 1 !important;
+    }
+    .g2 .waffle i, .g2 .stat-num, .g3 .delta-stat, .g4 .sl-dot { transform: none !important; }
+    .g3 .track .span { transform: scaleX(1) !important; }
+    .g3 .track .pip.was, .g3 .track .pip.is { transform: translate(-50%, -50%) scale(1) !important; }
+    .g4 .sl-path { stroke-dashoffset: 0 !important; }
   }
 </style>
 </head>
@@ -1110,14 +1128,7 @@
         <div class="eyebrow">The supporting picture</div>
         <h2 class="display display-md">Your hormone <span class="italic ring-word">picture</span>.</h2>
       </div>
-      <div class="body-grid">
-        <div class="map-card" data-bind-svg="s4_slope"></div>
-        <div class="legend">
-          <div class="col-label">What changed</div>
-          <div class="lg-rows" data-bind-list="s4_legend"></div>
-          <div class="lg-note">Severity bands: High ≥60% · Mod-High ≥40% · Moderate ≥20% · Low &lt;20%</div>
-        </div>
-      </div>
+      <div class="map-card" data-bind-svg="s4_slope"></div>
       <p class="caption">These categories share symptoms — the overall pattern matters more than any single number.</p>
     </div>
     <div class="footer-bar">
