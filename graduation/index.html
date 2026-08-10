@@ -344,46 +344,86 @@
   }
   .g1 .photo-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--forest-500); }
 
-  /* ════════════ Slide 2 — Where you started ════════════ */
-  .g2 .cols { display: grid; grid-template-columns: 1.12fr 1fr; gap: 100px; flex: 1; min-height: 0; margin-top: 40px; align-items: start; }
-  .g2 .qcol { position: relative; padding-top: 66px; }
-  .g2 .quote-mark {
-    position: absolute; top: 0; left: -8px;
-    font-family: var(--font-display); font-size: 170px; line-height: 1; color: var(--terracotta-600);
-    opacity: 0.9;
+  /* ════════════ Slide 2 — Where you started (photo + waffle infographic) ════════════ */
+  .g2 .slide-frame { padding-bottom: 110px; }
+  .g2 .cols { display: grid; grid-template-columns: 1fr 1.05fr; gap: 70px; flex: 1; min-height: 0; margin-top: 38px; align-items: stretch; }
+  .g2 .photo-side {
+    position: relative; border-radius: 24px; overflow: hidden;
+    background: var(--forest-grad-end);
+    box-shadow: 0 1px 0 rgba(28,49,24,0.04);
   }
-  .g2 blockquote {
-    font-family: var(--font-display); font-style: italic; font-size: 54px;
-    line-height: 1.2; letter-spacing: -0.02em; color: var(--forest-700);
+  .g2 .photo-side > img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; object-position: center 22%;
   }
-  .g2 .attr {
-    margin-top: 30px; display: flex; align-items: center; gap: 14px;
-    font-size: 22px; color: var(--grey-500);
+  .g2 .photo-tag {
+    position: absolute; left: 22px; top: 22px;
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 8px 16px;
+    background: rgba(15,35,18,0.55);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(244,239,228,0.28);
+    border-radius: 999px;
+    font-family: var(--font-sans); font-size: 12px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase; color: rgba(244,239,228,0.92);
   }
-  .g2 .attr::before { content: ""; width: 32px; height: 1px; background: var(--grey-500); opacity: 0.6; }
-  .g2 .scol { display: flex; flex-direction: column; }
+  .g2 .photo-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--forest-500); }
+  .g2 .quote-panel {
+    position: absolute; left: 20px; right: 20px; bottom: 20px;
+    background: rgba(255,252,247,0.94);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-radius: 16px; padding: 28px 32px 24px;
+  }
+  .g2 .quote-panel .qmark {
+    display: block; font-family: var(--font-display); font-size: 74px; line-height: 0.55;
+    color: var(--terracotta-600); margin-bottom: 6px;
+  }
+  .g2 .quote-panel blockquote {
+    font-family: var(--font-display); font-style: italic; font-size: 34px;
+    line-height: 1.24; letter-spacing: -0.02em; color: var(--grey-800);
+  }
+  .g2 .quote-panel .attr {
+    margin-top: 16px; display: flex; align-items: center; gap: 12px;
+    font-size: 18px; color: var(--grey-500);
+  }
+  .g2 .quote-panel .attr::before { content: ""; width: 28px; height: 1px; background: var(--grey-500); opacity: 0.6; }
+
+  .g2 .scol { display: flex; flex-direction: column; min-height: 0; }
+  .g2 .stat-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 40px; }
   .g2 .stat-num {
-    font-family: var(--font-display); font-size: 148px; line-height: 0.9; letter-spacing: -0.04em;
+    font-family: var(--font-display); font-size: 132px; line-height: 0.86; letter-spacing: -0.04em;
     color: var(--forest-700);
   }
-  .g2 .stat-num small { font-family: var(--font-display); font-size: 52px; color: var(--grey-500); letter-spacing: -0.02em; }
+  .g2 .stat-num small { font-family: var(--font-display); font-size: 48px; color: var(--grey-500); letter-spacing: -0.02em; }
   .g2 .stat-cap {
-    margin-top: 16px;
-    font-family: var(--font-sans); font-weight: 700; font-size: 17px;
+    margin-top: 14px;
+    font-family: var(--font-sans); font-weight: 700; font-size: 16px;
     letter-spacing: 0.18em; text-transform: uppercase; color: var(--forest-900);
   }
-  .g2 .catlist-wrap { margin-top: 44px; }
-  .g2 .catlist { display: flex; flex-direction: column; }
+  /* waffle — one cell per questionnaire symptom */
+  .g2 .waffle { display: grid; grid-template-columns: repeat(9, 26px); gap: 7px; flex: none; padding-top: 6px; }
+  .g2 .waffle i {
+    width: 26px; height: 26px; border-radius: 6px; display: block;
+    background: var(--white); border: 1px solid var(--bone-200);
+    box-sizing: border-box;
+  }
+  .g2 .waffle i.on { background: var(--terracotta-600); border-color: var(--terracotta-600); opacity: 0.88; }
+  .g2 .waffle-cap {
+    margin-top: 10px; text-align: right;
+    font-family: var(--font-sans); font-size: 14px; color: var(--grey-500);
+  }
+  .g2 .catlist-wrap { margin-top: auto; padding-top: 26px; }
   .g2 .cat-kicker {
     font-family: var(--font-sans); font-size: 14px; font-weight: 700;
     letter-spacing: 0.2em; text-transform: uppercase; color: var(--forest-500);
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
+  .g2 .catlist { display: flex; flex-direction: column; }
   .g2 .catlist li {
     display: flex; align-items: center; justify-content: space-between; gap: 20px;
-    padding: 16px 0; border-bottom: 1px solid var(--border-hair);
+    padding: 15px 0; border-bottom: 1px solid var(--border-hair);
   }
-  .g2 .catlist li:last-child { border-bottom: 0; }
+  .g2 .catlist li:last-child { border-bottom: 0; padding-bottom: 0; }
   .g2 .catlist .cname { font-family: var(--font-display); font-size: 27px; letter-spacing: -0.02em; color: var(--grey-800); }
   .g2 .catlist .cval { display: flex; align-items: center; gap: 16px; }
   .g2 .catlist .cpct { font-size: 24px; font-weight: 600; color: var(--grey-700); font-variant-numeric: tabular-nums; }
@@ -409,18 +449,54 @@
   }
   .g3.modest .ds-num, .g3.modest .ds-num .ds-arrow { color: var(--grey-800); }
   .g3.modest .ds-label { color: var(--grey-500); }
-  .g3 .wins { flex: 1; display: flex; flex-direction: column; justify-content: center; margin-top: 18px; }
+  .g3 .wins-head {
+    margin-top: 26px;
+    display: grid; grid-template-columns: 1fr 430px 330px; gap: 50px; align-items: end;
+  }
+  .g3 .wins-head .wh-scale {
+    display: flex; justify-content: space-between;
+    font-family: var(--font-sans); font-size: 12px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--grey-500);
+  }
+  .g3 .wins { flex: 1; display: flex; flex-direction: column; justify-content: center; margin-top: 8px; }
   .g3 .wins li {
-    display: flex; align-items: center; justify-content: space-between; gap: 40px;
-    padding: 23px 0; border-top: 1px solid var(--border-hair);
+    display: grid; grid-template-columns: 1fr 430px 330px; gap: 50px; align-items: center;
+    padding: 21px 0; border-top: 1px solid var(--border-hair);
   }
   .g3 .wins li:last-child { border-bottom: 1px solid var(--border-hair); }
-  .g3 .wins .sname { font-family: var(--font-display); font-size: 42px; letter-spacing: -0.025em; color: var(--forest-700); }
-  .g3 .wins .move { display: flex; align-items: baseline; gap: 18px; white-space: nowrap; }
-  .g3 .wins .from { font-size: 30px; color: var(--grey-500); }
-  .g3 .wins .arrow { color: var(--forest-500); font-size: 28px; }
-  .g3 .wins .to { font-size: 32px; color: var(--forest-900); font-weight: 700; letter-spacing: -0.01em; }
-  .g3 .wins li.flat .sname { color: var(--grey-500); font-style: normal; }
+  .g3 .wins .sname { font-family: var(--font-display); font-size: 40px; letter-spacing: -0.025em; color: var(--forest-700); }
+  /* 0–5 rating track — the questionnaire scale drawn as dots */
+  .g3 .track { position: relative; height: 24px; }
+  .g3 .track .rail {
+    position: absolute; left: 9px; right: 9px; top: 50%; height: 2px;
+    transform: translateY(-50%); background: var(--bone-200);
+  }
+  .g3 .track .span {
+    position: absolute; top: 50%; height: 4px; border-radius: 2px;
+    transform: translateY(-50%); background: var(--forest-500); opacity: 0.55;
+  }
+  .g3 .track .pip {
+    position: absolute; top: 50%; width: 10px; height: 10px; border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--white); border: 1.5px solid var(--bone-200); box-sizing: border-box;
+  }
+  .g3 .track .pip.was {
+    width: 18px; height: 18px;
+    background: var(--cream-50); border: 2.5px solid var(--terracotta-600);
+  }
+  .g3 .track .pip.is {
+    width: 20px; height: 20px;
+    background: var(--forest-700); border: none;
+    box-shadow: 0 0 0 6px rgba(135,164,130,0.28);
+  }
+  .g3 .wins li.flat .track .span { display: none; }
+  .g3 .wins li.flat .track .pip.was { display: none; }
+  .g3 .wins li.flat .track .pip.is { background: var(--grey-500); box-shadow: none; }
+  .g3 .wins .move { display: flex; align-items: baseline; gap: 14px; white-space: nowrap; justify-content: flex-end; }
+  .g3 .wins .from { font-size: 26px; color: var(--grey-500); }
+  .g3 .wins .arrow { color: var(--forest-500); font-size: 24px; }
+  .g3 .wins .to { font-size: 28px; color: var(--forest-900); font-weight: 700; letter-spacing: -0.01em; }
+  .g3 .wins li.flat .sname { color: var(--grey-500); }
   .g3 .wins li.flat .from, .g3 .wins li.flat .to { color: var(--grey-500); font-weight: 400; }
   .g3 .wins li.flat .arrow { color: var(--grey-300); }
   .g3 .callout {
@@ -441,48 +517,41 @@
     line-height: 1.22; letter-spacing: -0.02em; color: var(--grey-800);
   }
 
-  /* ════════════ Slide 4 — Hormone picture ════════════ */
-  .g4 .panel {
-    margin-top: 40px; flex: 1; min-height: 0;
-    background: var(--white); border: 1px solid var(--bone-200);
-    border-radius: 12px; overflow: hidden;
-    box-shadow: 0 1px 0 rgba(28,49,24,0.04);
-    display: flex; flex-direction: column;
+  /* ════════════ Slide 4 — Hormone picture (dark slope chart + legend,
+     mirrors the main deck's hormone-map slide) ════════════ */
+  .g4 .body-grid { margin-top: 36px; flex: 1; min-height: 0; display: grid; grid-template-columns: 1.28fr 1fr; gap: 56px; align-items: stretch; }
+  .g4 .map-card {
+    position: relative; border-radius: 14px; overflow: hidden;
+    background: var(--forest-700);
+    box-shadow: 0 1px 0 rgba(28,49,24,0.06);
+    display: flex;
   }
-  .g4 .p-head {
-    background: var(--forest-700); color: var(--cream-50);
-    padding: 20px 40px;
-    display: flex; align-items: baseline; justify-content: space-between; gap: 20px;
+  .g4 .map-card svg { width: 100%; height: 100%; display: block; }
+  .g4 .legend { display: flex; flex-direction: column; min-height: 0; }
+  .g4 .col-label {
+    font-family: var(--font-sans); font-size: 15px; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--forest-500);
+    margin-bottom: 8px;
   }
-  .g4 .p-head h4 {
-    font-family: var(--font-display); font-size: 30px; line-height: 1.05;
-    letter-spacing: -0.02em; color: var(--cream-50);
+  .g4 .lg-rows { flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; }
+  .g4 .lg-row {
+    display: flex; align-items: center; gap: 20px;
+    padding: 16px 0; border-bottom: 1px solid var(--border-hair);
   }
-  .g4 .p-head .p-legend {
-    display: flex; gap: 28px; align-items: center;
-    font-family: var(--font-sans); font-size: 14px; font-weight: 700;
-    letter-spacing: 0.18em; text-transform: uppercase; color: rgba(244,239,228,0.75);
+  .g4 .lg-row:last-child { border-bottom: 0; }
+  .g4 .lg-swatch { width: 14px; height: 14px; border-radius: 50%; flex: none; }
+  .g4 .lg-body { flex: 1; min-width: 0; }
+  .g4 .lg-name { font-family: var(--font-display); font-size: 28px; letter-spacing: -0.02em; color: var(--grey-800); }
+  .g4 .lg-move { display: flex; align-items: center; gap: 10px; margin-top: 7px; }
+  .g4 .lg-move .arrow { color: var(--grey-500); font-size: 16px; }
+  .g4 .lg-move .g-sev { font-size: 13px; padding: 4px 12px; }
+  .g4 .lg-pcts { font-size: 15px; color: var(--grey-500); margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .g4 .lg-note {
+    padding-top: 16px; border-top: 1px solid var(--border-hair);
+    font-family: var(--font-sans); font-size: 15px; color: var(--grey-500);
   }
-  .g4 .p-head .p-legend i { display: inline-block; width: 26px; height: 10px; border-radius: 3px; margin-right: 8px; vertical-align: baseline; }
-  .g4 .p-head .p-legend .sw-intake { background: var(--bone-200); }
-  .g4 .p-head .p-legend .sw-final { background: var(--forest-500); }
-  .g4 .p-body { padding: 14px 40px 20px; flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; }
-  .g4 .brow {
-    display: grid; grid-template-columns: 430px 1fr 320px; gap: 44px; align-items: center;
-    padding: 18px 0; border-bottom: 1px solid var(--bone-200);
-  }
-  .g4 .brow:last-child { border-bottom: 0; }
-  .g4 .bname { font-family: var(--font-display); font-size: 30px; letter-spacing: -0.02em; color: var(--forest-700); }
-  .g4 .btrack { display: flex; flex-direction: column; gap: 9px; }
-  .g4 .bar { position: relative; height: 24px; border-radius: 5px; background: var(--cream-50); overflow: hidden; }
-  .g4 .bar i { position: absolute; inset: 0 auto 0 0; border-radius: 5px; display: block; }
-  .g4 .bar.intake i { background: var(--bone-200); }
-  .g4 .bar.final  i { background: var(--forest-500); }
-  .g4 .bar span { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 14px; font-weight: 700; color: var(--grey-600); font-variant-numeric: tabular-nums; }
-  .g4 .btrans { display: flex; align-items: center; gap: 12px; justify-content: flex-end; }
-  .g4 .btrans .arrow { color: var(--grey-500); font-size: 20px; }
   .g4 .caption {
-    margin-top: 18px;
+    margin-top: 20px;
     font-family: var(--font-sans); font-size: 20px; color: var(--grey-500); font-style: italic;
   }
 
@@ -970,14 +1039,26 @@
         <h2 class="display display-md" data-bind-html="s2_display">It started with <span class="italic ring-word">your words</span>.</h2>
       </div>
       <div class="cols">
-        <div class="qcol">
-          <span class="quote-mark">&ldquo;</span>
-          <blockquote data-bind="intake_quote"></blockquote>
-          <div class="attr" data-bind="s2_attr">you, at your first visit</div>
+        <div class="photo-side">
+          <img src="../assets/images/portrait-forest-woman.png" alt="Woman in dappled light, eyes closed, remembering">
+          <div class="photo-tag"><span class="dot"></span><span data-bind="s2_phototag">First visit</span></div>
+          <div class="quote-panel">
+            <span class="qmark">&ldquo;</span>
+            <blockquote data-bind="intake_quote"></blockquote>
+            <div class="attr" data-bind="s2_attr">you, at your first visit</div>
+          </div>
         </div>
         <div class="scol">
-          <div class="stat-num"><span data-bind="intake_flagged"></span><small> of 54</small></div>
-          <div class="stat-cap" data-bind="s2_statcap">Symptoms moderate or worse</div>
+          <div class="stat-row">
+            <div>
+              <div class="stat-num"><span data-bind="intake_flagged"></span><small> of 54</small></div>
+              <div class="stat-cap" data-bind="s2_statcap">Symptoms moderate or worse</div>
+            </div>
+            <div>
+              <div class="waffle" data-bind-list="s2_waffle"></div>
+              <div class="waffle-cap">One square per questionnaire symptom</div>
+            </div>
+          </div>
           <div class="catlist-wrap">
             <ul class="catlist" data-bind-list="s2_categories"></ul>
           </div>
@@ -1004,6 +1085,11 @@
           <div class="ds-label" data-bind="ds_label">Symptoms moderate or worse</div>
         </div>
       </div>
+      <div class="wins-head">
+        <span></span>
+        <span class="wh-scale"><span>Not present</span><span>Very severe</span></span>
+        <span></span>
+      </div>
       <ul class="wins" data-bind-list="s3_wins"></ul>
       <div class="callout">
         <div class="co-tag">Chantelle's note</div>
@@ -1024,12 +1110,13 @@
         <div class="eyebrow">The supporting picture</div>
         <h2 class="display display-md">Your hormone <span class="italic ring-word">picture</span>.</h2>
       </div>
-      <div class="panel">
-        <div class="p-head">
-          <h4>Hormonal imbalance categories</h4>
-          <div class="p-legend"><span><i class="sw-intake"></i>Intake</span><span><i class="sw-final"></i>Today</span></div>
+      <div class="body-grid">
+        <div class="map-card" data-bind-svg="s4_slope"></div>
+        <div class="legend">
+          <div class="col-label">What changed</div>
+          <div class="lg-rows" data-bind-list="s4_legend"></div>
+          <div class="lg-note">Severity bands: High ≥60% · Mod-High ≥40% · Moderate ≥20% · Low &lt;20%</div>
         </div>
-        <div class="p-body" data-bind-list="s4_bars"></div>
       </div>
       <p class="caption">These categories share symptoms — the overall pattern matters more than any single number.</p>
     </div>
