@@ -1,0 +1,29 @@
+/* Self-hosted fonts for the Graduation Deck route.
+   PHIPA constraint N2: zero network requests beyond this origin — no runtime
+   font CDNs on this route. Same families the rest of the project loads from
+   Google Fonts, so the deck matches the brand exactly. */
+
+@font-face {
+  font-family: 'Castoro';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('Castoro-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Castoro';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('Castoro-400-italic.woff2') format('woff2');
+}
+
+/* Variable font — one file covers 400–700. */
+@font-face {
+  font-family: 'Public Sans';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('PublicSans-var.woff2') format('woff2');
+}

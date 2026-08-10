@@ -7,10 +7,11 @@
    ========================================================================== */
 
 /* -- Fonts ----------------------------------------------------------------- */
-/* All four typefaces are free on Google Fonts. If the user deploys offline,
-   download TTFs and drop them into fonts/ ; the imports below will keep
-   working as a fallback. */
-@import url('https://fonts.googleapis.com/css2?family=Castoro:ital@0;1&family=Public+Sans:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;700&family=Inter:wght@300;400;500&display=swap');
+/* Fonts are NOT imported here. Each page loads its own font source:
+     • main deck (index.html)      — Google Fonts <link> in its <head>
+     • graduation route            — self-hosted graduation/fonts/fonts.css
+       (PHIPA N2: that route may not make any CDN requests)
+   Keeping this file network-free lets every route share one token source. */
 
 :root {
   /* =========================================================================
@@ -44,6 +45,23 @@
   /* Pure */
   --white:     #FFFFFF;
   --black:     #000000;
+
+  /* Terracotta — warm accent (graduation deck callouts) */
+  --terracotta-600: #C05A3C;   /* callout text / borders */
+  --terracotta-100: #F6E3DB;   /* callout wash background */
+
+  /* Hormone Questionnaire severity bands (report chip palette).
+     High ≥60% · Mod-High ≥40% · Moderate ≥20% · Low <20%.
+     NOTE: pending confirmation against the branded PDF report's exact hex
+     values (PRD open question 3) — swap here if they differ. */
+  --sev-high:      #B3402F;   /* red */
+  --sev-modhigh:   #C97B2D;   /* orange */
+  --sev-moderate:  #D9B13F;   /* yellow */
+  --sev-low:       #5F8C5A;   /* green */
+  --sev-high-bg:     #F7E5E1;
+  --sev-modhigh-bg:  #F7EBDD;
+  --sev-moderate-bg: #F6EFD8;
+  --sev-low-bg:      #E6EFE4;
 
   /* Alpha helpers used in the designs */
   --forest-ring-50: rgba(26, 80, 18, 0.5);   /* 1.3px ring accent circles */

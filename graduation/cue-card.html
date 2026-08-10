@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Presenter Cue Card — Graduation Deck</title>
+<!-- Static, no PHI, no scripts. Print once, keep at the desk (§5.10).
+     On-screen presenter notes are prohibited — the deck screen is shared. -->
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html, body { margin: 0; padding: 0; background: var(--cream-50); }
+  body {
+    font-family: var(--font-sans); color: var(--grey-900);
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 760px; margin: 0 auto; padding: 52px 40px 70px; }
+
+  .masthead { display: flex; align-items: baseline; justify-content: space-between; border-bottom: 2px solid var(--forest-700); padding-bottom: 18px; }
+  h1 { font-family: var(--font-display); font-weight: 400; font-size: 34px; letter-spacing: -0.03em; margin: 0; color: var(--grey-800); }
+  h1 em { font-style: italic; color: var(--forest-700); }
+  .mast-tag { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--grey-500); }
+
+  .rules { margin: 26px 0 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .rule-card {
+    border: 1.5px solid var(--forest-700); border-radius: 8px; padding: 14px 18px;
+    font-size: 14.5px; line-height: 1.45; color: var(--grey-800); background: var(--white);
+  }
+  .rule-card b { color: var(--forest-700); display: block; font-size: 11.5px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 5px; }
+
+  ol.cues { list-style: none; margin: 0; padding: 0; counter-reset: cue; }
+  ol.cues li {
+    counter-increment: cue;
+    display: grid; grid-template-columns: 44px 200px 1fr; gap: 16px; align-items: baseline;
+    padding: 13px 0; border-bottom: 1px solid var(--border-hair);
+  }
+  ol.cues li::before {
+    content: counter(cue, decimal-leading-zero);
+    font-family: var(--font-display); font-size: 22px; color: var(--forest-500);
+  }
+  ol.cues .slide { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--grey-600); }
+  ol.cues .cue { font-size: 15px; line-height: 1.5; color: var(--grey-900); }
+  ol.cues .cue b { color: var(--forest-700); }
+  ol.cues .cue em { font-style: italic; }
+
+  .foot { margin-top: 28px; font-size: 12.5px; color: var(--grey-500); display: flex; justify-content: space-between; }
+
+  .printbar { position: fixed; right: 26px; bottom: 26px; }
+  .printbar button {
+    font-family: var(--font-sans); font-size: 15px; font-weight: 600; cursor: pointer;
+    background: var(--forest-700); color: var(--white); border: none; border-radius: 48px;
+    padding: 13px 28px; box-shadow: 0 4px 25px rgba(0,0,0,0.16);
+  }
+  @media print {
+    .printbar { display: none; }
+    .page { max-width: none; padding: 0.2in 0.35in; }
+    body { background: #fff; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    @page { size: letter portrait; margin: 0.4in; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="masthead">
+    <h1>Graduation visit — <em>presenter cues</em></h1>
+    <span class="mast-tag">Print &amp; keep at desk · never on screen</span>
+  </div>
+
+  <div class="rules">
+    <div class="rule-card"><b>Standing rule 1</b>The offer is information, never pressure.</div>
+    <div class="rule-card"><b>Standing rule 2</b>Bad visit = slow down on slide 3. Never speed up to slide 7.</div>
+  </div>
+
+  <ol class="cues">
+    <li><span class="slide">Congratulations</span><span class="cue">Reference one thing from her survey answers before advancing.</span></li>
+    <li><span class="slide">Where you started</span><span class="cue">Let the quote sit — this slide is about remembering, not explaining.</span></li>
+    <li><span class="slide">Then and now ⭐</span><span class="cue">If the visit is going badly, <b>slow down here</b> — never speed up to the offer. Read the wins aloud in her words.</span></li>
+    <li><span class="slide">Hormone picture</span><span class="cue">One sentence per category, max. Don't teach endocrinology. <em>(Skipped in then-test decks.)</em></span></li>
+    <li><span class="slide">What made this work</span><span class="cue">The pivot slide — deliver the bridge line <b>verbatim</b>; it makes slide 6 a conclusion, not an upsell.</span></li>
+    <li><span class="slide">What happens next</span><span class="cue">"Most of our graduates continue with Ongoing Care — here's what both look like." Neutral voice; the layout steers.</span></li>
+    <li><span class="slide">Your graduate offer</span><span class="cue">Verbatim: "If you decide today or this week, it's $695. If you'd rather take time, it's $795 after — the program is identical either way." <b>Then stop talking.</b></span></li>
+    <li><span class="slide">First step</span><span class="cue">If she said yes on 7, book the held slot now, in the room.</span></li>
+    <li><span class="slide">Thank you</span><span class="cue">Warm regardless of decision. Hand over the leave-behind with the deadline written in by hand.</span></li>
+  </ol>
+
+  <div class="foot">
+    <span>Optimal Clinic · Foundation Graduation Deck</span>
+    <span>Contains no patient information</span>
+  </div>
+</div>
+<div class="printbar"><button onclick="window.print()">Print cue card</button></div>
+</body>
+</html>
