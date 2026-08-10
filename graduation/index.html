@@ -409,15 +409,22 @@
   }
   .g2 .waffle i.on { background: var(--terracotta-600); border-color: var(--terracotta-600); opacity: 0.88; }
   .g2 .waffle-cap {
-    margin-top: 12px; text-align: right;
+    margin-top: 14px;
+    display: flex; align-items: center; justify-content: flex-end; gap: 9px;
     font-family: var(--font-sans); font-size: 14.5px; color: var(--grey-500);
   }
+  .g2 .waffle-cap b { color: var(--grey-800); font-weight: 700; }
+  .g2 .waffle-cap .sw { width: 13px; height: 13px; border-radius: 4px; flex: none; background: var(--white); border: 1px solid var(--bone-200); box-sizing: border-box; }
+  .g2 .waffle-cap .sw.on { background: var(--terracotta-600); border-color: var(--terracotta-600); opacity: 0.88; }
+  .g2 .waffle-cap .lgap { width: 10px; }
   .g2 .catlist-wrap { padding-top: 10px; }
   .g2 .cat-kicker {
+    display: flex; align-items: center; gap: 12px;
     font-family: var(--font-sans); font-size: 14px; font-weight: 700;
     letter-spacing: 0.2em; text-transform: uppercase; color: var(--forest-500);
     margin-bottom: 4px;
   }
+  .g2 .cat-kicker::before { content: ""; width: 26px; height: 1px; background: var(--forest-500); }
   .g2 .catlist { display: flex; flex-direction: column; }
   .g2 .catlist li {
     display: flex; align-items: center; justify-content: space-between; gap: 20px;
@@ -476,9 +483,9 @@
     transform: translateY(-50%); background: var(--forest-500); opacity: 0.55;
   }
   .g3 .track .pip {
-    position: absolute; top: 50%; width: 10px; height: 10px; border-radius: 50%;
+    position: absolute; top: 50%; width: 8px; height: 8px; border-radius: 50%;
     transform: translate(-50%, -50%);
-    background: var(--white); border: 1.5px solid var(--bone-200); box-sizing: border-box;
+    background: var(--bone-200); box-sizing: border-box;
   }
   .g3 .track .pip.was {
     width: 18px; height: 18px;
@@ -487,7 +494,7 @@
   .g3 .track .pip.is {
     width: 20px; height: 20px;
     background: var(--forest-700); border: none;
-    box-shadow: 0 0 0 6px rgba(135,164,130,0.28);
+    box-shadow: 0 0 0 7px rgba(135,164,130,0.22);
   }
   .g3 .wins li.flat .track .span { display: none; }
   .g3 .wins li.flat .track .pip.was { display: none; }
@@ -702,6 +709,17 @@
 
   /* ════════════ Slide 7 — Your graduate offer ════════════ */
   .g7 .slide-frame { align-items: center; justify-content: center; text-align: center; }
+  .g7 .wash {
+    position: absolute; left: 50%; top: -340px; transform: translateX(-50%);
+    width: 1100px; height: 1100px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(135,164,130,0.16) 0%, rgba(135,164,130,0) 65%);
+    pointer-events: none;
+  }
+  .g7 .ring {
+    position: absolute; right: 150px; bottom: 150px; width: 220px; height: 220px;
+    border: 1.6px solid var(--forest-ring-50); border-radius: 50%;
+    transform: rotate(-4deg); opacity: 0.5; pointer-events: none;
+  }
   .g7 .g7-eyebrow {
     font-family: var(--font-sans); font-size: 15px; font-weight: 700;
     letter-spacing: 0.28em; text-transform: uppercase; color: var(--forest-500);
@@ -723,9 +741,14 @@
   }
   .g7 .early b { font-weight: 700; }
   .g7 .locks {
+    position: relative;
     margin-top: 52px; padding-top: 34px;
     border-top: 1px solid var(--bone-200);
-    display: grid; grid-template-columns: auto auto; gap: 96px;
+    display: grid; grid-template-columns: auto auto; gap: 110px;
+  }
+  .g7 .locks::after {
+    content: ""; position: absolute; left: 50%; top: 40px; bottom: 6px;
+    width: 1px; background: var(--bone-200);
   }
   .g7 .lock .credit-label {
     font-family: var(--font-sans); font-size: 12px; font-weight: 700;
@@ -807,7 +830,7 @@
   .g9 .photo9::after {
     content: ""; position: absolute; inset: 0; pointer-events: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)'/%3E%3C/svg%3E");
-    opacity: 0.30; mix-blend-mode: overlay;
+    opacity: 0.34; mix-blend-mode: overlay;
   }
   .g9 .photo9 .photo-tag {
     position: absolute; left: 24px; bottom: 24px;
@@ -1318,6 +1341,8 @@
 
   <!-- 7 — Your graduate offer -->
   <section class="g7" data-label="07 Your graduate offer">
+    <div class="wash"></div>
+    <div class="ring"></div>
     <div class="slide-frame">
       <div class="g7-eyebrow">Your graduate offer</div>
       <div class="price"><span data-bind="ANNUAL"></span><small> / year</small></div>

@@ -29,7 +29,7 @@
       email: 'care@beoptimal.ca',
       web: 'beoptimal.ca',
     },
-    TEMPLATE_VERSION: 'grad-deck v1.4.0',
+    TEMPLATE_VERSION: 'grad-deck v1.5.0',
   };
 
   /* §2 — the instrument */
@@ -524,9 +524,11 @@
     let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Category severity, intake versus today">`;
     svg += `<rect width="${W}" height="${H}" fill="#2C4E25"/>`;
 
-    // column headers + guides
-    svg += txt(xL, 50, 'INTAKE', 15, 700, '#87A482', 'middle', 2.5);
-    svg += txt(xR, 50, 'TODAY', 15, 700, '#87A482', 'middle', 2.5);
+    // in-card title + column headers + guides
+    svg += `<g class="sl-lab" style="--d:0.05s">` +
+      txt(56, 50, 'SHARE OF CATEGORY SYMPTOMS FLAGGED', 12.5, 700, '#87A482', 'start', 2) + '</g>';
+    svg += txt(xL, 50, 'INTAKE', 15, 700, '#F4EFE4', 'middle', 2.5, 0.85);
+    svg += txt(xR, 50, 'TODAY', 15, 700, '#F4EFE4', 'middle', 2.5, 0.85);
     svg += `<line x1="${xL}" y1="${top - 18}" x2="${xL}" y2="${top + plotH + 18}" stroke="#ffffff" stroke-opacity="0.08"/>`;
     svg += `<line x1="${xR}" y1="${top - 18}" x2="${xR}" y2="${top + plotH + 18}" stroke="#ffffff" stroke-opacity="0.08"/>`;
 
@@ -658,6 +660,10 @@
       cell.style.setProperty('--i', i);
       waffle.appendChild(cell);
     }
+    $('.g2 .waffle-cap').innerHTML =
+      `<span class="sw on"></span><span><b>${s.intakeFlagged}</b> moderate or worse</span>` +
+      `<span class="lgap"></span>` +
+      `<span class="sw"></span><span><b>${54 - s.intakeFlagged}</b> milder or clear</span>`;
     const catwrap = $('.g2 .catlist-wrap');
     const catlist = $('.g2 .catlist');
     catlist.innerHTML = '';
