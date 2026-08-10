@@ -29,7 +29,7 @@
       email: 'care@beoptimal.ca',
       web: 'beoptimal.ca',
     },
-    TEMPLATE_VERSION: 'grad-deck v1.0.0',
+    TEMPLATE_VERSION: 'grad-deck v1.1.0',
   };
 
   /* §2 — the instrument */
@@ -483,15 +483,30 @@
   function bind(name, text) {
     $$(`[data-bind="${name}"]`).forEach((el) => { el.textContent = text; });
   }
+  // Fixed template strings only — never user input.
+  function bindHTML(name, html) {
+    $$(`[data-bind-html="${name}"]`).forEach((el) => { el.innerHTML = html; });
+  }
+
+  function fillPageNumbers() {
+    const pad2 = (n) => String(n).padStart(2, '0');
+    const sections = $$('#deck > section');
+    sections.forEach((sec, i) => {
+      const el = sec.querySelector('.pagenum');
+      if (el) el.textContent = `${pad2(i + 1)} / ${pad2(sections.length)}`;
+    });
+  }
 
   function renderDeck(s) {
     // ── merge fields ──
     bind('first_name', s.first);
     bind('daterange', fmtRange(s.start, s.end));
+    bind('grad_year', s.end.slice(0, 4));
     bind('intake_quote', s.quote);
     bind('headline_win', s.win);
     bind('intake_flagged', String(s.intakeFlagged));
-    bind('delta', `${s.intakeFlagged} → ${s.finalFlagged}`);
+    bind('delta_from', String(s.intakeFlagged));
+    bind('delta_to', String(s.finalFlagged));
     bind('deadline_date', fmtDate(s.deadline));
     bind('deadline_date2', fmtDate(s.deadline));
     bind('clinic_address', CONFIG.CLINIC.address);
@@ -512,14 +527,21 @@
     bind('print_foot', `${s.first} · ${fmtDate(todayIso())} · ${CONFIG.TEMPLATE_VERSION}`);
 
     // ── slide 2 ──
-    bind('s2_header', s.thenTest ? 'Looking back to when you started' : 'Where you started');
-    bind('s2_attr', s.thenTest ? '— you, thinking back to the start' : '— you, at your first visit');
-    $('.g2 .stat-cap').textContent = s.thenTest
-      ? 'symptoms you rated moderate or worse, looking back'
-      : 'symptoms rated moderate or worse';
+    bind('s2_eyebrow', 'Where you started');
+    bindHTML('s2_display', s.thenTest
+      ? 'Looking back to when you <span class="italic ring-word">started</span>.'
+      : 'It started with <span class="italic ring-word">your words</span>.');
+    bind('s2_attr', s.thenTest ? 'you, thinking back to the start' : 'you, at your first visit');
+    bind('s2_statcap', s.thenTest ? 'Symptoms moderate or worse, looking back' : 'Symptoms moderate or worse');
+    const catwrap = $('.g2 .catlist-wrap');
     const catlist = $('.g2 .catlist');
     catlist.innerHTML = '';
-    if (!s.thenTest) {
+    catwrap.querySelector('.cat-kicker')?.remove();
+    if (!s.thenTest && s.categories.length) {
+      const kicker = document.createElement('div');
+      kicker.className = 'cat-kicker';
+      kicker.textContent = 'Top categories at intake';
+      catwrap.insertBefore(kicker, catlist);
       s.categories.forEach((c) => {
         const band = sevBand(c.intake);
         const li = document.createElement('li');
@@ -532,7 +554,10 @@
     // ── slide 3 (⭐ + §5.4 Modest variants) ──
     const modest = s.mode === 'modest';
     $('.g3').classList.toggle('modest', modest);
-    bind('s3_headline', modest ? "Your progress — and what's next" : 'Where you are now');
+    bindHTML('s3_headline', modest
+      ? 'Your progress — and <span class="italic">what&rsquo;s next</span>.'
+      : 'Where you are <span class="italic ring-word">now</span>.');
+    bind('ds_label', 'Symptoms moderate or worse');
     const winsUl = $('.g3 .wins');
     winsUl.innerHTML = '';
     s.wins.forEach((w) => {
@@ -550,7 +575,7 @@
     if (skipS4 && inDom) slideHormone.remove();
     if (!skipS4) {
       if (!inDom) deck.insertBefore(slideHormone, slideHormoneAnchor.nextSibling);
-      const bars = $('.g4 .bars');
+      const bars = $('.g4 .p-body');
       bars.innerHTML = '';
       s.categories.forEach((c) => {
         const bi = sevBand(c.intake), bf = sevBand(c.final);
@@ -586,6 +611,7 @@
      View switching
      ════════════════════════════════════════════════════════════════════ */
   function showDeck() {
+    fillPageNumbers();
     prep.hidden = true;
     navzones.hidden = false;
     deck.classList.add('ready');
