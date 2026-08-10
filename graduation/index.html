@@ -388,31 +388,31 @@
   }
   .g2 .quote-panel .attr::before { content: ""; width: 28px; height: 1px; background: var(--grey-500); opacity: 0.6; }
 
-  .g2 .scol { display: flex; flex-direction: column; min-height: 0; }
-  .g2 .stat-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 40px; }
+  .g2 .scol { display: flex; flex-direction: column; justify-content: space-between; min-height: 0; gap: 20px; }
+  .g2 .stat-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 32px; }
   .g2 .stat-num {
-    font-family: var(--font-display); font-size: 132px; line-height: 0.86; letter-spacing: -0.04em;
+    font-family: var(--font-display); font-size: 154px; line-height: 0.86; letter-spacing: -0.04em;
     color: var(--forest-700);
   }
-  .g2 .stat-num small { font-family: var(--font-display); font-size: 48px; color: var(--grey-500); letter-spacing: -0.02em; }
+  .g2 .stat-num small { font-family: var(--font-display); font-size: 54px; color: var(--grey-500); letter-spacing: -0.02em; }
   .g2 .stat-cap {
-    margin-top: 14px;
-    font-family: var(--font-sans); font-weight: 700; font-size: 16px;
+    margin-top: 16px;
+    font-family: var(--font-sans); font-weight: 700; font-size: 17px;
     letter-spacing: 0.18em; text-transform: uppercase; color: var(--forest-900);
   }
   /* waffle — one cell per questionnaire symptom */
-  .g2 .waffle { display: grid; grid-template-columns: repeat(9, 26px); gap: 7px; flex: none; padding-top: 6px; }
+  .g2 .waffle { display: grid; grid-template-columns: repeat(9, 31px); gap: 8px; flex: none; padding-top: 4px; }
   .g2 .waffle i {
-    width: 26px; height: 26px; border-radius: 6px; display: block;
+    width: 31px; height: 31px; border-radius: 7px; display: block;
     background: var(--white); border: 1px solid var(--bone-200);
     box-sizing: border-box;
   }
   .g2 .waffle i.on { background: var(--terracotta-600); border-color: var(--terracotta-600); opacity: 0.88; }
   .g2 .waffle-cap {
-    margin-top: 10px; text-align: right;
-    font-family: var(--font-sans); font-size: 14px; color: var(--grey-500);
+    margin-top: 12px; text-align: right;
+    font-family: var(--font-sans); font-size: 14.5px; color: var(--grey-500);
   }
-  .g2 .catlist-wrap { margin-top: auto; padding-top: 26px; }
+  .g2 .catlist-wrap { padding-top: 10px; }
   .g2 .cat-kicker {
     font-family: var(--font-sans); font-size: 14px; font-weight: 700;
     letter-spacing: 0.2em; text-transform: uppercase; color: var(--forest-500);
@@ -421,12 +421,12 @@
   .g2 .catlist { display: flex; flex-direction: column; }
   .g2 .catlist li {
     display: flex; align-items: center; justify-content: space-between; gap: 20px;
-    padding: 15px 0; border-bottom: 1px solid var(--border-hair);
+    padding: 17px 0; border-bottom: 1px solid var(--border-hair);
   }
   .g2 .catlist li:last-child { border-bottom: 0; padding-bottom: 0; }
-  .g2 .catlist .cname { font-family: var(--font-display); font-size: 27px; letter-spacing: -0.02em; color: var(--grey-800); }
+  .g2 .catlist .cname { font-family: var(--font-display); font-size: 29px; letter-spacing: -0.02em; color: var(--grey-800); }
   .g2 .catlist .cval { display: flex; align-items: center; gap: 16px; }
-  .g2 .catlist .cpct { font-size: 24px; font-weight: 600; color: var(--grey-700); font-variant-numeric: tabular-nums; }
+  .g2 .catlist .cpct { font-size: 25px; font-weight: 600; color: var(--grey-700); font-variant-numeric: tabular-nums; }
 
   .g-sev { display: inline-flex; align-items: center; padding: 6px 16px; border-radius: 999px; font-size: 16px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; }
   .g-sev.high     { background: var(--sev-high-bg);     color: var(--sev-high); }
@@ -451,22 +451,22 @@
   .g3.modest .ds-label { color: var(--grey-500); }
   .g3 .wins-head {
     margin-top: 26px;
-    display: grid; grid-template-columns: 1fr 430px 330px; gap: 50px; align-items: end;
+    display: grid; grid-template-columns: 470px 1fr; gap: 70px; align-items: end;
   }
   .g3 .wins-head .wh-scale {
     display: flex; justify-content: space-between;
-    font-family: var(--font-sans); font-size: 12px; font-weight: 700;
-    letter-spacing: 0.14em; text-transform: uppercase; color: var(--grey-500);
+    font-family: var(--font-sans); font-size: 12.5px; font-weight: 700;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--grey-500);
   }
-  .g3 .wins { flex: 1; display: flex; flex-direction: column; justify-content: center; margin-top: 8px; }
+  .g3 .wins { flex: 1; display: flex; flex-direction: column; justify-content: center; margin-top: 6px; }
   .g3 .wins li {
-    display: grid; grid-template-columns: 1fr 430px 330px; gap: 50px; align-items: center;
-    padding: 21px 0; border-top: 1px solid var(--border-hair);
+    display: grid; grid-template-columns: 470px 1fr; gap: 70px; align-items: center;
+    padding: 22px 0; border-top: 1px solid var(--border-hair);
   }
   .g3 .wins li:last-child { border-bottom: 1px solid var(--border-hair); }
-  .g3 .wins .sname { font-family: var(--font-display); font-size: 40px; letter-spacing: -0.025em; color: var(--forest-700); }
+  .g3 .wins .sname { font-family: var(--font-display); font-size: 40px; letter-spacing: -0.025em; color: var(--forest-700); line-height: 1.02; }
   /* 0–5 rating track — the questionnaire scale drawn as dots */
-  .g3 .track { position: relative; height: 24px; }
+  .g3 .track { position: relative; height: 28px; }
   .g3 .track .rail {
     position: absolute; left: 9px; right: 9px; top: 50%; height: 2px;
     transform: translateY(-50%); background: var(--bone-200);
@@ -492,10 +492,11 @@
   .g3 .wins li.flat .track .span { display: none; }
   .g3 .wins li.flat .track .pip.was { display: none; }
   .g3 .wins li.flat .track .pip.is { background: var(--grey-500); box-shadow: none; }
-  .g3 .wins .move { display: flex; align-items: baseline; gap: 14px; white-space: nowrap; justify-content: flex-end; }
-  .g3 .wins .from { font-size: 26px; color: var(--grey-500); }
-  .g3 .wins .arrow { color: var(--forest-500); font-size: 24px; }
-  .g3 .wins .to { font-size: 28px; color: var(--forest-900); font-weight: 700; letter-spacing: -0.01em; }
+  .g3 .wins .scell { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .g3 .wins .move { display: flex; align-items: baseline; gap: 12px; white-space: nowrap; }
+  .g3 .wins .from { font-size: 21px; color: var(--grey-500); }
+  .g3 .wins .arrow { color: var(--forest-500); font-size: 19px; }
+  .g3 .wins .to { font-size: 21px; color: var(--forest-900); font-weight: 700; letter-spacing: -0.01em; }
   .g3 .wins li.flat .sname { color: var(--grey-500); }
   .g3 .wins li.flat .from, .g3 .wins li.flat .to { color: var(--grey-500); font-weight: 400; }
   .g3 .wins li.flat .arrow { color: var(--grey-300); }
@@ -565,23 +566,44 @@
 
   /* ════════════ Slide 5 — What made this work ════════════ */
   .g5 .pillars { margin-top: 44px; flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-content: center; }
-  .g5 .pillar { min-height: 300px; }
   .g5 .pillar {
+    position: relative; overflow: hidden; min-height: 310px;
     background: var(--white); border: 1px solid var(--forest-700); border-radius: 8px;
     padding: 36px 36px 34px;
     display: flex; flex-direction: column; gap: 18px;
   }
-  .g5 .pillar .num { font-family: var(--font-display); font-size: 58px; line-height: 1; color: var(--forest-500); letter-spacing: -0.02em; }
-  .g5 .pillar h3 { font-family: var(--font-display); font-size: 36px; color: var(--forest-700); letter-spacing: -0.03em; line-height: 1.05; }
-  .g5 .pillar p { font-family: var(--font-sans); font-size: 22px; color: var(--grey-700); line-height: 1.45; }
-  .g5 .pillar h3 { max-width: 360px; }
+  .g5 .pillar .ghost {
+    position: absolute; top: -34px; right: 10px;
+    font-family: var(--font-display); font-size: 190px; line-height: 1;
+    color: var(--sage-25); letter-spacing: -0.04em; pointer-events: none;
+    font-style: italic;
+  }
+  .g5 .pillar .icon {
+    width: 58px; height: 58px; border-radius: 50%; flex: none;
+    background: var(--sage-25);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .g5 .pillar .icon svg { width: 27px; height: 27px; color: var(--forest-700); }
+  .g5 .pillar h3 { font-family: var(--font-display); font-size: 36px; color: var(--forest-700); letter-spacing: -0.03em; line-height: 1.05; max-width: 340px; margin-top: 6px; position: relative; }
+  .g5 .pillar p { font-family: var(--font-sans); font-size: 22px; color: var(--grey-700); line-height: 1.45; position: relative; }
   .g5 .bridge {
+    position: relative; overflow: hidden;
     margin-top: 36px;
     display: flex; align-items: flex-start; gap: 24px;
     padding: 34px 40px;
     background: var(--white); border: 1px solid var(--bone-200);
     border-left: 5px solid var(--forest-500); border-radius: 10px;
     box-shadow: 0 1px 0 rgba(28,49,24,0.04);
+  }
+  .g5 .bridge::before {
+    content: ""; position: absolute; right: -110px; top: -110px;
+    width: 300px; height: 300px; border-radius: 50%;
+    border: 1.6px solid var(--forest-ring-50); opacity: 0.5; pointer-events: none;
+  }
+  .g5 .bridge::after {
+    content: ""; position: absolute; right: -50px; top: -50px;
+    width: 170px; height: 170px; border-radius: 50%;
+    border: 1.6px solid var(--forest-ring-50); opacity: 0.35; pointer-events: none;
   }
   .g5 .bridge .b-tag {
     font-family: var(--font-sans); font-size: 14px; font-weight: 700;
@@ -602,7 +624,7 @@
     box-shadow: 0 1px 0 rgba(28,49,24,0.04);
   }
   .g6 .path.hero { border: 1px solid var(--forest-700); }
-  .g6 .path.alt  { border: 1px solid var(--bone-200); }
+  .g6 .path.alt  { border: 1px solid var(--bone-200); align-self: start; }
   .g6 .p-head {
     padding: 20px 36px;
     display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
@@ -653,13 +675,13 @@
     font-family: var(--font-sans); font-size: 17px; line-height: 1; color: var(--grey-800);
     padding: 12px 20px; background: var(--cream-50); border-radius: 999px; white-space: nowrap;
   }
-  .g6 .ppv { display: flex; flex-direction: column; flex: 1; justify-content: center; }
-  .g6 .ppv li { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; padding: 26px 0; border-bottom: 1px solid var(--bone-200); }
+  .g6 .ppv { display: flex; flex-direction: column; }
+  .g6 .ppv li { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; padding: 22px 0; border-bottom: 1px solid var(--bone-200); }
+  .g6 .ppv li:first-child { padding-top: 4px; }
   .g6 .ppv .vname { font-family: var(--font-display); font-size: 28px; letter-spacing: -0.02em; color: var(--forest-700); }
   .g6 .ppv .vsub { display: block; font-family: var(--font-sans); font-size: 15px; color: var(--grey-500); margin-top: 4px; }
   .g6 .ppv .vprice { font-family: var(--font-sans); font-size: 30px; font-weight: 700; color: var(--forest-900); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .g6 .path.alt .p-body .pnote:last-child { margin-top: auto; padding-top: 18px; border-top: 1px solid var(--bone-200); }
-  .g6 .pnote { font-family: var(--font-sans); font-size: 17px; color: var(--grey-500); line-height: 1.5; margin-top: 18px; }
+  .g6 .pnote { font-family: var(--font-sans); font-size: 17px; color: var(--grey-500); line-height: 1.5; margin-top: 16px; }
   .g6 .pprice { font-family: var(--font-display); font-size: 64px; letter-spacing: -0.03em; color: var(--forest-700); line-height: 1; }
   .g6 .pprice small { font-family: var(--font-sans); font-size: 22px; color: var(--grey-500); letter-spacing: 0; }
   .g6 .freeline {
@@ -757,19 +779,48 @@
   }
   .g8 .cardwrap figcaption .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--forest-500); }
 
-  /* ════════════ Slide 9 — Thank you (dark closer) ════════════ */
+  /* ════════════ Slide 9 — Thank you (dark closer with candid photo) ════════════ */
   .g9 { background: var(--forest-700); color: var(--cream-50); }
-  .g9 .slide-frame { padding: 100px 120px 130px; }
+  .g9 .slide-frame { padding: 96px 120px 130px; }
+  .g9 .cols9 { flex: 1; min-height: 0; display: grid; grid-template-columns: 1.25fr 1fr; gap: 90px; align-items: stretch; }
+  .g9 .left9 { display: flex; flex-direction: column; min-height: 0; }
   .g9 .eyebrow { color: var(--forest-500); }
   .g9 h1 {
-    font-family: var(--font-display); font-size: 100px; line-height: 1.0;
+    font-family: var(--font-display); font-size: 88px; line-height: 1.0;
     letter-spacing: -0.04em; color: var(--cream-50); font-weight: 400;
-    max-width: 1440px; margin-top: 26px;
+    margin-top: 26px;
   }
   .g9 .lead-dark {
     font-family: var(--font-sans); font-size: 32px; color: rgba(255,255,255,0.85);
     margin-top: 30px; letter-spacing: -0.01em;
   }
+  .g9 .photo9 {
+    position: relative; border-radius: 24px; overflow: hidden;
+    background: var(--forest-grad-end);
+  }
+  .g9 .photo9 img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; object-position: 38% center;
+    filter: saturate(0.92) contrast(1.02);
+  }
+  /* film grain — inline SVG noise, no network */
+  .g9 .photo9::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.30; mix-blend-mode: overlay;
+  }
+  .g9 .photo9 .photo-tag {
+    position: absolute; left: 24px; bottom: 24px;
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 8px 16px;
+    background: rgba(15,35,18,0.55);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(244,239,228,0.28);
+    border-radius: 999px;
+    font-family: var(--font-sans); font-size: 12px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase; color: rgba(244,239,228,0.92);
+  }
+  .g9 .photo9 .photo-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--forest-500); }
   .g9 .contact-bar { margin-top: auto; display: flex; flex-direction: column; gap: 12px; }
   .g9 .contact-row {
     display: flex; align-items: center; gap: 18px;
@@ -854,7 +905,7 @@
     <section class="pcard" id="fs-patient">
       <p class="kicker">Section 01</p>
       <h2>Patient &amp; framing</h2>
-      <p class="hint">From the chart and Chantelle's final-visit note.</p>
+      <p class="hint">From the chart and the provider's final-visit note.</p>
       <div class="fgrid">
         <div class="f" style="grid-column: span 4;">
           <label for="f-first">First name</label>
@@ -1022,7 +1073,7 @@
         <div class="mid">
           <div class="g1-eyebrow">Foundation Program · <span data-bind="daterange"></span></div>
           <h1>Congratulations, <span class="italic" data-bind="first_name"></span>.</h1>
-          <p class="sub">Over the past 12 weeks, you and Chantelle built a treatment plan that's yours.</p>
+          <p class="sub">Over the past 12 weeks, you and Optimal built a treatment plan that's yours.</p>
         </div>
         <div class="foot">
           <div class="credits">
@@ -1032,7 +1083,7 @@
             </div>
             <div>
               <div class="credit-label">Guided by</div>
-              <div class="credit-value">Chantelle, NP</div>
+              <div class="credit-value">Optimal</div>
             </div>
             <div>
               <div class="credit-label">Today</div>
@@ -1042,7 +1093,7 @@
         </div>
       </div>
       <div class="photo">
-        <img src="../assets/hero-woman.jpg" alt="Woman, mid-life, serene">
+        <img src="../assets/images/graduate-hero.jpg" alt="Woman, mid-life, smiling warmly" style="object-position: 62% center;">
         <div class="photo-tag"><span class="dot"></span>Foundation Graduate</div>
       </div>
     </div>
@@ -1106,11 +1157,10 @@
       <div class="wins-head">
         <span></span>
         <span class="wh-scale"><span>Not present</span><span>Very severe</span></span>
-        <span></span>
       </div>
       <ul class="wins" data-bind-list="s3_wins"></ul>
       <div class="callout">
-        <div class="co-tag">Chantelle's note</div>
+        <div class="co-tag">From your provider</div>
         <div class="co-text">&ldquo;<span data-bind="headline_win"></span>&rdquo;</div>
       </div>
     </div>
@@ -1147,17 +1197,20 @@
       </div>
       <div class="pillars">
         <div class="pillar">
-          <div class="num">01</div>
+          <div class="ghost">01</div>
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></div>
           <h3>The right regimen, found through titration</h3>
           <p>Doses adjusted visit over visit until the plan fit you — not a template.</p>
         </div>
         <div class="pillar">
-          <div class="num">02</div>
+          <div class="ghost">02</div>
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
           <h3>Regular monitoring</h3>
           <p>Symptoms, labs, and body composition — tracked at every step.</p>
         </div>
         <div class="pillar">
-          <div class="num">03</div>
+          <div class="ghost">03</div>
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
           <h3>A team that knows your history</h3>
           <p>Your chart, your patterns, your preferences — already understood.</p>
         </div>
@@ -1237,7 +1290,7 @@
         <div class="path hero">
           <div class="p-head"><h3>Optimal Women's</h3><span class="ptag">Membership</span></div>
           <div class="p-body">
-            <div class="rec">Chantelle's recommendation for you</div>
+            <div class="rec">Your provider's recommendation</div>
             <div class="pprice"><span data-bind="WOMENS_MONTHLY"></span><small> / month</small></div>
             <p class="pnote">The full longevity program — everything in Ongoing Care, plus deeper testing and proactive optimization through the year.</p>
             <div class="freeline">First month free if you upgrade this week.</div>
@@ -1301,7 +1354,7 @@
             <li>Build your <em>Your Optimal Year</em> card together</li>
             <li>Book your Mid-Year and Annual visits</li>
             <li>Fresh InBody scan</li>
-            <li>Your concerns list for Chantelle</li>
+            <li>Your priorities list for your provider</li>
           </ul>
           <p class="booknow">We can book it right now — most patients schedule within 2–3 weeks.</p>
           <div class="held" id="held-slot-box">
@@ -1353,22 +1406,30 @@
   <!-- 9 — Thank you (dark closer) -->
   <section class="g9 on-dark" data-label="09 Thank you">
     <div class="slide-frame">
-      <div class="eyebrow">Thank you</div>
-      <h1>We're proud of what you accomplished.</h1>
-      <p class="lead-dark">Whatever you choose, we're here.</p>
-      <div class="contact-bar">
-        <div class="contact-row">
-          <span data-bind="clinic_email"></span>
-          <span class="dot"></span>
-          <span data-bind="clinic_web"></span>
+      <div class="cols9">
+        <div class="left9">
+          <div class="eyebrow">Thank you</div>
+          <h1>We're proud of what you accomplished.</h1>
+          <p class="lead-dark">Whatever you choose, we're here.</p>
+          <div class="contact-bar">
+            <div class="contact-row">
+              <span data-bind="clinic_email"></span>
+              <span class="dot"></span>
+              <span data-bind="clinic_web"></span>
+            </div>
+            <div class="contact-row">
+              <span data-bind="clinic_address"></span>
+            </div>
+          </div>
+          <div class="footer-note">
+            <div class="fn-tag">No pressure</div>
+            <div>Cheryl will check in with you on <strong data-bind="deadline_date2"></strong> if you'd like time to decide.</div>
+          </div>
         </div>
-        <div class="contact-row">
-          <span data-bind="clinic_address"></span>
+        <div class="photo9">
+          <img src="../assets/images/thankyou-candid.jpg" alt="Woman laughing, candid street portrait">
+          <div class="photo-tag"><span class="dot"></span>Here's to your year</div>
         </div>
-      </div>
-      <div class="footer-note">
-        <div class="fn-tag">No pressure</div>
-        <div>Cheryl will check in with you on <strong data-bind="deadline_date2"></strong> if you'd like time to decide.</div>
       </div>
     </div>
     <div class="footer-bar">

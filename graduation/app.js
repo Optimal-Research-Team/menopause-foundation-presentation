@@ -29,7 +29,7 @@
       email: 'care@beoptimal.ca',
       web: 'beoptimal.ca',
     },
-    TEMPLATE_VERSION: 'grad-deck v1.3.0',
+    TEMPLATE_VERSION: 'grad-deck v1.4.0',
   };
 
   /* §2 — the instrument */
@@ -702,9 +702,11 @@
       }
       if (w.intake !== w.final) track += `<span class="pip was" style="left:${pipLeft(w.intake)}"></span>`;
       track += `<span class="pip is" style="left:${pipLeft(w.final)}"></span></span>`;
-      li.innerHTML = `<span class="sname">${w.name}</span>
-        ${track}
-        <span class="move"><span class="from">${RATING_LABELS[w.intake]}</span><span class="arrow">→</span><span class="to">${RATING_LABELS[w.final]}</span></span>`;
+      li.innerHTML = `<div class="scell">
+          <span class="sname">${w.name}</span>
+          <span class="move"><span class="from">${RATING_LABELS[w.intake]}</span><span class="arrow">→</span><span class="to">${RATING_LABELS[w.final]}</span></span>
+        </div>
+        ${track}`;
       winsUl.appendChild(li);
     });
 
