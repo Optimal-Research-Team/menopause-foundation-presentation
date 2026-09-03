@@ -1172,119 +1172,187 @@
     deck-stage > section.in-view .rv { animation-duration: 0.01s; animation-delay: 0s; }
     .shmap .hormone-map-svg path { animation-duration: 0.01s; animation-delay: 0s !important; }
     .shmap.in-view .legend .lg-row { animation-duration: 0.01s; animation-delay: 0s !important; }
+    .shold.in-view .fl-seg, .shold.in-view .fl-node,
+    .shold.in-view .fl-tag, .shold.in-view .fl-refund { animation-duration: 0.01s !important; animation-delay: 0s !important; }
   }
 
-  /* ================= Slide 8 — Bloodwork timing reminder ================= */
+  /* ================= Slide — Bloodwork timing reminder =================
+     Gradient timeline: a single track running forest → amber, with marker
+     pills sitting on the line and refined cards beneath. */
   .stime .tl-wrap { margin-top: 24px; flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; }
-  .stime .tl-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
-  .stime .tl-step { text-align: center; display: flex; flex-direction: column; }
-
-  /* Track: hairline through each column, dot at centre */
-  .stime .tl-mark { position: relative; height: 22px; margin-bottom: 24px; }
-  .stime .tl-mark::before {
-    content: ""; position: absolute; top: 10px; left: -16px; right: -16px; height: 2px;
-    background: var(--bone-200, #E8E1CC);
+  .stime .tl-row { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+  .stime .tl-line {
+    position: absolute; left: 12.5%; right: 12.5%; top: 17px; height: 3px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #2C4E25 0%, #6B8A4A 58%, #A66B1F 100%);
   }
-  .stime .tl-step:first-child .tl-mark::before { left: 50%; }
-  .stime .tl-step:last-child .tl-mark::before { right: 50%; }
-  .stime .tl-mark .dot {
-    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-    width: 18px; height: 18px; border-radius: 50%;
-    background: var(--forest-700); border: 4px solid var(--cream-50);
-    box-shadow: 0 0 0 1.5px var(--bone-200, #E8E1CC);
-  }
-  .stime .tl-step.fee .tl-mark .dot { background: #A66B1F; }
-
-  .stime .tl-when {
-    font-family: var(--font-sans); font-size: 15px; font-weight: 700;
-    letter-spacing: 0.2em; text-transform: uppercase; color: var(--forest-500, #6B8A4A);
-    margin-bottom: 14px;
-  }
-  .stime .tl-step.fee .tl-when { color: #A66B1F; }
-  .stime .tl-card {
-    background: var(--white); border: 1px solid var(--bone-300, #D9D2BD); border-radius: 12px;
-    padding: 30px 28px; flex: 1;
+  .stime .tl-step { display: flex; flex-direction: column; align-items: center; }
+  .stime .tl-pill {
+    position: relative; z-index: 1;
+    display: inline-flex; align-items: center; gap: 9px;
+    background: var(--cream-50); border: 1px solid var(--bone-300, #D9D2BD);
+    border-radius: 999px; padding: 8px 18px;
+    font-family: var(--font-sans); font-size: 13px; font-weight: 700;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--forest-700);
     box-shadow: 0 1px 0 rgba(28,49,24,0.04);
   }
+  .stime .tl-pill::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--forest-700); }
+  .stime .tl-step.fee .tl-pill { color: #A66B1F; border-color: rgba(166,107,31,0.5); }
+  .stime .tl-step.fee .tl-pill::before { background: #A66B1F; }
+  .stime .tl-card {
+    margin-top: 30px; width: 100%;
+    background: var(--white); border: 1px solid var(--bone-300, #D9D2BD); border-radius: 14px;
+    padding: 32px 28px; flex: 1; text-align: center;
+    box-shadow: 0 2px 14px rgba(28,49,24,0.05);
+  }
   .stime .tl-card h4 {
-    font-family: var(--font-display); font-size: 30px; line-height: 1.05;
+    font-family: var(--font-display); font-size: 31px; line-height: 1.05;
     letter-spacing: -0.02em; color: var(--forest-700); margin-bottom: 12px;
   }
-  .stime .tl-card p { font-family: var(--font-sans); font-size: 19px; line-height: 1.45; color: var(--grey-600); }
+  .stime .tl-card p { font-family: var(--font-sans); font-size: 18.5px; line-height: 1.45; color: var(--grey-600); }
   .stime .tl-step.fee .tl-card { background: var(--forest-700); border-color: var(--forest-700); }
   .stime .tl-step.fee .tl-card h4 { color: var(--cream-50); }
   .stime .tl-step.fee .tl-card p { color: rgba(255,252,247,0.84); }
 
   .stime .tl-note {
-    margin-top: 42px; text-align: center;
-    font-family: var(--font-sans); font-size: 21px; line-height: 1.45; color: var(--grey-600);
+    margin-top: 44px; text-align: center;
+    display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap;
+    font-family: var(--font-sans); font-size: 20px; line-height: 1.45; color: var(--grey-600);
   }
-  .stime .tl-note b { color: var(--forest-700); font-weight: 600; }
-
-  /* ================= Slide — Meet your care team ================= */
-  .steam .team-row { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 48px; flex: 1; min-height: 0; }
-  .steam .team-card {
-    background: var(--white); border: 1px solid var(--bone-300, #D9D2BD); border-radius: 14px;
-    overflow: hidden; display: flex; flex-direction: column;
-    box-shadow: 0 1px 0 rgba(28,49,24,0.04);
-  }
-  .steam .team-photo { height: 360px; overflow: hidden; flex-shrink: 0; background: var(--bone-100); }
-  .steam .team-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .steam .team-card:nth-child(1) .team-photo img { object-position: 50% 40%; }
-  .steam .team-card:nth-child(2) .team-photo img { object-position: 50% 28%; }
-  .steam .team-body { padding: 30px 36px 32px; display: flex; flex-direction: column; }
-  .steam .team-name {
-    font-family: var(--font-display); font-size: 38px; line-height: 1.05;
-    letter-spacing: -0.02em; color: var(--grey-800); margin-bottom: 8px;
-  }
-  .steam .team-role {
-    font-family: var(--font-sans); font-size: 15px; font-weight: 700;
-    letter-spacing: 0.2em; text-transform: uppercase; color: var(--forest-500, #6B8A4A);
-    margin-bottom: 16px;
-  }
-  .steam .team-bio { font-family: var(--font-sans); font-size: 20px; line-height: 1.5; color: var(--grey-600); }
-
-  /* ================= Slide — Lab results that pause the program ================= */
-  .shold .fl-wrap { margin-top: 16px; flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; }
-  .shold .fl-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 44px; }
-  .shold .fl-step { position: relative; display: flex; flex-direction: column; }
-  /* Arrow connectors between cards */
-  .shold .fl-step:not(:last-child)::after {
-    content: "→"; position: absolute; top: 50%; right: -36px; transform: translateY(-50%);
-    font-family: var(--font-sans); font-size: 26px; color: var(--forest-500, #6B8A4A);
-  }
-  .shold .fl-num {
-    font-family: var(--font-sans); font-size: 15px; font-weight: 700;
-    letter-spacing: 0.2em; text-transform: uppercase; color: var(--forest-500, #6B8A4A);
-    margin-bottom: 12px;
-  }
-  .shold .fl-card {
-    background: var(--white); border: 1px solid var(--bone-300, #D9D2BD); border-radius: 12px;
-    padding: 28px 26px; flex: 1;
-    box-shadow: 0 1px 0 rgba(28,49,24,0.04);
-  }
-  .shold .fl-card h4 {
-    font-family: var(--font-display); font-size: 28px; line-height: 1.08;
-    letter-spacing: -0.02em; color: var(--forest-700); margin-bottom: 12px;
-  }
-  .shold .fl-card p { font-family: var(--font-sans); font-size: 18px; line-height: 1.45; color: var(--grey-600); }
-  .shold .fl-step.hold .fl-card { background: var(--forest-700); border-color: var(--forest-700); }
-  .shold .fl-step.hold .fl-card h4 { color: var(--cream-50); }
-  .shold .fl-step.hold .fl-card p { color: rgba(255,252,247,0.84); }
-
-  .shold .fl-refund {
-    margin-top: 40px;
-    display: flex; align-items: baseline; gap: 16px;
-    background: var(--sage-25); border: 1px solid rgba(135,164,130,0.45); border-radius: 12px;
-    padding: 24px 32px;
-  }
-  .shold .fl-refund .fr-label {
-    font-family: var(--font-sans); font-size: 14px; font-weight: 700;
-    letter-spacing: 0.18em; text-transform: uppercase; color: var(--forest-700);
+  .stime .tl-tel {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1.5px solid var(--forest-700); border-radius: 999px;
+    padding: 7px 18px; font-weight: 600; font-size: 18px; color: var(--forest-700);
     white-space: nowrap;
   }
-  .shold .fl-refund p { font-family: var(--font-sans); font-size: 19px; line-height: 1.5; color: var(--grey-800); }
+
+  /* ================= Slide — Meet your care team =================
+     Photos are shown complete (no cropping) at a shared width; the card
+     is designed around each image's natural aspect ratio. */
+  .steam .team-row { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 48px; flex: 1; min-height: 0; align-items: stretch; }
+  .steam .team-card {
+    background: var(--white); border: 1px solid var(--bone-300, #D9D2BD); border-radius: 14px;
+    padding: 40px; display: flex; gap: 40px; align-items: center;
+    box-shadow: 0 1px 0 rgba(28,49,24,0.04);
+  }
+  .steam .team-photo { flex-shrink: 0; }
+  .steam .team-photo img { width: 340px; height: auto; display: block; border-radius: 12px; }
+  .steam .team-body { display: flex; flex-direction: column; min-width: 0; }
+  .steam .team-name {
+    font-family: var(--font-display); font-size: 37px; line-height: 1.05;
+    letter-spacing: -0.02em; color: var(--grey-800); margin-bottom: 10px;
+  }
+  .steam .team-role {
+    font-family: var(--font-sans); font-size: 14px; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--forest-500, #6B8A4A);
+    margin-bottom: 22px;
+  }
+  .steam .team-points { display: flex; flex-direction: column; gap: 14px; }
+  .steam .team-points li {
+    font-family: var(--font-sans); font-size: 19px; line-height: 1.35; color: var(--grey-600);
+    padding-left: 30px; position: relative;
+  }
+  .steam .team-points li::before {
+    content: ""; position: absolute; left: 0; top: 9px;
+    width: 14px; height: 8px;
+    border-left: 2px solid var(--forest-500, #6B8A4A); border-bottom: 2px solid var(--forest-500, #6B8A4A);
+    transform: rotate(-45deg);
+  }
+
+  /* ================= Slide — Lab results that pause the program =================
+     Swimlane routing diagram: the care path flows through "Your Foundation
+     Program", detours into the "Your Family Physician" lane at an incidental
+     finding, and returns. Path segments draw in sequence, nodes pop, labels
+     rise — replayed on every visit (same choreography family as the
+     hormone-map slide). At rest (print/export) everything is fully drawn. */
+  .shold .fl-wrap { margin-top: 8px; flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; }
+  .shold .fl-info { position: relative; width: 1680px; height: 570px; }
+  .shold .fl-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+  /* Path + nodes (SVG) */
+  .shold .fl-seg { fill: none; stroke: var(--forest-700); stroke-width: 2.5; }
+  .shold .fl-seg.faint { stroke: var(--forest-500); stroke-opacity: 0.55; }
+  .shold .fl-node { transform-box: fill-box; transform-origin: center; }
+
+  /* Typography-anchored step labels (HTML overlay) */
+  .shold .fl-tag { position: absolute; }
+  .shold .fl-tag .k {
+    font-family: var(--font-sans); font-size: 13px; font-weight: 700;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--forest-500, #6B8A4A);
+    margin-bottom: 8px;
+  }
+  .shold .fl-tag h4 {
+    font-family: var(--font-display); font-size: 27px; line-height: 1.05;
+    letter-spacing: -0.02em; color: var(--grey-800); margin-bottom: 8px;
+  }
+  .shold .fl-tag p { font-family: var(--font-sans); font-size: 16.5px; line-height: 1.4; color: var(--grey-500); }
+  .shold .fl-tag.centered { text-align: center; }
+
+  /* Hold step: lives in the FP lane, gets the amber accent */
+  .shold .fl-tag.hold .k { color: #A66B1F; }
+  .shold .fl-hold-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--font-sans); font-size: 12px; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase; color: #A66B1F;
+    border: 1.5px solid rgba(166,107,31,0.55); border-radius: 999px;
+    padding: 5px 12px; margin-bottom: 12px;
+  }
+  .shold .fl-hold-chip::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #A66B1F; }
+
+  /* Refund aside inside the FP lane */
+  .shold .fl-refund { position: absolute; border-left: 1.5px dashed rgba(118,115,109,0.5); padding-left: 28px; }
+  .shold .fl-refund .k {
+    font-family: var(--font-sans); font-size: 13px; font-weight: 700;
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--forest-700);
+    margin-bottom: 8px;
+  }
+  .shold .fl-refund p { font-family: var(--font-sans); font-size: 16.5px; line-height: 1.45; color: var(--grey-600); }
   .shold .fl-refund b { color: var(--forest-700); font-weight: 600; }
+
+  /* ── Choreography (only while the slide is active) ── */
+  @keyframes fl-draw { to { stroke-dashoffset: 0; } }
+  @keyframes fl-pop {
+    from { transform: scale(0); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+  .shold.in-view .fl-seg { stroke-dasharray: 100; stroke-dashoffset: 100; animation: fl-draw 0.5s ease both; }
+  .shold.in-view .fl-seg.s-a { animation-delay: 0.05s; }
+  .shold.in-view .fl-seg.s-b { animation-delay: 0.45s; }
+  .shold.in-view .fl-seg.s-c { animation-delay: 0.90s; }
+  .shold.in-view .fl-seg.s-d { animation-delay: 1.50s; }
+  .shold.in-view .fl-seg.s-e { animation-delay: 2.05s; }
+  .shold.in-view .fl-node { animation: fl-pop 0.4s cubic-bezier(.34,1.56,.64,1) both; }
+  .shold.in-view .fl-node.n-1 { animation-delay: 0.40s; }
+  .shold.in-view .fl-node.n-2 { animation-delay: 0.85s; }
+  .shold.in-view .fl-node.n-3 { animation-delay: 1.35s; }
+  .shold.in-view .fl-node.n-4 { animation-delay: 1.95s; }
+  .shold.in-view .fl-tag, .shold.in-view .fl-refund { animation: rv-rise 0.55s var(--ease-standard) both; }
+  .shold.in-view .fl-tag.t-1 { animation-delay: 0.50s; }
+  .shold.in-view .fl-tag.t-2 { animation-delay: 0.95s; }
+  .shold.in-view .fl-tag.t-3 { animation-delay: 1.45s; }
+  .shold.in-view .fl-tag.t-4 { animation-delay: 2.05s; }
+  .shold.in-view .fl-refund { animation-delay: 2.30s; }
+
+  /* ================= Slide — Appendix divider ================= */
+  .sappx .appx-grid {
+    display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 80px;
+    flex: 1; min-height: 0; align-items: center; margin-top: 4px;
+  }
+  .sappx .appx-copy .eyebrow { margin-bottom: 22px; }
+  .sappx .appx-copy .display { margin-bottom: 28px; }
+  .sappx .appx-copy p {
+    font-family: var(--font-sans); font-size: 26px; line-height: 1.5;
+    color: var(--grey-600); max-width: 30ch;
+  }
+  .sappx .appx-photos { display: flex; flex-direction: column; gap: 24px; }
+  .sappx .appx-photos .ph {
+    border-radius: 16px; overflow: hidden;
+    border: 1px solid var(--bone-300, #D9D2BD);
+    box-shadow: 0 1px 0 rgba(28,49,24,0.04);
+  }
+  .sappx .appx-photos .ph img { width: 100%; display: block; object-fit: cover; }
+  .sappx .appx-photos .ph.big img { height: 400px; }
+  .sappx .appx-photos .ph.small img { height: 250px; object-position: 15% 55%; }
 
   /* Section section-progress dots (top right) */
   .progress {
@@ -1680,7 +1748,7 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>02 / 16</span><span style="">Foundation Program: Menopause &amp; Perimenopause Care</span></div>
+      <div class="footer-meta"><span>02 / 17</span><span style="">Foundation Program: Menopause &amp; Perimenopause Care</span></div>
     </div>
   </section>
 
@@ -1849,7 +1917,7 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>03 / 16</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
+      <div class="footer-meta"><span>03 / 17</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
     </div>
   </section>
 
@@ -1919,7 +1987,7 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>04 / 16</span><span style=""><span style="display: inline !important;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
+      <div class="footer-meta"><span>04 / 17</span><span style=""><span style="display: inline !important;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
     </div>
   </section>
 
@@ -1999,7 +2067,7 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>05 / 16</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
+      <div class="footer-meta"><span>05 / 17</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
     </div>
   </section>
 
@@ -2093,7 +2161,7 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>06 / 16</span><span style=""><span style="display: inline !important;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
+      <div class="footer-meta"><span>06 / 17</span><span style=""><span style="display: inline !important;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
     </div>
   </section>
 
@@ -2111,7 +2179,12 @@
           <div class="team-body">
             <div class="team-name">Chantelle Oostwoud</div>
             <div class="team-role">MN, PHC-NP · Our Clinician</div>
-            <p class="team-bio">The dedicated clinician for the Menopause &amp; Perimenopause Care Program. A Nurse Practitioner with a Master of Nursing from Athabasca University, Chantelle brings nearly a decade of frontline experience across emergency medicine, critical care, and remote community health — working with a small panel of patients who want more time, more thoroughness, and more answers than the standard system typically allows.</p>
+            <ul class="team-points">
+              <li>Your dedicated clinician for this program</li>
+              <li>Master of Nursing, Athabasca University</li>
+              <li>A decade across emergency, critical care &amp; remote health</li>
+              <li>Small panel — more time, more answers</li>
+            </ul>
           </div>
         </div>
         <div class="team-card">
@@ -2119,7 +2192,11 @@
           <div class="team-body">
             <div class="team-name">Cheryl Cairns</div>
             <div class="team-role">Care Coordinator</div>
-            <p class="team-bio">Cheryl is an Optimal Health Care Coordinator and the first person most members get to know. She handles onboarding, care navigation, and supports women's hormone health programming.</p>
+            <ul class="team-points">
+              <li>The first person most members meet</li>
+              <li>Onboarding &amp; care navigation</li>
+              <li>Supports hormone health programming</li>
+            </ul>
           </div>
         </div>
       </div>
@@ -2127,10 +2204,9 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>07 / 16</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
+      <div class="footer-meta"><span>07 / 17</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
     </div>
   </section>
-
 
   <!-- ============ SLIDE 8 — Lab work & optional add-ons ============ -->
   <section data-label="08 Lab work &amp; optional add-ons" class="slabs">
@@ -2250,12 +2326,9 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>08 / 16</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
+      <div class="footer-meta"><span>08 / 17</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
     </div>
   </section>
-
-
-
 
   <!-- ============ SLIDE 9 — Therapy options ============ -->
   <section data-label="09 Hormone therapy options" class="s6">
@@ -2313,7 +2386,7 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>09 / 16</span><span style=""><span style="display: inline !important;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
+      <div class="footer-meta"><span>09 / 17</span><span style=""><span style="display: inline !important;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
     </div>
   </section>
 
@@ -2367,7 +2440,7 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>10 / 16</span><span style=""><span style="color: rgb(118, 115, 109); font-family: &quot;Public Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Arial, sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 252, 247); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
+      <div class="footer-meta"><span>10 / 17</span><span style=""><span style="color: rgb(118, 115, 109); font-family: &quot;Public Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Arial, sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 252, 247); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
     </div>
   </section>
 
@@ -2422,7 +2495,7 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>11 / 16</span><span style=""><span style="color: rgb(118, 115, 109); font-family: &quot;Public Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Arial, sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 252, 247); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
+      <div class="footer-meta"><span>11 / 17</span><span style=""><span style="color: rgb(118, 115, 109); font-family: &quot;Public Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Arial, sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 252, 247); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
     </div>
   </section>
 
@@ -2464,67 +2537,12 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>12 / 16</span><span style=""><span style="color: rgb(118, 115, 109); font-family: &quot;Public Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Arial, sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 252, 247); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
+      <div class="footer-meta"><span>12 / 17</span><span style=""><span style="color: rgb(118, 115, 109); font-family: &quot;Public Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Arial, sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 252, 247); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
     </div>
   </section>
 
-  <!-- ============ SLIDE 13 — Lab results that pause the program ============ -->
-  <section data-label="13 Lab results that may pause your consultation" class="shold">
-    <div class="slide-frame">
-      <div class="title-block">
-        <div class="eyebrow">Before your consultation</div>
-        <h2 class="display display-sm">Certain lab results may put your<br>consultation <span class="italic ring-word">on hold</span>.</h2>
-        <p class="lead">Occasionally, bloodwork reveals something unrelated that deserves attention first. Here's exactly what happens if it does.</p>
-      </div>
-
-      <div class="fl-wrap">
-        <div class="fl-row">
-          <div class="fl-step">
-            <div class="fl-num">Step 1</div>
-            <div class="fl-card">
-              <h4>Results reviewed</h4>
-              <p>Your NP reviews your complete panel before your consultation is booked.</p>
-            </div>
-          </div>
-          <div class="fl-step">
-            <div class="fl-num">Step 2</div>
-            <div class="fl-card">
-              <h4>Incidental finding</h4>
-              <p>A result unrelated to hormones needs to be investigated before hormone care can safely begin.</p>
-            </div>
-          </div>
-          <div class="fl-step hold">
-            <div class="fl-num">Step 3</div>
-            <div class="fl-card">
-              <h4>Routed to your FP</h4>
-              <p>Your care is directed back to your family physician with a full copy of your results, and your program is placed on hold.</p>
-            </div>
-          </div>
-          <div class="fl-step">
-            <div class="fl-num">Step 4</div>
-            <div class="fl-card">
-              <h4>You return</h4>
-              <p>Once the finding is resolved, you pick up right where you left off and continue through the Foundation Program.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="fl-refund">
-          <div class="fr-label">Refunds</div>
-          <p>If you'd prefer a refund while your program is on hold, we provide a <b>pro-rated refund minus $150</b>, which covers analyzing your bloodwork and your initial onboarding.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="footer-bar">
-      <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>13 / 16</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
-    </div>
-  </section>
-
-
-  <!-- ============ SLIDE 14 — Urgent care ============ -->
-  <section data-label="14 When to seek urgent care" class="s10 on-dark">
+  <!-- ============ SLIDE 13 — Urgent care ============ -->
+  <section data-label="13 When to seek urgent care" class="s10 on-dark">
     <div class="frame">
       <div class="title-block">
         <div class="eyebrow">When to seek urgent care</div>
@@ -2546,12 +2564,12 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Opposite.png" class="logo" alt="">
-      <div class="footer-meta"><span>14 / 16</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
+      <div class="footer-meta"><span>13 / 17</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
     </div>
   </section>
 
-  <!-- ============ SLIDE 15 — Pricing & next steps ============ -->
-  <section data-label="15 Pricing and next steps" class="s11">
+  <!-- ============ SLIDE 14 — Pricing & next steps ============ -->
+  <section data-label="14 Pricing and next steps" class="s11">
     <div class="slide-frame">
       <div class="title-block">
         <div class="eyebrow" style="">Pricing &amp; immediate next steps</div>
@@ -2620,12 +2638,122 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>15 / 16</span><span style=""><span style="display: inline !important;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
+      <div class="footer-meta"><span>14 / 17</span><span style=""><span style="display: inline !important;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
     </div>
   </section>
 
-<!-- ============ SLIDE 16 — Bloodwork timing reminder ============ -->
-  <section data-label="16 Bloodwork timing" class="stime">
+  <!-- ============ SLIDE 15 — Appendix divider ============ -->
+  <section data-label="15 Appendix" class="sappx">
+    <div class="slide-frame">
+      <div class="appx-grid">
+        <div class="appx-copy">
+          <div class="eyebrow">Appendix</div>
+          <h2 class="display display-lg">A couple<br>of <span class="italic ring-word">notes</span>.</h2>
+          <p>Two quick housekeeping details before we wrap — purely for expectation-setting. Nothing here needs action today.</p>
+        </div>
+        <div class="appx-photos">
+          <div class="ph big"><img src="assets/images/clinic-reception.jpg" alt="Optimal Clinic reception"></div>
+          <div class="ph small"><img src="assets/images/clinic-hallway.jpg" alt="Optimal Clinic treatment hallway"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bar">
+      <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
+      <div class="footer-meta"><span>15 / 17</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
+    </div>
+  </section>
+
+<!-- ============ SLIDE 16 — Lab results that pause the program ============ -->
+  <section data-label="16 Lab results that may pause your consultation" class="shold">
+    <div class="slide-frame">
+      <div class="title-block">
+        <div class="eyebrow">Before your consultation</div>
+        <h2 class="display display-sm">Certain lab results may put your<br>consultation <span class="italic ring-word">on hold</span>.</h2>
+        <p class="lead">Occasionally, bloodwork reveals something unrelated that deserves attention first. Here's exactly what happens if it does.</p>
+      </div>
+
+      <div class="fl-wrap">
+        <div class="fl-info">
+          <svg class="fl-svg" viewBox="0 0 1680 570" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Flow diagram: results reviewed, incidental finding, care routed to your family physician while the program is on hold, then you return and continue">
+            <defs>
+              <marker id="fl-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M 0 1 L 9 5 L 0 9 z" fill="#2C4E25"/>
+              </marker>
+            </defs>
+
+            <!-- Lanes -->
+            <rect x="0" y="14"  width="1680" height="220" rx="16" fill="#FFFFFF" stroke="#E8E1CC" stroke-width="1"/>
+            <rect x="0" y="296" width="1680" height="260" rx="16" fill="rgba(135,164,130,0.10)" stroke="rgba(135,164,130,0.35)" stroke-width="1"/>
+            <text x="26" y="224" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="13" font-weight="700" letter-spacing="2.6" fill="#87A482">YOUR FOUNDATION PROGRAM</text>
+            <text x="26" y="542" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="13" font-weight="700" letter-spacing="2.6" fill="#6B8A4A">YOUR FAMILY PHYSICIAN</text>
+
+            <!-- Route -->
+            <path class="fl-seg s-a" pathLength="100" d="M 60 178 H 231"/>
+            <path class="fl-seg s-b" pathLength="100" d="M 269 178 H 591"/>
+            <path class="fl-seg s-c" pathLength="100" d="M 629 178 C 750 178 715 400 821 400"/>
+            <path class="fl-seg s-d" pathLength="100" d="M 859 400 C 1005 400 1150 178 1311 178"/>
+            <path class="fl-seg s-e" pathLength="100" d="M 1349 178 H 1584" marker-end="url(#fl-arrow)"/>
+
+            <!-- Nodes -->
+            <g class="fl-node n-1">
+              <circle cx="250" cy="178" r="17" fill="#FFFFFF" stroke="#2C4E25" stroke-width="2.5"/>
+              <path d="M 243 178 l 5 5 l 9 -10" fill="none" stroke="#2C4E25" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <g class="fl-node n-2">
+              <circle cx="610" cy="178" r="17" fill="#FFFFFF" stroke="#A66B1F" stroke-width="2.5"/>
+              <line x1="610" y1="170" x2="610" y2="180" stroke="#A66B1F" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="610" cy="186.5" r="1.8" fill="#A66B1F"/>
+            </g>
+            <g class="fl-node n-3">
+              <circle cx="840" cy="400" r="17" fill="#2C4E25"/>
+              <path d="M 833 400 H 847 M 840 393 V 407" stroke="#FFFCF7" stroke-width="2.5" stroke-linecap="round"/>
+            </g>
+            <g class="fl-node n-4">
+              <circle cx="1330" cy="178" r="17" fill="#FFFFFF" stroke="#6B8A4A" stroke-width="2.5"/>
+              <path d="M 1326 172 L 1336 178 L 1326 184 Z" fill="#6B8A4A"/>
+            </g>
+          </svg>
+
+          <!-- Step labels -->
+          <div class="fl-tag centered t-1" style="left: 100px; top: 48px; width: 300px;">
+            <div class="k">Step 1</div>
+            <h4>Results reviewed</h4>
+            <p>Your NP reviews your complete panel first.</p>
+          </div>
+          <div class="fl-tag centered t-2" style="left: 460px; top: 48px; width: 300px;">
+            <div class="k">Step 2</div>
+            <h4>Incidental finding</h4>
+            <p>Something unrelated needs attention before care begins.</p>
+          </div>
+          <div class="fl-tag centered hold t-3" style="left: 680px; top: 432px; width: 320px;">
+            <div class="fl-hold-chip">Program on hold</div>
+            <h4>Routed to your FP</h4>
+            <p>Your family physician takes over, with a full copy of your results.</p>
+          </div>
+          <div class="fl-tag centered t-4" style="left: 1180px; top: 48px; width: 300px;">
+            <div class="k">Step 4</div>
+            <h4>You return</h4>
+            <p>Resolved — you continue right where you left off.</p>
+          </div>
+
+          <!-- Refund aside (optional exit from the hold) -->
+          <div class="fl-refund" style="left: 1180px; top: 420px; width: 400px;">
+            <div class="k">Prefer a refund?</div>
+            <p>We provide a <b>pro-rated refund minus $150</b>, covering your bloodwork analysis and initial onboarding.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bar">
+      <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
+      <div class="footer-meta"><span>16 / 17</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
+    </div>
+  </section>
+
+  <!-- ============ SLIDE 17 — Bloodwork timing reminder ============ -->
+  <section data-label="17 Bloodwork timing" class="stime">
     <div class="slide-frame">
       <div class="title-block">
         <div class="eyebrow">A friendly reminder</div>
@@ -2635,51 +2763,45 @@
 
       <div class="tl-wrap">
         <div class="tl-row">
+          <div class="tl-line" aria-hidden="true"></div>
           <div class="tl-step">
-            <div class="tl-mark"><span class="dot"></span></div>
-            <div class="tl-when">Day 0 · Registration</div>
+            <div class="tl-pill">Day 0 · Registration</div>
             <div class="tl-card">
               <h4>You're enrolled</h4>
               <p>Your lab requisition is in hand — LifeLabs or Dynacare, whenever suits your week.</p>
             </div>
           </div>
           <div class="tl-step">
-            <div class="tl-mark"><span class="dot"></span></div>
-            <div class="tl-when">Weeks 1–2 · The sweet spot</div>
+            <div class="tl-pill">Weeks 1–2 · Sweet spot</div>
             <div class="tl-card">
               <h4>Priority scheduling</h4>
               <p>Complete your bloodwork in this window and we can prioritize your NP consultation — typically booked within approximately one week of your results arriving.</p>
             </div>
           </div>
           <div class="tl-step">
-            <div class="tl-mark"><span class="dot"></span></div>
-            <div class="tl-when">After 2 weeks</div>
+            <div class="tl-pill">After 2 weeks</div>
             <div class="tl-card">
               <h4>We'll still see you</h4>
               <p>Absolutely no problem — though we can no longer guarantee same-week scheduling once your results come in.</p>
             </div>
           </div>
           <div class="tl-step fee">
-            <div class="tl-mark"><span class="dot"></span></div>
-            <div class="tl-when">Week 8</div>
+            <div class="tl-pill">Week 8</div>
             <div class="tl-card">
               <h4>$100 fee applies</h4>
               <p>If bloodwork isn't completed within 8 weeks of registration, a $100 administrative fee is added to re-coordinate your program.</p>
             </div>
           </div>
         </div>
-        <p class="tl-note">Life gets busy — we understand. If you're running behind, just call us at <b>(437) 370-0291</b> and we'll help you stay on track.</p>
+        <p class="tl-note">Life gets busy — we understand. If you're running behind, just call us and we'll help you stay on track. <span class="tl-tel">(437) 370-0291</span></p>
       </div>
     </div>
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>16 / 16</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
+      <div class="footer-meta"><span>17 / 17</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
     </div>
   </section>
-
-
-
 
 </deck-stage>
 
@@ -2695,7 +2817,7 @@
     // a block with a handful of children (cards, columns) staggers per child.
     document.querySelectorAll('deck-stage > section').forEach((slide) => {
       let tops;
-      if (slide.classList.contains('shmap')) {
+      if (slide.classList.contains('shmap') || slide.classList.contains('shold')) {
         tops = [slide.querySelector('.title-block')];
       } else {
         const root = slide.querySelector('.slide-frame') || slide;
@@ -2715,7 +2837,7 @@
     });
 
     const replay = (slide) => {
-      slide.querySelectorAll('.rv, .hormone-map-svg path, .legend .lg-row').forEach((el) => {
+      slide.querySelectorAll('.rv, .hormone-map-svg path, .legend .lg-row, .fl-seg, .fl-node, .fl-tag, .fl-refund').forEach((el) => {
         el.style.animation = 'none';
         void el.getBoundingClientRect(); // force reflow so animations restart
         el.style.animation = '';
