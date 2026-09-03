@@ -1221,6 +1221,71 @@
   }
   .stime .tl-note b { color: var(--forest-700); font-weight: 600; }
 
+  /* ================= Slide — Meet your care team ================= */
+  .steam .team-row { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 48px; flex: 1; min-height: 0; }
+  .steam .team-card {
+    background: var(--white); border: 1px solid var(--bone-300, #D9D2BD); border-radius: 14px;
+    overflow: hidden; display: flex; flex-direction: column;
+    box-shadow: 0 1px 0 rgba(28,49,24,0.04);
+  }
+  .steam .team-photo { height: 360px; overflow: hidden; flex-shrink: 0; background: var(--bone-100); }
+  .steam .team-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .steam .team-card:nth-child(1) .team-photo img { object-position: 50% 40%; }
+  .steam .team-card:nth-child(2) .team-photo img { object-position: 50% 28%; }
+  .steam .team-body { padding: 30px 36px 32px; display: flex; flex-direction: column; }
+  .steam .team-name {
+    font-family: var(--font-display); font-size: 38px; line-height: 1.05;
+    letter-spacing: -0.02em; color: var(--grey-800); margin-bottom: 8px;
+  }
+  .steam .team-role {
+    font-family: var(--font-sans); font-size: 15px; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--forest-500, #6B8A4A);
+    margin-bottom: 16px;
+  }
+  .steam .team-bio { font-family: var(--font-sans); font-size: 20px; line-height: 1.5; color: var(--grey-600); }
+
+  /* ================= Slide — Lab results that pause the program ================= */
+  .shold .fl-wrap { margin-top: 16px; flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; }
+  .shold .fl-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 44px; }
+  .shold .fl-step { position: relative; display: flex; flex-direction: column; }
+  /* Arrow connectors between cards */
+  .shold .fl-step:not(:last-child)::after {
+    content: "→"; position: absolute; top: 50%; right: -36px; transform: translateY(-50%);
+    font-family: var(--font-sans); font-size: 26px; color: var(--forest-500, #6B8A4A);
+  }
+  .shold .fl-num {
+    font-family: var(--font-sans); font-size: 15px; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--forest-500, #6B8A4A);
+    margin-bottom: 12px;
+  }
+  .shold .fl-card {
+    background: var(--white); border: 1px solid var(--bone-300, #D9D2BD); border-radius: 12px;
+    padding: 28px 26px; flex: 1;
+    box-shadow: 0 1px 0 rgba(28,49,24,0.04);
+  }
+  .shold .fl-card h4 {
+    font-family: var(--font-display); font-size: 28px; line-height: 1.08;
+    letter-spacing: -0.02em; color: var(--forest-700); margin-bottom: 12px;
+  }
+  .shold .fl-card p { font-family: var(--font-sans); font-size: 18px; line-height: 1.45; color: var(--grey-600); }
+  .shold .fl-step.hold .fl-card { background: var(--forest-700); border-color: var(--forest-700); }
+  .shold .fl-step.hold .fl-card h4 { color: var(--cream-50); }
+  .shold .fl-step.hold .fl-card p { color: rgba(255,252,247,0.84); }
+
+  .shold .fl-refund {
+    margin-top: 40px;
+    display: flex; align-items: baseline; gap: 16px;
+    background: var(--sage-25); border: 1px solid rgba(135,164,130,0.45); border-radius: 12px;
+    padding: 24px 32px;
+  }
+  .shold .fl-refund .fr-label {
+    font-family: var(--font-sans); font-size: 14px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--forest-700);
+    white-space: nowrap;
+  }
+  .shold .fl-refund p { font-family: var(--font-sans); font-size: 19px; line-height: 1.5; color: var(--grey-800); }
+  .shold .fl-refund b { color: var(--forest-700); font-weight: 600; }
+
   /* Section section-progress dots (top right) */
   .progress {
     position: absolute; top: 44px; right: 120px;
@@ -1615,7 +1680,7 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>02 / 14</span><span style="">Foundation Program: Menopause &amp; Perimenopause Care</span></div>
+      <div class="footer-meta"><span>02 / 16</span><span style="">Foundation Program: Menopause &amp; Perimenopause Care</span></div>
     </div>
   </section>
 
@@ -1784,7 +1849,7 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>03 / 14</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
+      <div class="footer-meta"><span>03 / 16</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
     </div>
   </section>
 
@@ -1854,7 +1919,7 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>04 / 14</span><span style=""><span style="display: inline !important;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
+      <div class="footer-meta"><span>04 / 16</span><span style=""><span style="display: inline !important;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
     </div>
   </section>
 
@@ -1934,7 +1999,7 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>05 / 14</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
+      <div class="footer-meta"><span>05 / 16</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
     </div>
   </section>
 
@@ -2028,12 +2093,47 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>06 / 14</span><span style=""><span style="display: inline !important;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
+      <div class="footer-meta"><span>06 / 16</span><span style=""><span style="display: inline !important;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
     </div>
   </section>
 
-  <!-- ============ SLIDE 7 — Lab work & optional add-ons ============ -->
-  <section data-label="07 Lab work &amp; optional add-ons" class="slabs">
+  <!-- ============ SLIDE 7 — Meet your care team ============ -->
+  <section data-label="07 Meet your care team" class="steam">
+    <div class="slide-frame">
+      <div class="title-block">
+        <div class="eyebrow">Your care team</div>
+        <h2 class="display display-md">The people <span class="italic ring-word">looking after</span> you.</h2>
+      </div>
+
+      <div class="team-row">
+        <div class="team-card">
+          <div class="team-photo"><img src="assets/images/team-chantelle.jpg" alt="Chantelle Oostwoud, MN, PHC-NP"></div>
+          <div class="team-body">
+            <div class="team-name">Chantelle Oostwoud</div>
+            <div class="team-role">MN, PHC-NP · Our Clinician</div>
+            <p class="team-bio">The dedicated clinician for the Menopause &amp; Perimenopause Care Program. A Nurse Practitioner with a Master of Nursing from Athabasca University, Chantelle brings nearly a decade of frontline experience across emergency medicine, critical care, and remote community health — working with a small panel of patients who want more time, more thoroughness, and more answers than the standard system typically allows.</p>
+          </div>
+        </div>
+        <div class="team-card">
+          <div class="team-photo"><img src="assets/images/team-cheryl.jpg" alt="Cheryl Cairns, Care Coordinator"></div>
+          <div class="team-body">
+            <div class="team-name">Cheryl Cairns</div>
+            <div class="team-role">Care Coordinator</div>
+            <p class="team-bio">Cheryl is an Optimal Health Care Coordinator and the first person most members get to know. She handles onboarding, care navigation, and supports women's hormone health programming.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bar">
+      <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
+      <div class="footer-meta"><span>07 / 16</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
+    </div>
+  </section>
+
+
+  <!-- ============ SLIDE 8 — Lab work & optional add-ons ============ -->
+  <section data-label="08 Lab work &amp; optional add-ons" class="slabs">
     <div class="slide-frame">
       <div class="title-block">
         <div class="eyebrow">Lab work &amp; optional add-ons</div>
@@ -2067,7 +2167,7 @@
         <div class="panel">
           <div class="p-head">
             <h4>Your complete lab panel</h4>
-            <div class="p-count">32 tests · 8 systems</div>
+            <div class="p-count">29 tests · 8 systems</div>
           </div>
           <div class="p-body">
             <div class="p-group">
@@ -2103,8 +2203,6 @@
               <div class="p-cat">Cardiovascular &amp; Lipids</div>
               <ul class="p-items">
                 <li>Lipid Assessment</li>
-                <li>ApoB</li>
-                <li>Lp(a)</li>
               </ul>
             </div>
             <div class="p-group">
@@ -2121,7 +2219,6 @@
               <div class="p-cat">Liver &amp; Protein</div>
               <ul class="p-items">
                 <li>ALT</li>
-                <li>AST</li>
                 <li>Alk. Phosphatase</li>
                 <li>Bilirubin</li>
                 <li>Albumin</li>
@@ -2153,15 +2250,15 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>07 / 14</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
+      <div class="footer-meta"><span>08 / 16</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
     </div>
   </section>
 
 
 
 
-  <!-- ============ SLIDE 8 — Therapy options ============ -->
-  <section data-label="08 Hormone therapy options" class="s6">
+  <!-- ============ SLIDE 9 — Therapy options ============ -->
+  <section data-label="09 Hormone therapy options" class="s6">
     <div class="slide-frame">
       <div class="title-block">
         <div class="eyebrow">Understanding your options</div>
@@ -2216,12 +2313,12 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>08 / 14</span><span style=""><span style="display: inline !important;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
+      <div class="footer-meta"><span>09 / 16</span><span style=""><span style="display: inline !important;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
     </div>
   </section>
 
-  <!-- ============ SLIDE 9 — Benefits ============ -->
-  <section data-label="09 Benefits of treatment" class="s7">
+  <!-- ============ SLIDE 10 — Benefits ============ -->
+  <section data-label="10 Benefits of treatment" class="s7">
     <div class="slide-frame">
       <div class="title-block">
         <div class="eyebrow">What treatment can do for you</div>
@@ -2270,12 +2367,12 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>09 / 14</span><span style=""><span style="color: rgb(118, 115, 109); font-family: &quot;Public Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Arial, sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 252, 247); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
+      <div class="footer-meta"><span>10 / 16</span><span style=""><span style="color: rgb(118, 115, 109); font-family: &quot;Public Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Arial, sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 252, 247); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
     </div>
   </section>
 
-  <!-- ============ SLIDE 10 — Safety ============ -->
-  <section data-label="10 Safety and risk information" class="s8">
+  <!-- ============ SLIDE 11 — Safety ============ -->
+  <section data-label="11 Safety and risk information" class="s8">
     <div class="slide-frame">
       <div class="title-block">
         <div class="eyebrow">Safety &amp; risk information</div>
@@ -2325,12 +2422,12 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>10 / 14</span><span style=""><span style="color: rgb(118, 115, 109); font-family: &quot;Public Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Arial, sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 252, 247); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
+      <div class="footer-meta"><span>11 / 16</span><span style=""><span style="color: rgb(118, 115, 109); font-family: &quot;Public Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Arial, sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 252, 247); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
     </div>
   </section>
 
-  <!-- ============ SLIDE 11 — Incidental findings outside scope ============ -->
-  <section data-label="11 If we find something outside our scope" class="sinc">
+  <!-- ============ SLIDE 12 — Incidental findings outside scope ============ -->
+  <section data-label="12 If we find something outside our scope" class="sinc">
     <div class="slide-frame">
       <div class="title-block">
         <div class="eyebrow">Findings outside the scope of this program</div>
@@ -2367,12 +2464,67 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>11 / 14</span><span style=""><span style="color: rgb(118, 115, 109); font-family: &quot;Public Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Arial, sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 252, 247); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
+      <div class="footer-meta"><span>12 / 16</span><span style=""><span style="color: rgb(118, 115, 109); font-family: &quot;Public Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, Arial, sans-serif; font-size: 18px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 252, 247); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
     </div>
   </section>
 
-  <!-- ============ SLIDE 12 — Urgent care ============ -->
-  <section data-label="12 When to seek urgent care" class="s10 on-dark">
+  <!-- ============ SLIDE 13 — Lab results that pause the program ============ -->
+  <section data-label="13 Lab results that may pause your consultation" class="shold">
+    <div class="slide-frame">
+      <div class="title-block">
+        <div class="eyebrow">Before your consultation</div>
+        <h2 class="display display-sm">Certain lab results may put your<br>consultation <span class="italic ring-word">on hold</span>.</h2>
+        <p class="lead">Occasionally, bloodwork reveals something unrelated that deserves attention first. Here's exactly what happens if it does.</p>
+      </div>
+
+      <div class="fl-wrap">
+        <div class="fl-row">
+          <div class="fl-step">
+            <div class="fl-num">Step 1</div>
+            <div class="fl-card">
+              <h4>Results reviewed</h4>
+              <p>Your NP reviews your complete panel before your consultation is booked.</p>
+            </div>
+          </div>
+          <div class="fl-step">
+            <div class="fl-num">Step 2</div>
+            <div class="fl-card">
+              <h4>Incidental finding</h4>
+              <p>A result unrelated to hormones needs to be investigated before hormone care can safely begin.</p>
+            </div>
+          </div>
+          <div class="fl-step hold">
+            <div class="fl-num">Step 3</div>
+            <div class="fl-card">
+              <h4>Routed to your FP</h4>
+              <p>Your care is directed back to your family physician with a full copy of your results, and your program is placed on hold.</p>
+            </div>
+          </div>
+          <div class="fl-step">
+            <div class="fl-num">Step 4</div>
+            <div class="fl-card">
+              <h4>You return</h4>
+              <p>Once the finding is resolved, you pick up right where you left off and continue through the Foundation Program.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="fl-refund">
+          <div class="fr-label">Refunds</div>
+          <p>If you'd prefer a refund while your program is on hold, we provide a <b>pro-rated refund minus $150</b>, which covers analyzing your bloodwork and your initial onboarding.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bar">
+      <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
+      <div class="footer-meta"><span>13 / 16</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
+    </div>
+  </section>
+
+
+  <!-- ============ SLIDE 14 — Urgent care ============ -->
+  <section data-label="14 When to seek urgent care" class="s10 on-dark">
     <div class="frame">
       <div class="title-block">
         <div class="eyebrow">When to seek urgent care</div>
@@ -2394,12 +2546,12 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Opposite.png" class="logo" alt="">
-      <div class="footer-meta"><span>12 / 14</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
+      <div class="footer-meta"><span>14 / 16</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
     </div>
   </section>
 
-  <!-- ============ SLIDE 13 — Pricing & next steps ============ -->
-  <section data-label="13 Pricing and next steps" class="s11">
+  <!-- ============ SLIDE 15 — Pricing & next steps ============ -->
+  <section data-label="15 Pricing and next steps" class="s11">
     <div class="slide-frame">
       <div class="title-block">
         <div class="eyebrow" style="">Pricing &amp; immediate next steps</div>
@@ -2468,12 +2620,12 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>13 / 14</span><span style=""><span style="display: inline !important;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
+      <div class="footer-meta"><span>15 / 16</span><span style=""><span style="display: inline !important;">Foundation Program: Menopause &amp; Perimenopause Care</span></span></div>
     </div>
   </section>
 
-<!-- ============ SLIDE 14 — Bloodwork timing reminder ============ -->
-  <section data-label="14 Bloodwork timing" class="stime">
+<!-- ============ SLIDE 16 — Bloodwork timing reminder ============ -->
+  <section data-label="16 Bloodwork timing" class="stime">
     <div class="slide-frame">
       <div class="title-block">
         <div class="eyebrow">A friendly reminder</div>
@@ -2522,7 +2674,7 @@
 
     <div class="footer-bar">
       <img src="assets/logos/OptimalLogo-Green.png" class="logo" alt="">
-      <div class="footer-meta"><span>14 / 14</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
+      <div class="footer-meta"><span>16 / 16</span><span>Foundation Program: Menopause &amp; Perimenopause Care</span></div>
     </div>
   </section>
 
