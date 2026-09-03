@@ -743,7 +743,7 @@
   .s7 .benefits-grid { display: grid; grid-template-columns: 1.05fr 1fr 1fr; gap: 20px; margin-top: 26px; }
   .s7 .b-feature {
     grid-row: span 3;
-    background-image: url('assets/images/portrait-circle-1.png');
+    background-image: url('assets/images/clinic-waiting.jpg');
     background-size: cover; background-position: center;
     border-radius: 8px;
     position: relative; overflow: hidden;
@@ -1173,49 +1173,41 @@
     .shmap .hormone-map-svg path { animation-duration: 0.01s; animation-delay: 0s !important; }
     .shmap.in-view .legend .lg-row { animation-duration: 0.01s; animation-delay: 0s !important; }
     .shold.in-view .fl-seg, .shold.in-view .fl-node,
-    .shold.in-view .fl-tag, .shold.in-view .fl-refund { animation-duration: 0.01s !important; animation-delay: 0s !important; }
+    .shold.in-view .fl-tag, .shold.in-view .fl-refund,
+    .stime.in-view .fl-seg, .stime.in-view .fl-node,
+    .stime.in-view .fl-tag, .stime.in-view .fl-refund { animation-duration: 0.01s !important; animation-delay: 0s !important; }
   }
 
   /* ================= Slide — Bloodwork timing reminder =================
-     Gradient timeline: a single track running forest → amber, with marker
-     pills sitting on the line and refined cards beneath. */
+     Time track, day 0 -> week 8: sweet-spot window opens, the line drains
+     forest -> amber toward the fee. fl-* class names reused as replay
+     hooks; animations scoped here, gated on .in-view; at rest (print/
+     export) everything is fully drawn. */
   .stime .tl-wrap { margin-top: 24px; flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; }
-  .stime .tl-row { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
-  .stime .tl-line {
-    position: absolute; left: 12.5%; right: 12.5%; top: 17px; height: 3px;
-    border-radius: 2px;
-    background: linear-gradient(90deg, #2C4E25 0%, #6B8A4A 58%, #A66B1F 100%);
-  }
-  .stime .tl-step { display: flex; flex-direction: column; align-items: center; }
-  .stime .tl-pill {
-    position: relative; z-index: 1;
-    display: inline-flex; align-items: center; gap: 9px;
-    background: var(--cream-50); border: 1px solid var(--bone-300, #D9D2BD);
-    border-radius: 999px; padding: 8px 18px;
+  .stime .fl-info { position: relative; width: 1680px; height: 460px; }
+  .stime .fl-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .stime .fl-seg { fill: none; stroke-width: 3; stroke-linecap: round; }   /* no stroke here — attribute strokes (solid + gradient) must win */
+  .stime .fl-seg.s-d { stroke: #C9C2AE; stroke-width: 1.5; }
+  .stime .fl-node { transform-box: fill-box; transform-origin: center; }
+  .stime .fl-node.win { transform-origin: left center; }
+  .stime .fl-node.n-ring { opacity: 0; }
+
+  .stime .fl-tag { position: absolute; text-align: center; }
+  .stime .fl-tag .k {
     font-family: var(--font-sans); font-size: 13px; font-weight: 700;
-    letter-spacing: 0.16em; text-transform: uppercase; color: var(--forest-700);
-    box-shadow: 0 1px 0 rgba(28,49,24,0.04);
+    letter-spacing: 0.22em; text-transform: uppercase; color: var(--forest-500, #6B8A4A);
+    margin-bottom: 8px;
   }
-  .stime .tl-pill::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--forest-700); }
-  .stime .tl-step.fee .tl-pill { color: #A66B1F; border-color: rgba(166,107,31,0.5); }
-  .stime .tl-step.fee .tl-pill::before { background: #A66B1F; }
-  .stime .tl-card {
-    margin-top: 30px; width: 100%;
-    background: var(--white); border: 1px solid var(--bone-300, #D9D2BD); border-radius: 14px;
-    padding: 32px 28px; flex: 1; text-align: center;
-    box-shadow: 0 2px 14px rgba(28,49,24,0.05);
+  .stime .fl-tag h4 {
+    font-family: var(--font-display); font-size: 27px; line-height: 1.05;
+    letter-spacing: -0.02em; color: var(--grey-800); margin-bottom: 8px;
   }
-  .stime .tl-card h4 {
-    font-family: var(--font-display); font-size: 31px; line-height: 1.05;
-    letter-spacing: -0.02em; color: var(--forest-700); margin-bottom: 12px;
-  }
-  .stime .tl-card p { font-family: var(--font-sans); font-size: 18.5px; line-height: 1.45; color: var(--grey-600); }
-  .stime .tl-step.fee .tl-card { background: var(--forest-700); border-color: var(--forest-700); }
-  .stime .tl-step.fee .tl-card h4 { color: var(--cream-50); }
-  .stime .tl-step.fee .tl-card p { color: rgba(255,252,247,0.84); }
+  .stime .fl-tag p { font-family: var(--font-sans); font-size: 16.5px; line-height: 1.4; color: var(--grey-500); }
+  .stime .fl-tag.fee .k { color: #A66B1F; }
+  .stime .fl-tag.fee h4 b { color: #A66B1F; font-weight: 400; }
 
   .stime .tl-note {
-    margin-top: 44px; text-align: center;
+    margin-top: 30px; text-align: center;
     display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap;
     font-family: var(--font-sans); font-size: 20px; line-height: 1.45; color: var(--grey-600);
   }
@@ -1226,36 +1218,72 @@
     white-space: nowrap;
   }
 
+  /* ── Choreography (reuses global fl-draw / fl-pop / rv-rise) ── */
+  @keyframes tl-window { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes tl-fade-in { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes tl-ring { from { opacity: 0.55; transform: scale(1); } to { opacity: 0; transform: scale(2.1); } }
+  .stime.in-view .fl-seg { stroke-dasharray: 100; stroke-dashoffset: 100; animation: fl-draw 0.55s ease both; }
+  .stime.in-view .fl-seg.s-a { animation-delay: 0.35s; }
+  .stime.in-view .fl-seg.s-b { animation-delay: 1.45s; animation-duration: 0.7s; }
+  .stime.in-view .fl-seg.s-c { animation-delay: 2.35s; animation-duration: 0.4s; }
+  .stime.in-view .fl-seg.s-d { animation-delay: 1.60s; animation-duration: 0.6s; }
+  .stime.in-view .fl-node { animation: fl-pop 0.4s cubic-bezier(.34,1.56,.64,1) both; }
+  .stime.in-view .fl-node.n-1 { animation-delay: 0.05s; }
+  .stime.in-view .fl-node.n-2 { animation-delay: 1.30s; }
+  .stime.in-view .fl-node.n-3 { animation-delay: 2.20s; }
+  .stime.in-view .fl-node.n-4 { animation-delay: 2.60s; }
+  .stime.in-view .fl-node.win   { animation: tl-window 0.7s var(--ease-standard) both 0.55s; }
+  .stime.in-view .fl-node.ticks { animation: tl-fade-in 0.5s ease both 0.90s; }
+  .stime.in-view .fl-node.n-ring { animation: tl-ring 0.9s ease-out both 2.55s; }
+  .stime.in-view .fl-tag, .stime.in-view .fl-refund { animation: rv-rise 0.55s var(--ease-standard) both; }
+  .stime.in-view .fl-tag.t-1 { animation-delay: 0.15s; }
+  .stime.in-view .fl-tag.t-2 { animation-delay: 0.85s; }
+  .stime.in-view .fl-tag.t-3 { animation-delay: 1.70s; }
+  .stime.in-view .fl-tag.t-4 { animation-delay: 2.30s; }
+  .stime.in-view .fl-refund  { animation-delay: 2.65s; }
+
   /* ================= Slide — Meet your care team =================
-     Photos are shown complete (no cropping) at a shared width; the card
-     is designed around each image's natural aspect ratio. */
-  .steam .team-row { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 48px; flex: 1; min-height: 0; align-items: stretch; }
-  .steam .team-card {
-    background: var(--white); border: 1px solid var(--bone-300, #D9D2BD); border-radius: 14px;
-    padding: 40px; display: flex; gap: 40px; align-items: center;
-    box-shadow: 0 1px 0 rgba(28,49,24,0.04);
+     Mirrored photo-anchored cards: image full-bleed to the card's outer
+     edge (identical 360x450 4:5 crop for both people), card height locked
+     to the photo, text vertically centered, row centered in the frame. */
+  .steam .team-row {
+    flex: 1; min-height: 0;
+    display: grid; grid-template-columns: 820px 820px; gap: 40px;
+    justify-content: center; align-content: center; margin-top: 0;
   }
-  .steam .team-photo { flex-shrink: 0; }
-  .steam .team-photo img { width: 340px; height: auto; display: block; border-radius: 12px; }
-  .steam .team-body { display: flex; flex-direction: column; min-width: 0; }
+  .steam .team-card {
+    width: 820px; height: 450px;
+    display: flex; align-items: stretch;
+    background: var(--white); border: 1px solid var(--bone-200, #E8E1CC);
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 2px 14px rgba(28,49,24,0.05);
+  }
+  .steam .team-card.flip { flex-direction: row-reverse; }
+  .steam .team-photo { flex-shrink: 0; width: 360px; }
+  .steam .team-photo img { width: 360px; height: 450px; object-fit: cover; object-position: center top; display: block; }
+  .steam .team-body {
+    flex: 1; min-width: 0; padding: 0 46px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
   .steam .team-name {
-    font-family: var(--font-display); font-size: 37px; line-height: 1.05;
-    letter-spacing: -0.02em; color: var(--grey-800); margin-bottom: 10px;
+    font-family: var(--font-display); font-size: 36px; line-height: 1.05;
+    letter-spacing: -0.02em; color: var(--grey-800); margin-bottom: 8px;
   }
   .steam .team-role {
-    font-family: var(--font-sans); font-size: 14px; font-weight: 700;
+    font-family: var(--font-sans); font-size: 13px; font-weight: 700;
     letter-spacing: 0.2em; text-transform: uppercase; color: var(--forest-500, #6B8A4A);
-    margin-bottom: 22px;
   }
-  .steam .team-points { display: flex; flex-direction: column; gap: 14px; }
+  .steam .team-rule { width: 40px; height: 2px; border-radius: 1px; background: var(--forest-500, #6B8A4A); margin: 20px 0 22px; }
+  .steam .team-points { display: flex; flex-direction: column; gap: 13px; }
   .steam .team-points li {
-    font-family: var(--font-sans); font-size: 19px; line-height: 1.35; color: var(--grey-600);
-    padding-left: 30px; position: relative;
+    font-family: var(--font-sans); font-size: 18px; line-height: 1.4; color: var(--grey-600);
+    padding-left: 28px; position: relative;
   }
   .steam .team-points li::before {
-    content: ""; position: absolute; left: 0; top: 9px;
-    width: 14px; height: 8px;
-    border-left: 2px solid var(--forest-500, #6B8A4A); border-bottom: 2px solid var(--forest-500, #6B8A4A);
+    content: ""; position: absolute; left: 0; top: 8px;
+    width: 13px; height: 7px;
+    border-left: 2px solid var(--forest-500, #6B8A4A);
+    border-bottom: 2px solid var(--forest-500, #6B8A4A);
     transform: rotate(-45deg);
   }
 
@@ -2179,23 +2207,26 @@
           <div class="team-body">
             <div class="team-name">Chantelle Oostwoud</div>
             <div class="team-role">MN, PHC-NP · Our Clinician</div>
+            <div class="team-rule" aria-hidden="true"></div>
             <ul class="team-points">
               <li>Your dedicated clinician for this program</li>
               <li>Master of Nursing, Athabasca University</li>
-              <li>A decade across emergency, critical care &amp; remote health</li>
+              <li>A decade in emergency, critical &amp; remote care</li>
               <li>Small panel — more time, more answers</li>
             </ul>
           </div>
         </div>
-        <div class="team-card">
+        <div class="team-card flip">
           <div class="team-photo"><img src="assets/images/team-cheryl.jpg" alt="Cheryl Cairns, Care Coordinator"></div>
           <div class="team-body">
             <div class="team-name">Cheryl Cairns</div>
             <div class="team-role">Care Coordinator</div>
+            <div class="team-rule" aria-hidden="true"></div>
             <ul class="team-points">
               <li>The first person most members meet</li>
               <li>Onboarding &amp; care navigation</li>
-              <li>Supports hormone health programming</li>
+              <li>Books your labs, consults &amp; follow-ups</li>
+              <li>Your first call for scheduling &amp; results</li>
             </ul>
           </div>
         </div>
@@ -2762,38 +2793,83 @@
       </div>
 
       <div class="tl-wrap">
-        <div class="tl-row">
-          <div class="tl-line" aria-hidden="true"></div>
-          <div class="tl-step">
-            <div class="tl-pill">Day 0 · Registration</div>
-            <div class="tl-card">
-              <h4>You're enrolled</h4>
-              <p>Your lab requisition is in hand — LifeLabs or Dynacare, whenever suits your week.</p>
-            </div>
+        <div class="fl-info">
+          <svg class="fl-svg" viewBox="0 0 1680 460" xmlns="http://www.w3.org/2000/svg" role="img"
+               aria-label="Timeline: register day 0; complete bloodwork in the first two weeks for priority scheduling; after two weeks you are still seen but same-week scheduling is not guaranteed; at week 8 a $100 administrative fee applies.">
+            <defs>
+              <linearGradient id="tl-fade" gradientUnits="userSpaceOnUse" x1="730" y1="0" x2="1410" y2="0">
+                <stop offset="0" stop-color="#6B8A4A"/><stop offset="1" stop-color="#A66B1F"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Sweet-spot window (range: weeks 0-2) -->
+            <g class="fl-node win">
+              <rect x="170" y="190" width="540" height="120" rx="12"
+                    fill="rgba(135,164,130,0.10)" stroke="rgba(135,164,130,0.35)"/>
+              <text x="440" y="216" text-anchor="middle" font-family="Public Sans, Inter, system-ui, sans-serif"
+                    font-size="12" font-weight="700" letter-spacing="2.6" fill="#87A482">SWEET SPOT</text>
+            </g>
+
+            <!-- Track (segments stop 20px short of node centers) -->
+            <path class="fl-seg s-a" pathLength="100" d="M 190 250 H 690" stroke="#2C4E25"/>
+            <path class="fl-seg s-b" pathLength="100" d="M 730 250 H 1410" stroke="url(#tl-fade)"/>
+            <path class="fl-seg s-c" pathLength="100" d="M 1452 250 H 1548" stroke="#A66B1F" stroke-opacity="0.4"/>
+            <!-- 2-8 range bracket -->
+            <path class="fl-seg s-d" pathLength="100" d="M 730 218 V 210 H 1410 V 218"/>
+
+            <!-- Week ticks (semi-proportional scale; wk-2 mark is the node itself) -->
+            <g class="fl-node ticks">
+              <g fill="none" stroke="#D9D2BD" stroke-width="1.5">
+                <path d="M 440 258 V 268 M 830 258 V 268 M 950 258 V 268 M 1070 258 V 268 M 1190 258 V 268 M 1310 258 V 268"/>
+              </g>
+              <g font-family="Public Sans, Inter, system-ui, sans-serif" font-size="11" fill="#B9B3A6" text-anchor="middle">
+                <text x="440" y="286">WK 1</text><text x="830" y="286">WK 3</text><text x="950" y="286">WK 4</text>
+                <text x="1070" y="286">WK 5</text><text x="1190" y="286">WK 6</text><text x="1310" y="286">WK 7</text>
+              </g>
+            </g>
+
+            <!-- Nodes -->
+            <g class="fl-node n-1">
+              <circle cx="170" cy="250" r="17" fill="#2C4E25"/>
+              <path d="M 163 250 l 5 5 l 9 -10" fill="none" stroke="#FFFCF7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <g class="fl-node n-2">
+              <circle cx="710" cy="250" r="17" fill="#FFFFFF" stroke="#6B8A4A" stroke-width="2.5"/>
+              <path d="M 710 241 V 250 L 717 254" fill="none" stroke="#6B8A4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+            <circle class="fl-node n-ring" cx="1430" cy="250" r="17" fill="none" stroke="#A66B1F" stroke-width="2"/>
+            <g class="fl-node n-3">
+              <circle cx="1430" cy="250" r="17" fill="#FFFFFF" stroke="#A66B1F" stroke-width="2.5"/>
+              <text x="1430" y="256" text-anchor="middle" font-family="Public Sans, Inter, system-ui, sans-serif"
+                    font-size="16" font-weight="700" fill="#A66B1F">$</text>
+            </g>
+            <path class="fl-node n-4" d="M 1548 244 L 1560 250 L 1548 256 Z" fill="#A66B1F" fill-opacity="0.55"/>
+          </svg>
+
+          <!-- Labels: above / below / above / below -->
+          <div class="fl-tag t-1" style="left: 30px; top: 52px; width: 280px;">
+            <div class="k">Day 0 · Registration</div>
+            <h4>You're enrolled</h4>
+            <p>Requisition in hand — LifeLabs or Dynacare, any day that suits.</p>
           </div>
-          <div class="tl-step">
-            <div class="tl-pill">Weeks 1–2 · Sweet spot</div>
-            <div class="tl-card">
-              <h4>Priority scheduling</h4>
-              <p>Complete your bloodwork in this window and we can prioritize your NP consultation — typically booked within approximately one week of your results arriving.</p>
-            </div>
+          <div class="fl-tag t-2" style="left: 260px; top: 330px; width: 360px;">
+            <div class="k">Weeks 1–2 · Priority</div>
+            <h4>First in line</h4>
+            <p>Labs done in this window mean your NP consult is booked within about a week of your results arriving.</p>
           </div>
-          <div class="tl-step">
-            <div class="tl-pill">After 2 weeks</div>
-            <div class="tl-card">
-              <h4>We'll still see you</h4>
-              <p>Absolutely no problem — though we can no longer guarantee same-week scheduling once your results come in.</p>
-            </div>
+          <div class="fl-tag t-3" style="left: 900px; top: 46px; width: 340px;">
+            <div class="k">Weeks 2–8</div>
+            <h4>We'll still see you</h4>
+            <p>No problem at all — though same-week scheduling is no longer guaranteed once results arrive.</p>
           </div>
-          <div class="tl-step fee">
-            <div class="tl-pill">Week 8</div>
-            <div class="tl-card">
-              <h4>$100 fee applies</h4>
-              <p>If bloodwork isn't completed within 8 weeks of registration, a $100 administrative fee is added to re-coordinate your program.</p>
-            </div>
+          <div class="fl-tag fee t-4" style="left: 1260px; top: 330px; width: 340px;">
+            <div class="k">Week 8</div>
+            <h4>A <b>$100 admin fee</b> applies</h4>
+            <p>If bloodwork isn't complete by week 8, the fee covers re-coordinating your program.</p>
           </div>
         </div>
-        <p class="tl-note">Life gets busy — we understand. If you're running behind, just call us and we'll help you stay on track. <span class="tl-tel">(437) 370-0291</span></p>
+
+        <p class="tl-note fl-refund">Life gets busy — we understand. Running behind? Call us and we'll keep you on track. <span class="tl-tel">(437) 370-0291</span></p>
       </div>
     </div>
 
@@ -2817,7 +2893,7 @@
     // a block with a handful of children (cards, columns) staggers per child.
     document.querySelectorAll('deck-stage > section').forEach((slide) => {
       let tops;
-      if (slide.classList.contains('shmap') || slide.classList.contains('shold')) {
+      if (slide.classList.contains('shmap') || slide.classList.contains('shold') || slide.classList.contains('stime')) {
         tops = [slide.querySelector('.title-block')];
       } else {
         const root = slide.querySelector('.slide-frame') || slide;
