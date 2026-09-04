@@ -75,21 +75,41 @@
   }
   .privacy-note svg { flex: none; }
 
+  .prep-main { counter-reset: psec; }
   .pcard {
     margin-top: 36px; background: var(--white);
     border: 1px solid var(--bone-200); border-radius: 12px;
     padding: 34px 38px 38px;
     box-shadow: 0 1px 0 rgba(28,49,24,0.04);
+    counter-increment: psec;
+    transition: box-shadow 220ms var(--ease-standard), border-color 220ms var(--ease-standard);
   }
-  .pcard .kicker {
-    font-size: 12px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--forest-500); margin: 0 0 6px;
+  .pcard:focus-within {
+    border-color: var(--forest-500);
+    box-shadow: 0 1px 0 rgba(28,49,24,0.04), 0 16px 40px -24px rgba(28,49,24,0.22);
   }
-  .pcard > h2 {
-    margin: 0 0 4px; font-family: var(--font-display); font-weight: 400;
+  .pcard-head {
+    display: flex; align-items: flex-start; gap: 18px;
+    margin: 0 0 26px; padding-bottom: 20px;
+    border-bottom: 1px solid var(--bone-200);
+  }
+  .pnum {
+    flex: none; position: relative; width: 46px; height: 40px; margin-top: 3px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-size: 19px; color: var(--forest-700);
+    font-variant-numeric: tabular-nums;
+  }
+  .pnum::after { content: counter(psec, decimal-leading-zero); }
+  .pnum::before {
+    content: ""; position: absolute; inset: 0;
+    border: 1.4px solid var(--forest-ring-50); border-radius: 50%;
+    transform: rotate(-4deg);
+  }
+  .pcard-titles h2 {
+    margin: 0; font-family: var(--font-display); font-weight: 400;
     font-size: 28px; letter-spacing: -0.03em; color: var(--forest-700);
   }
-  .pcard > .hint { margin: 0 0 26px; font-size: 14px; color: var(--grey-500); line-height: 1.5; }
+  .pcard-titles .hint { margin: 6px 0 0; font-size: 14px; color: var(--grey-500); line-height: 1.5; max-width: 680px; }
 
   .fgrid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px 24px; }
   .f { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
@@ -108,8 +128,23 @@
   .f textarea { resize: vertical; min-height: 74px; line-height: 1.5; }
   .f :is(input, textarea, select):focus {
     border-color: var(--forest-700); box-shadow: 0 0 0 3px rgba(44,78,37,0.12);
-    background: var(--white);
+    background-color: var(--white);
   }
+  .f :is(input, textarea, select):hover:not(:focus),
+  .rowline :is(input, select):hover:not(:focus) { border-color: var(--grey-500); }
+  #prep ::placeholder { color: var(--grey-500); opacity: 0.65; }
+  /* hand-drawn control chrome: bundled chevron, no native spinners */
+  .f select, .rowline select {
+    appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none'><path d='M1 1l4 4 4-4' stroke='%232C4E25' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat; background-position: right 12px center; background-size: 10px 6px;
+    padding-right: 34px; cursor: pointer;
+  }
+  input[type="number"] { font-variant-numeric: tabular-nums; appearance: textfield; -moz-appearance: textfield; }
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator { opacity: 0.55; }
   .f :is(input, textarea, select).invalid { border-color: var(--sev-high); box-shadow: 0 0 0 3px rgba(179,64,47,0.10); }
   .f .err { font-size: 12.5px; color: var(--sev-high); display: none; }
   .f .err.show { display: block; }
@@ -139,7 +174,10 @@
     align-self: end; padding: 10px 18px; border-radius: 48px;
     background: var(--sage-25); color: var(--forest-900);
     font-size: 15px; font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums;
+    opacity: 0; transform: translateY(2px);
+    transition: opacity 180ms var(--ease-standard), transform 180ms var(--ease-standard);
   }
+  .delta-preview.on { opacity: 1; transform: none; }
   .delta-preview.neutral { background: var(--grey-100); color: var(--grey-600); }
 
   #worsen-warning {
@@ -159,8 +197,9 @@
     font-family: var(--font-sans); font-size: 14.5px; color: var(--grey-900);
     background: var(--cream-50); border: 1px solid var(--grey-300); border-radius: 7px;
     padding: 10px 12px; outline: none; width: 100%; box-sizing: border-box; min-width: 0;
+    transition: border-color 140ms ease, box-shadow 140ms ease;
   }
-  .rowline :is(input, select):focus { border-color: var(--forest-700); box-shadow: 0 0 0 3px rgba(44,78,37,0.12); background: var(--white); }
+  .rowline :is(input, select):focus { border-color: var(--forest-700); box-shadow: 0 0 0 3px rgba(44,78,37,0.12); background-color: var(--white); }
   .rowline .stack { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
   .rowline .del {
     width: 34px; height: 34px; border-radius: 7px; border: 1px solid transparent;
@@ -176,6 +215,8 @@
   }
   .sev-chip { visibility: hidden; }
   .sev-chip.on { visibility: visible; }
+  .sev-chip.on, .rating-label.on { animation: chipIn 180ms var(--ease-standard); }
+  @keyframes chipIn { from { opacity: 0; transform: translateY(3px); } }
   .sev-chip.high     { background: var(--sev-high-bg);     color: var(--sev-high); }
   .sev-chip.modhigh  { background: var(--sev-modhigh-bg);  color: #8A5218; }
   .sev-chip.moderate { background: var(--sev-moderate-bg); color: #7A611A; }
@@ -215,6 +256,17 @@
   .btn.ghost:hover { background: var(--sage-25); }
   .btn.quiet { background: transparent; color: var(--grey-500); border-color: var(--grey-300); }
   .btn.quiet:hover { color: var(--sev-high); border-color: var(--sev-high); background: var(--sev-high-bg); }
+  .prep-progress { display: flex; gap: 7px; align-items: center; margin-right: 8px; }
+  .pp-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    border: 1.5px solid var(--grey-300); box-sizing: border-box;
+    transition: background 200ms var(--ease-standard), border-color 200ms var(--ease-standard);
+  }
+  .pp-dot.done { background: var(--forest-500); border-color: var(--forest-500); animation: ppPop 260ms var(--ease-standard); }
+  .pp-dot[hidden] { display: none; }
+  @keyframes ppPop { 0% { transform: scale(0.5); } 60% { transform: scale(1.3); } 100% { transform: scale(1); } }
+  .btn.primary .arr { display: inline-block; transition: transform 160ms var(--ease-standard); }
+  .btn.primary:hover .arr { transform: translateX(4px); }
   .demo-tag {
     display: none; font-size: 12.5px; font-weight: 700; letter-spacing: 0.08em;
     color: var(--terracotta-600); background: var(--terracotta-100);
@@ -312,7 +364,8 @@
     color: var(--grey-700); max-width: 560px;
   }
   .g1 .foot { padding-top: 28px; border-top: 1px solid var(--bone-200); }
-  .g1 .credits { display: grid; grid-template-columns: repeat(3, auto); gap: 48px; align-items: start; }
+  .g1 .credits { display: grid; grid-template-columns: repeat(3, auto); gap: 40px; align-items: start; }
+  .g1 .credits > div + div { border-left: 1px solid var(--bone-200); padding-left: 40px; }
   .g1 .credit-label {
     font-family: var(--font-sans); font-size: 11px; font-weight: 700;
     letter-spacing: 0.24em; text-transform: uppercase; color: var(--grey-500);
@@ -322,12 +375,24 @@
     font-family: var(--font-display); font-size: 19px; line-height: 1.25;
     color: var(--forest-700); white-space: nowrap;
   }
+  .g1 .photo-col { flex: 0.92; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
   .g1 .photo {
-    flex: 0.92; min-width: 0;
+    flex: 1; min-width: 0;
     border-radius: 24px; overflow: hidden;
     background: var(--bone-100); position: relative;
     box-shadow: 0 1px 0 rgba(28,49,24,0.04);
   }
+  .g1 .photo::after {
+    content: ""; position: absolute; inset: 0; border-radius: inherit;
+    box-shadow: inset 0 0 0 1px rgba(28,49,24,0.10); pointer-events: none;
+  }
+  .g1 .photo.hero::before {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 180px;
+    background: linear-gradient(to top, rgba(15,35,18,0.20), rgba(15,35,18,0));
+  }
+  .g1 .photo.clinic { flex: 0 0 296px; border-radius: 20px; }
+  .g1 .photo.clinic img { object-position: center 72%; }
+  .g1 .photo.clinic .photo-tag { left: 20px; bottom: 20px; padding: 7px 14px; font-size: 11px; }
   .g1 .photo img {
     position: absolute; inset: 0; width: 100%; height: 100%;
     object-fit: cover; object-position: 65% center;
@@ -354,7 +419,7 @@
   }
   .g2 .photo-side > img {
     position: absolute; inset: 0; width: 100%; height: 100%;
-    object-fit: cover; object-position: center 22%;
+    object-fit: cover; object-position: 42% center;
   }
   .g2 .photo-tag {
     position: absolute; left: 22px; top: 22px;
@@ -370,8 +435,10 @@
   .g2 .photo-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--forest-500); }
   .g2 .quote-panel {
     position: absolute; left: 20px; right: 20px; bottom: 20px;
-    background: rgba(255,252,247,0.94);
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    background: rgba(255,252,247,0.88);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(223,215,202,0.65);
+    box-shadow: 0 10px 30px rgba(28,49,24,0.10);
     border-radius: 16px; padding: 28px 32px 24px;
   }
   .g2 .quote-panel .qmark {
@@ -407,7 +474,7 @@
     background: var(--white); border: 1px solid var(--bone-200);
     box-sizing: border-box;
   }
-  .g2 .waffle i.on { background: var(--terracotta-600); border-color: var(--terracotta-600); opacity: 0.88; }
+  .g2 .waffle i.on { background: color-mix(in srgb, var(--terracotta-600) 88%, var(--cream-50)); border-color: transparent; }
   .g2 .waffle-cap {
     margin-top: 14px;
     display: flex; align-items: center; justify-content: flex-end; gap: 9px;
@@ -415,7 +482,7 @@
   }
   .g2 .waffle-cap b { color: var(--grey-800); font-weight: 700; }
   .g2 .waffle-cap .sw { width: 13px; height: 13px; border-radius: 4px; flex: none; background: var(--white); border: 1px solid var(--bone-200); box-sizing: border-box; }
-  .g2 .waffle-cap .sw.on { background: var(--terracotta-600); border-color: var(--terracotta-600); opacity: 0.88; }
+  .g2 .waffle-cap .sw.on { background: color-mix(in srgb, var(--terracotta-600) 88%, var(--cream-50)); border-color: transparent; }
   .g2 .waffle-cap .lgap { width: 10px; }
   .g2 .catlist-wrap { padding-top: 10px; }
   .g2 .cat-kicker {
@@ -442,8 +509,16 @@
   .g-sev.low      { background: var(--sev-low-bg);      color: var(--sev-low); }
 
   /* ════════════ Slide 3 — Then and now ⭐ ════════════ */
+  .g3::before {
+    content: ""; position: absolute; top: -300px; right: -240px;
+    width: 980px; height: 980px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(135,164,130,0.10) 0%, rgba(135,164,130,0) 62%);
+    pointer-events: none;
+  }
   .g3 .top { display: flex; align-items: flex-start; justify-content: space-between; gap: 60px; }
   .g3 .delta-stat { text-align: right; flex: none; }
+  .g3 .ds-num .ds-from { color: var(--grey-500); }
+  .g3 .ds-num .ds-to { color: var(--forest-700); }
   .g3 .ds-num {
     font-family: var(--font-display); font-size: 118px; line-height: 0.9; letter-spacing: -0.04em;
     color: var(--forest-700); white-space: nowrap; font-variant-numeric: tabular-nums;
@@ -454,21 +529,36 @@
     font-family: var(--font-sans); font-weight: 700; font-size: 15px;
     letter-spacing: 0.2em; text-transform: uppercase; color: var(--forest-900);
   }
-  .g3.modest .ds-num, .g3.modest .ds-num .ds-arrow { color: var(--grey-800); }
+  .g3.modest .ds-num, .g3.modest .ds-num .ds-arrow,
+  .g3.modest .ds-num .ds-from, .g3.modest .ds-num .ds-to { color: var(--grey-800); }
   .g3.modest .ds-label { color: var(--grey-500); }
   .g3 .wins-head {
     margin-top: 26px;
     display: grid; grid-template-columns: 470px 1fr; gap: 70px; align-items: end;
   }
   .g3 .wins-head .wh-scale {
-    display: flex; justify-content: space-between;
+    position: relative; height: 34px;
     font-family: var(--font-sans); font-size: 12.5px; font-weight: 700;
     letter-spacing: 0.16em; text-transform: uppercase; color: var(--grey-500);
   }
+  .g3 .wh-scale .lab { position: absolute; bottom: 13px; white-space: nowrap; }
+  .g3 .wh-scale .lab.start { left: 0; }
+  .g3 .wh-scale .lab.mid { left: calc(9px + (100% - 18px) * 0.6); transform: translateX(-50%); opacity: 0.75; }
+  .g3 .wh-scale .lab.end { right: 0; }
+  .g3 .wh-scale .tick { position: absolute; bottom: 0; width: 1px; height: 7px; background: var(--bone-200); }
+  .g3 .wh-key {
+    display: flex; gap: 28px; align-items: center;
+    font-family: var(--font-sans); font-size: 12.5px; font-weight: 700;
+    letter-spacing: 0.16em; text-transform: uppercase; color: var(--grey-500);
+  }
+  .g3 .wh-key .wk { display: inline-flex; align-items: center; gap: 9px; }
+  .g3 .wh-key i { width: 13px; height: 13px; border-radius: 50%; box-sizing: border-box; flex: none; }
+  .g3 .wh-key .wk-then { background: var(--cream-50); border: 2.5px solid var(--terracotta-600); }
+  .g3 .wh-key .wk-now { background: var(--forest-700); box-shadow: 0 0 0 4px rgba(135,164,130,0.22); }
   .g3 .wins { flex: 1; display: flex; flex-direction: column; justify-content: center; margin-top: 6px; }
   .g3 .wins li {
     display: grid; grid-template-columns: 470px 1fr; gap: 70px; align-items: center;
-    padding: 22px 0; border-top: 1px solid var(--border-hair);
+    padding: 19px 0; border-top: 1px solid var(--border-hair);
   }
   .g3 .wins li:last-child { border-bottom: 1px solid var(--border-hair); }
   .g3 .wins .sname { font-family: var(--font-display); font-size: 40px; letter-spacing: -0.025em; color: var(--forest-700); line-height: 1.02; }
@@ -508,9 +598,9 @@
   .g3 .wins li.flat .from, .g3 .wins li.flat .to { color: var(--grey-500); font-weight: 400; }
   .g3 .wins li.flat .arrow { color: var(--grey-300); }
   .g3 .callout {
-    margin-top: 34px;
+    margin-top: 24px;
     display: flex; align-items: flex-start; gap: 24px;
-    padding: 30px 36px;
+    padding: 26px 36px;
     background: var(--white); border: 1px solid var(--bone-200);
     border-left: 5px solid var(--terracotta-600); border-radius: 10px;
     box-shadow: 0 1px 0 rgba(28,49,24,0.04);
@@ -530,7 +620,7 @@
   .g4 .map-card {
     margin-top: 36px; flex: 1; min-height: 0;
     position: relative; border-radius: 14px; overflow: hidden;
-    background: var(--forest-700);
+    background: linear-gradient(135deg, var(--forest-700), var(--forest-grad-end));
     box-shadow: 0 1px 0 rgba(28,49,24,0.06);
     display: flex;
   }
@@ -561,46 +651,125 @@
   .g2.play .stat-num { animation: riseIn 600ms cubic-bezier(.2,.7,.2,1) forwards; }
   @keyframes riseIn { to { opacity: 1; transform: translateY(0); } }
 
-  .g3 .track .span { transform: scaleX(0); transform-origin: left center; }
+  .g3 .track .span { transform: scaleX(0); transform-origin: right center; }
   .g3.play .track .span { animation: spanGrow 650ms cubic-bezier(.3,.6,.2,1) forwards; animation-delay: calc(var(--d, 0s) + 350ms); }
   @keyframes spanGrow { to { transform: scaleX(1); } }
   .g3 .track .pip.was, .g3 .track .pip.is { opacity: 0; transform: translate(-50%, -50%) scale(0); }
   .g3.play .track .pip.was { animation: pipPop 420ms cubic-bezier(.34,1.45,.4,1) forwards; animation-delay: var(--d, 0s); }
-  .g3.play .track .pip.is { animation: pipPop 420ms cubic-bezier(.34,1.45,.4,1) forwards; animation-delay: calc(var(--d, 0s) + 850ms); }
+  .g3.play .track .pip.is {
+    animation: pipPop 420ms cubic-bezier(.34,1.45,.4,1) forwards, haloSettle 800ms ease-out;
+    animation-delay: calc(var(--d, 0s) + 950ms), calc(var(--d, 0s) + 1380ms);
+  }
+  .g3.play .wins li.flat .track .pip.is { animation: pipPop 420ms cubic-bezier(.34,1.45,.4,1) forwards; animation-delay: calc(var(--d, 0s) + 950ms); }
+  @keyframes haloSettle {
+    0% { box-shadow: 0 0 0 7px rgba(135,164,130,0.22); }
+    35% { box-shadow: 0 0 0 12px rgba(135,164,130,0.10); }
+    100% { box-shadow: 0 0 0 7px rgba(135,164,130,0.22); }
+  }
   @keyframes pipPop { to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
   .g3 .delta-stat { opacity: 0; transform: translateY(10px); }
   .g3.play .delta-stat { animation: riseIn 600ms cubic-bezier(.2,.7,.2,1) forwards; animation-delay: 150ms; }
 
+  /* ════════════ Deck-wide entry-motion system ════════════
+     .ar = rise-in, .ap = photo settle; per-element delay via inline --d.
+     Chrome (footer-bar, pagenum, print-foot) NEVER animates. */
+  .ar { opacity: 0; transform: translateY(10px); }
+  deck-stage > section.play .ar {
+    animation: riseIn 600ms cubic-bezier(.2,.7,.2,1) forwards;
+    animation-delay: var(--d, 0s);
+  }
+  .ap { opacity: 0; }
+  deck-stage > section.play .ap {
+    animation: photoIn 900ms cubic-bezier(.3,.6,.2,1) forwards;
+    animation-delay: var(--d, 0s);
+  }
+  @keyframes photoIn { from { opacity: 0; transform: scale(1.015); } to { opacity: 1; transform: scale(1); } }
+
+  /* — slide 1 bespoke beat: eyebrow dash draws — */
+  .g1 .g1-eyebrow::before { transform: scaleX(0); transform-origin: left center; }
+  .g1.play .g1-eyebrow::before { animation: g1Dash 500ms cubic-bezier(.3,.6,.2,1) 200ms forwards; }
+  @keyframes g1Dash { to { transform: scaleX(1); } }
+
+  /* — slide 2 narrative beats: category list surfaces after the stat — */
+  .g2 .cat-kicker, .g2 .catlist li { opacity: 0; }
+  .g2.play :is(.cat-kicker, .catlist li) { animation: riseIn 500ms cubic-bezier(.2,.7,.2,1) forwards; }
+  .g2.play .cat-kicker { animation-delay: .5s; }
+  .g2.play .catlist li:nth-child(1) { animation-delay: .58s; }
+  .g2.play .catlist li:nth-child(2) { animation-delay: .66s; }
+  .g2.play .catlist li:nth-child(3) { animation-delay: .74s; }
+  .g2.play .catlist li:nth-child(4) { animation-delay: .82s; }
+  .g2.play .catlist li:nth-child(5) { animation-delay: .9s; }
+  .g2.play .catlist li:nth-child(6) { animation-delay: .98s; }
+
+  /* — slide 5 bespoke beat: method spine draws downward — */
+  .g5 .spine { transform: scaleY(0); transform-origin: top center; }
+  .g5.play .spine { animation: spineGrow 800ms cubic-bezier(.3,.6,.2,1) 250ms forwards; }
+  @keyframes spineGrow { to { transform: scaleY(1); } }
+
+  /* — slide 6: the year draws itself as a flow — */
+  .g6 .timeline::before { transform: scaleY(0); transform-origin: top center; }
+  .g6.play .timeline::before { animation: railGrow 700ms cubic-bezier(.3,.6,.2,1) 180ms forwards; }
+  @keyframes railGrow { to { transform: scaleY(1); } }
+  .g6 .tl-step::before { opacity: 0; transform: scale(0); }
+  .g6.play .tl-step:nth-child(1)::before { animation: wfPop 420ms cubic-bezier(.34,1.45,.4,1) 260ms forwards; }
+  .g6.play .tl-step:nth-child(2)::before { animation: wfPop 420ms cubic-bezier(.34,1.45,.4,1) 520ms forwards; }
+  .g6.play .tl-step:nth-child(3)::before { animation: wfPop 420ms cubic-bezier(.34,1.45,.4,1) 780ms forwards; }
+  .g6 .tl-body, .g6 .tl-when { opacity: 0; transform: translateY(8px); }
+  .g6.play .tl-step:nth-child(1) :is(.tl-body, .tl-when) { animation: riseIn 500ms cubic-bezier(.2,.7,.2,1) 350ms forwards; }
+  .g6.play .tl-step:nth-child(2) :is(.tl-body, .tl-when) { animation: riseIn 500ms cubic-bezier(.2,.7,.2,1) 610ms forwards; }
+  .g6.play .tl-step:nth-child(3) :is(.tl-body, .tl-when) { animation: riseIn 500ms cubic-bezier(.2,.7,.2,1) 870ms forwards; }
+  .g6 .inclusions span { opacity: 0; transform: translateY(6px); }
+  .g6.play .inc-chips span:nth-child(1) { animation: riseIn 420ms cubic-bezier(.2,.7,.2,1) 1120ms forwards; }
+  .g6.play .inc-chips span:nth-child(2) { animation: riseIn 420ms cubic-bezier(.2,.7,.2,1) 1200ms forwards; }
+  .g6.play .inc-chips span:nth-child(3) { animation: riseIn 420ms cubic-bezier(.2,.7,.2,1) 1280ms forwards; }
+  .g6 .path.alt { opacity: 0; transform: translateY(10px); }
+  .g6.play .path.alt { animation: riseIn 600ms cubic-bezier(.2,.7,.2,1) 1250ms forwards; }
+  .g6 .rec, .g6 .pprice, .g6 .path.hero .pnote, .g6 .freeline { opacity: 0; transform: translateY(8px); }
+  .g6.play .rec { animation: riseIn 500ms cubic-bezier(.2,.7,.2,1) 200ms forwards; }
+  .g6.play .pprice { animation: riseIn 500ms cubic-bezier(.2,.7,.2,1) 320ms forwards; }
+  .g6.play .path.hero .pnote { animation: riseIn 500ms cubic-bezier(.2,.7,.2,1) 440ms forwards; }
+  .g6.play .freeline { animation: riseIn 500ms cubic-bezier(.2,.7,.2,1) 560ms forwards; }
+
+  /* — slide 7: wash breathes in once, content cadence via .ar — */
+  .g7 .wash { opacity: 0; }
+  .g7.play .wash { animation: slFade 1200ms ease forwards; }
+
   /* ════════════ Slide 5 — What made this work ════════════ */
-  .g5 .pillars { margin-top: 44px; flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-content: center; }
-  .g5 .pillar {
-    position: relative; overflow: hidden; min-height: 310px;
-    background: var(--white); border: 1px solid var(--forest-700); border-radius: 8px;
-    padding: 36px 36px 34px;
-    display: flex; flex-direction: column; gap: 18px;
-  }
-  .g5 .pillar .ghost {
-    position: absolute; top: -34px; right: 10px;
-    font-family: var(--font-display); font-size: 190px; line-height: 1;
-    color: var(--sage-25); letter-spacing: -0.04em; pointer-events: none;
-    font-style: italic;
-  }
-  .g5 .pillar .icon {
-    width: 58px; height: 58px; border-radius: 50%; flex: none;
-    background: var(--sage-25);
+  .g5 .method { margin-top: 40px; flex: 1; min-height: 0; display: grid; grid-template-columns: 1.15fr 1fr; gap: 64px; align-items: stretch; }
+  .g5 .mcol { position: relative; display: flex; flex-direction: column; justify-content: center; }
+  .g5 .spine { position: absolute; left: 26px; top: 44px; bottom: 44px; width: 1px; background: var(--bone-200); }
+  .g5 .mrow { position: relative; display: flex; gap: 28px; align-items: flex-start; padding: 22px 0; }
+  .g5 .mnum {
+    position: relative; z-index: 1; flex: none;
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--white); border: 1px solid var(--forest-500);
     display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-style: italic; font-size: 24px; color: var(--forest-700);
   }
-  .g5 .pillar .icon svg { width: 27px; height: 27px; color: var(--forest-700); }
-  .g5 .pillar h3 { font-family: var(--font-display); font-size: 36px; color: var(--forest-700); letter-spacing: -0.03em; line-height: 1.05; max-width: 340px; margin-top: 6px; position: relative; }
-  .g5 .pillar p { font-family: var(--font-sans); font-size: 22px; color: var(--grey-700); line-height: 1.45; position: relative; }
+  .g5 .mbody h3 { font-family: var(--font-display); font-weight: 400; font-size: 32px; line-height: 1.08; letter-spacing: -0.03em; color: var(--forest-700); max-width: 560px; }
+  .g5 .mbody p { margin-top: 10px; font-family: var(--font-sans); font-size: 20px; line-height: 1.45; color: var(--grey-700); max-width: 560px; }
+  .g5 .photo5 {
+    position: relative; border-radius: 24px; overflow: hidden;
+    background: var(--bone-100); box-shadow: 0 1px 0 rgba(28,49,24,0.04); margin: 0;
+  }
+  .g5 .photo5 img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 55% center; }
+  .g5 .photo5 .photo-tag {
+    position: absolute; left: 24px; bottom: 24px;
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border-radius: 999px;
+    font-family: var(--font-sans); font-size: 12px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--forest-700);
+  }
+  .g5 .photo5 .photo-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--forest-500); }
   .g5 .bridge {
     position: relative; overflow: hidden;
-    margin-top: 36px;
+    margin-top: 32px;
     display: flex; align-items: flex-start; gap: 24px;
-    padding: 34px 40px;
-    background: var(--white); border: 1px solid var(--bone-200);
-    border-left: 5px solid var(--forest-500); border-radius: 10px;
-    box-shadow: 0 1px 0 rgba(28,49,24,0.04);
+    padding: 30px 40px;
+    background: var(--sage-25); border-radius: 16px;
   }
   .g5 .bridge::before {
     content: ""; position: absolute; right: -110px; top: -110px;
@@ -614,7 +783,7 @@
   }
   .g5 .bridge .b-tag {
     font-family: var(--font-sans); font-size: 14px; font-weight: 700;
-    letter-spacing: 0.18em; text-transform: uppercase; color: var(--forest-500);
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--forest-700);
     white-space: nowrap; padding-top: 10px;
   }
   .g5 .bridge .b-text {
@@ -636,7 +805,7 @@
     padding: 20px 36px;
     display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
   }
-  .g6 .path.hero .p-head { background: var(--forest-700); }
+  .g6 .path.hero .p-head { background: linear-gradient(120deg, var(--forest-700) 0%, var(--forest-grad-end) 100%); }
   .g6 .path.alt .p-head { border-bottom: 1px solid var(--bone-200); }
   .g6 .p-head h3 { font-family: var(--font-display); font-size: 36px; line-height: 1.02; letter-spacing: -0.03em; color: var(--cream-50); }
   .g6 .path.alt .p-head h3 { color: var(--forest-700); }
@@ -672,16 +841,29 @@
   .g6 .tl-num { font-family: var(--font-sans); font-size: 13px; font-weight: 600; letter-spacing: 0.2em; color: var(--forest-500); text-transform: uppercase; }
   .g6 .tl-title { font-family: var(--font-display); font-size: 30px; line-height: 1.1; letter-spacing: -0.02em; color: var(--forest-700); margin-top: 4px; }
   .g6 .tl-desc { font-family: var(--font-sans); font-size: 17px; line-height: 1.45; color: var(--grey-700); margin-top: 4px; }
-  .g6 .tl-when { font-family: var(--font-sans); font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--grey-500); align-self: start; padding-top: 8px; white-space: nowrap; }
+  .g6 .tl-when {
+    font-family: var(--font-sans); font-size: 12.5px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--grey-500);
+    align-self: start; margin-top: 4px; padding: 7px 14px;
+    background: var(--cream-50); border: 1px solid var(--bone-200); border-radius: 999px;
+    white-space: nowrap;
+  }
 
   .g6 .inclusions {
     margin-top: auto; padding-top: 20px; border-top: 1px solid var(--bone-200);
-    display: flex; flex-wrap: wrap; gap: 10px;
+    display: flex; flex-direction: column; gap: 12px;
   }
-  .g6 .inclusions span {
+  .g6 .inc-label {
+    font-family: var(--font-sans); font-size: 12px; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey-500);
+  }
+  .g6 .inc-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .g6 .inc-chips span {
     font-family: var(--font-sans); font-size: 17px; line-height: 1; color: var(--grey-800);
     padding: 12px 20px; background: var(--cream-50); border-radius: 999px; white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 9px; border: 1px solid var(--bone-200);
   }
+  .g6 .inc-chips span::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--forest-500); flex: none; }
   .g6 .ppv { display: flex; flex-direction: column; }
   .g6 .ppv li { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; padding: 22px 0; border-bottom: 1px solid var(--bone-200); }
   .g6 .ppv li:first-child { padding-top: 4px; }
@@ -730,8 +912,10 @@
     margin-top: 44px;
     font-family: var(--font-display); font-size: 186px; line-height: 0.92;
     letter-spacing: -0.045em; color: var(--forest-700);
+    font-feature-settings: "lnum" 1; font-variant-numeric: lining-nums;
   }
-  .g7 .price small { font-family: var(--font-display); font-size: 58px; color: var(--grey-500); letter-spacing: -0.02em; }
+  .g7 .price .cur { font-size: 92px; vertical-align: 52px; margin-right: 4px; color: var(--forest-500); letter-spacing: 0; }
+  .g7 .price small { font-family: var(--font-display); font-style: italic; font-size: 58px; color: var(--grey-500); letter-spacing: -0.02em; }
   .g7 .early {
     margin-top: 42px;
     display: inline-flex; align-items: baseline; gap: 14px;
@@ -765,34 +949,62 @@
     font-family: var(--font-sans); font-size: 27px; line-height: 1.4; color: var(--grey-800);
     padding-left: 46px; position: relative; letter-spacing: -0.01em;
   }
-  .g8 .check li::before {
-    content: ""; position: absolute; left: 0; top: 12px;
-    width: 22px; height: 12px;
-    border-left: 2px solid var(--forest-700); border-bottom: 2px solid var(--forest-700);
-    transform: rotate(-45deg);
+  .g8 .tick { position: absolute; left: 0; top: 8px; width: 26px; height: 16px; }
+  .g8 .tick path {
+    fill: none; stroke: var(--forest-700); stroke-width: 2.6;
+    stroke-linecap: round; stroke-linejoin: round;
+    stroke-dasharray: 1; stroke-dashoffset: 1;
   }
+  .g8.play .tick path { animation: slDraw 420ms cubic-bezier(.3,.6,.2,1) forwards; animation-delay: var(--d, 0s); }
   .g8 .check li em { font-style: italic; font-family: var(--font-display); font-size: 28px; color: var(--forest-700); }
   .g8 .booknow {
-    margin-top: 34px; padding-top: 26px; border-top: 1px solid var(--bone-200);
-    font-size: 24px; color: var(--grey-600); line-height: 1.45;
+    margin-top: 38px; padding-top: 28px; border-top: 1px solid var(--bone-200);
+    display: flex; align-items: flex-start; gap: 22px;
+  }
+  .g8 .booknow .bn-tag {
+    font-family: var(--font-sans); font-size: 13px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--terracotta-600);
+    white-space: nowrap; padding-top: 9px;
+  }
+  .g8 .booknow .bn-text {
+    font-family: var(--font-display); font-style: italic; font-size: 30px;
+    line-height: 1.28; letter-spacing: -0.02em; color: var(--grey-800);
+    max-width: 640px;
   }
   .g8 .held {
     display: none; margin-top: 26px;
     align-items: flex-start; gap: 22px;
-    padding: 26px 32px;
-    background: var(--forest-700); color: var(--cream-50);
-    border-radius: 12px;
+    padding: 28px 34px;
+    background: linear-gradient(135deg, var(--forest-700) 0%, var(--forest-grad-end) 100%); color: var(--cream-50);
+    border-radius: 14px;
     font-size: 27px; line-height: 1.35; letter-spacing: -0.01em;
   }
   .g8 .held.show { display: flex; }
   .g8 .held .h-tag {
+    display: inline-flex; align-items: center; gap: 10px;
     font-family: var(--font-sans); font-size: 13px; font-weight: 700;
     letter-spacing: 0.2em; text-transform: uppercase; color: var(--forest-500);
     white-space: nowrap; padding-top: 8px;
   }
-  .g8 .held b { color: var(--white); font-weight: 700; }
+  .g8 .held .h-dot { position: relative; width: 8px; height: 8px; border-radius: 50%; background: var(--forest-500); flex: none; }
+  .g8 .held .h-dot::after {
+    content: ""; position: absolute; inset: -5px; border-radius: 50%;
+    border: 1.3px solid var(--forest-500); opacity: 0;
+    animation: heldPulse 2.6s ease-out infinite;
+  }
+  @keyframes heldPulse {
+    0% { transform: scale(0.55); opacity: 0.9; }
+    70% { transform: scale(1.4); opacity: 0; }
+    100% { opacity: 0; }
+  }
+  .g8 .held b { color: var(--white); font-weight: 700; font-variant-numeric: tabular-nums; }
   .g8 .cardwrap { display: flex; flex-direction: column; align-items: center; gap: 20px; position: relative; }
-  .g8 .cardwrap svg { transform: rotate(-1.6deg); filter: drop-shadow(0 18px 30px rgba(28,49,24,0.14)); }
+  .g8 .cardwrap svg { transform: rotate(-1.6deg); filter: drop-shadow(0 18px 30px rgba(28,49,24,0.14)); opacity: 0; }
+  .g8.play .cardwrap svg { animation: cardSettle 650ms cubic-bezier(.2,.7,.2,1) 350ms forwards; }
+  @keyframes cardSettle {
+    from { opacity: 0; transform: translateY(24px) rotate(-0.5deg); }
+    to { opacity: 1; transform: rotate(-1.6deg); }
+  }
   .g8 .cardwrap figcaption {
     display: inline-flex; align-items: center; gap: 10px;
     padding: 8px 16px; border-radius: 999px;
@@ -802,12 +1014,19 @@
   }
   .g8 .cardwrap figcaption .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--forest-500); }
 
-  /* ════════════ Slide 9 — Thank you (dark closer with candid photo) ════════════ */
-  .g9 { background: var(--forest-700); color: var(--cream-50); }
+  /* ════════════ Slide 9 — Thank you (dark closer, the clinic itself) ════════════ */
+  .g9 {
+    background:
+      radial-gradient(1300px 900px at 16% 10%, rgba(255,252,247,0.05), transparent 62%),
+      linear-gradient(150deg, var(--forest-700) 0%, var(--forest-700) 42%, var(--forest-grad-end) 100%);
+    color: var(--cream-50);
+  }
   .g9 .slide-frame { padding: 96px 120px 130px; }
   .g9 .cols9 { flex: 1; min-height: 0; display: grid; grid-template-columns: 1.25fr 1fr; gap: 90px; align-items: stretch; }
   .g9 .left9 { display: flex; flex-direction: column; min-height: 0; }
-  .g9 .eyebrow { color: var(--forest-500); }
+  .g9 .eyebrow { display: flex; align-items: center; gap: 14px; color: var(--forest-500); }
+  .g9 .eyebrow::before { content: ""; width: 32px; height: 1px; background: var(--forest-500); flex: 0 0 auto; }
+  .g9 .ring-word::before { border-color: rgba(255,252,247,0.4); }
   .g9 h1 {
     font-family: var(--font-display); font-size: 88px; line-height: 1.0;
     letter-spacing: -0.04em; color: var(--cream-50); font-weight: 400;
@@ -823,7 +1042,7 @@
   }
   .g9 .photo9 img {
     position: absolute; inset: 0; width: 100%; height: 100%;
-    object-fit: cover; object-position: 38% center;
+    object-fit: cover; object-position: 46% center;
     filter: saturate(0.92) contrast(1.02);
   }
   /* film grain — inline SVG noise, no network */
@@ -844,12 +1063,20 @@
     letter-spacing: 0.18em; text-transform: uppercase; color: rgba(244,239,228,0.92);
   }
   .g9 .photo9 .photo-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--forest-500); }
-  .g9 .contact-bar { margin-top: auto; display: flex; flex-direction: column; gap: 12px; }
-  .g9 .contact-row {
-    display: flex; align-items: center; gap: 18px;
-    font-family: var(--font-sans); font-size: 24px; color: rgba(255,252,247,0.75);
+  .g9 .contact-bar {
+    margin-top: auto;
+    display: grid; grid-template-columns: auto auto 1fr; gap: 56px;
+    padding-top: 28px; border-top: 1px solid rgba(244,239,228,0.18);
   }
-  .g9 .contact-row .dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,252,247,0.4); }
+  .g9 .c-label {
+    font-family: var(--font-sans); font-size: 12px; font-weight: 700;
+    letter-spacing: 0.24em; text-transform: uppercase; color: var(--forest-500);
+    margin-bottom: 8px;
+  }
+  .g9 .c-value {
+    font-family: var(--font-display); font-size: 25px; letter-spacing: -0.01em;
+    color: rgba(255,252,247,0.92); line-height: 1.3;
+  }
   .g9 .footer-note {
     margin-top: 40px;
     display: flex; align-items: flex-start; gap: 24px;
@@ -886,16 +1113,64 @@
     #prep, #navzones { display: none !important; }
     .print-foot { display: block; }
     deck-stage { visibility: visible; }
-    /* infographic animations must never hide content on paper */
-    .g2 .waffle i, .g2 .stat-num, .g3 .delta-stat,
-    .g3 .track .span, .g3 .track .pip.was, .g3 .track .pip.is,
-    .g4 .sl-path, .g4 .sl-dot, .g4 .sl-lab {
+    /* animations must never hide content on paper */
+    .ar, .ap,
+    .g1 .g1-eyebrow::before,
+    .g2 .waffle i, .g2 .stat-num, .g2 .cat-kicker, .g2 .catlist li,
+    .g3 .delta-stat, .g3 .track .span, .g3 .track .pip.was, .g3 .track .pip.is,
+    .g4 .sl-path, .g4 .sl-dot, .g4 .sl-lab,
+    .g5 .spine,
+    .g6 .timeline::before, .g6 .tl-step::before, .g6 .tl-body, .g6 .tl-when,
+    .g6 .inclusions span, .g6 .path.alt, .g6 .rec, .g6 .pprice, .g6 .path.hero .pnote, .g6 .freeline,
+    .g7 .wash,
+    .g8 .cardwrap svg, .g8 .held .h-dot::after {
       animation: none !important; opacity: 1 !important;
     }
-    .g2 .waffle i, .g2 .stat-num, .g3 .delta-stat, .g4 .sl-dot { transform: none !important; }
+    .ar, .ap,
+    .g2 .waffle i, .g2 .stat-num, .g2 .cat-kicker, .g2 .catlist li,
+    .g3 .delta-stat, .g4 .sl-dot,
+    .g6 .tl-body, .g6 .tl-when, .g6 .inclusions span, .g6 .path.alt,
+    .g6 .rec, .g6 .pprice, .g6 .path.hero .pnote, .g6 .freeline { transform: none !important; }
+    .g1 .g1-eyebrow::before { transform: scaleX(1) !important; }
     .g3 .track .span { transform: scaleX(1) !important; }
     .g3 .track .pip.was, .g3 .track .pip.is { transform: translate(-50%, -50%) scale(1) !important; }
     .g4 .sl-path { stroke-dashoffset: 0 !important; }
+    .g5 .spine { transform: scaleY(1) !important; }
+    .g6 .timeline::before { transform: scaleY(1) !important; }
+    .g6 .tl-step::before { transform: scale(1) !important; }
+    .g8 .tick path { animation: none !important; stroke-dashoffset: 0 !important; }
+    .g8 .cardwrap svg { transform: rotate(-1.6deg) !important; }
+    .g8 .held .h-dot::after { opacity: 0 !important; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ar, .ap,
+    .g1 .g1-eyebrow::before,
+    .g2 .waffle i, .g2 .stat-num, .g2 .cat-kicker, .g2 .catlist li,
+    .g3 .delta-stat, .g3 .track .span, .g3 .track .pip.was, .g3 .track .pip.is,
+    .g4 .sl-path, .g4 .sl-dot, .g4 .sl-lab,
+    .g5 .spine,
+    .g6 .timeline::before, .g6 .tl-step::before, .g6 .tl-body, .g6 .tl-when,
+    .g6 .inclusions span, .g6 .path.alt, .g6 .rec, .g6 .pprice, .g6 .path.hero .pnote, .g6 .freeline,
+    .g7 .wash,
+    .g8 .cardwrap svg, .g8 .held .h-dot::after {
+      animation: none !important; opacity: 1 !important;
+    }
+    .ar, .ap,
+    .g2 .waffle i, .g2 .stat-num, .g2 .cat-kicker, .g2 .catlist li,
+    .g3 .delta-stat, .g4 .sl-dot,
+    .g6 .tl-body, .g6 .tl-when, .g6 .inclusions span, .g6 .path.alt,
+    .g6 .rec, .g6 .pprice, .g6 .path.hero .pnote, .g6 .freeline { transform: none !important; }
+    .g1 .g1-eyebrow::before { transform: scaleX(1) !important; }
+    .g3 .track .span { transform: scaleX(1) !important; }
+    .g3 .track .pip.was, .g3 .track .pip.is { transform: translate(-50%, -50%) scale(1) !important; }
+    .g4 .sl-path { stroke-dashoffset: 0 !important; }
+    .g5 .spine { transform: scaleY(1) !important; }
+    .g6 .timeline::before { transform: scaleY(1) !important; }
+    .g6 .tl-step::before { transform: scale(1) !important; }
+    .g8 .tick path { animation: none !important; stroke-dashoffset: 0 !important; }
+    .g8 .cardwrap svg { transform: rotate(-1.6deg) !important; }
+    .g8 .held .h-dot::after { opacity: 0 !important; }
   }
 </style>
 </head>
@@ -917,7 +1192,7 @@
 
   <main class="prep-main">
     <div class="prep-kicker">Offboarding visit</div>
-    <h1 class="prep-title">Foundation <em>Graduation</em> Deck</h1>
+    <h1 class="prep-title">Foundation <em class="ring-word">graduation</em> deck.</h1>
     <p class="prep-sub">Transcribe summary values from the two Hormone Questionnaire reports in the chart (side-by-side works best), then <b>Generate</b>. Present slides 1–9 with the printed cue card in hand.</p>
     <div class="privacy-note">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -926,9 +1201,13 @@
 
     <!-- Patient & framing -->
     <section class="pcard" id="fs-patient">
-      <p class="kicker">Section 01</p>
-      <h2>Patient &amp; framing</h2>
-      <p class="hint">From the chart and the provider's final-visit note.</p>
+      <header class="pcard-head">
+        <span class="pnum" aria-hidden="true"></span>
+        <div class="pcard-titles">
+          <h2>Patient &amp; framing</h2>
+          <p class="hint">From the chart and the provider's final-visit note.</p>
+        </div>
+      </header>
       <div class="fgrid">
         <div class="f" style="grid-column: span 4;">
           <label for="f-first">First name</label>
@@ -996,9 +1275,13 @@
 
     <!-- Symptom summary -->
     <section class="pcard" id="fs-summary">
-      <p class="kicker">Section 02</p>
-      <h2>Symptom summary</h2>
-      <p class="hint">Total symptoms rated moderate or worse (≥3), from each report's summary page.</p>
+      <header class="pcard-head">
+        <span class="pnum" aria-hidden="true"></span>
+        <div class="pcard-titles">
+          <h2>Symptom summary</h2>
+          <p class="hint">Total symptoms rated moderate or worse (≥3), from each report's summary page.</p>
+        </div>
+      </header>
       <div class="flagged-pair">
         <div class="f">
           <label for="f-intake-flagged" id="l-intake-flagged">Total flagged — intake</label>
@@ -1010,7 +1293,7 @@
           <input type="number" id="f-final-flagged" min="0" max="54" step="1" inputmode="numeric">
           <span class="err" id="e-final-flagged">Whole number, 0–54.</span>
         </div>
-        <div class="delta-preview" id="delta-preview" style="visibility:hidden;">31 → 9</div>
+        <div class="delta-preview" id="delta-preview">31 → 9</div>
       </div>
       <div id="worsen-warning">
         <div class="wtitle">
@@ -1028,9 +1311,13 @@
 
     <!-- Top categories -->
     <section class="pcard" id="fs-categories">
-      <p class="kicker">Section 03</p>
-      <h2>Top categories</h2>
-      <p class="hint">3–6 rows from the reports' Hormonal Imbalance tables. Chips derive live at 60 / 40 / 20 — if a chip disagrees with the on-screen report, you've likely mistyped. Supporting narrative only (slide 4).</p>
+      <header class="pcard-head">
+        <span class="pnum" aria-hidden="true"></span>
+        <div class="pcard-titles">
+          <h2>Top categories</h2>
+          <p class="hint">3–6 rows from the reports' Hormonal Imbalance tables. Chips derive live at 60 / 40 / 20 — if a chip disagrees with the on-screen report, you've likely mistyped. Supporting narrative only (slide 4).</p>
+        </div>
+      </header>
       <div class="rows" id="cat-rows">
         <div class="rowline cat">
           <span class="colhead">Category</span>
@@ -1047,9 +1334,13 @@
 
     <!-- Symptom wins -->
     <section class="pcard" id="fs-wins">
-      <p class="kicker">Section 04</p>
-      <h2>Symptom wins</h2>
-      <p class="hint" id="wins-hint">3–6 biggest movers, biased toward the chief complaints. Ratings are the 0–5 questionnaire scale; labels derive live. One flat row is fine — honesty photographs well too.</p>
+      <header class="pcard-head">
+        <span class="pnum" aria-hidden="true"></span>
+        <div class="pcard-titles">
+          <h2>Symptom wins</h2>
+          <p class="hint" id="wins-hint">3–6 biggest movers, biased toward the chief complaints. Ratings are the 0–5 questionnaire scale; labels derive live. One flat row is fine — honesty photographs well too.</p>
+        </div>
+      </header>
       <div class="rows" id="win-rows">
         <div class="rowline win">
           <span class="colhead">Symptom</span>
@@ -1070,8 +1361,14 @@
       <span class="demo-tag" id="demo-tag">SAMPLE DATA — FAKE</span>
     </div>
     <div class="right">
+      <div class="prep-progress" id="prep-progress" aria-hidden="true">
+        <span class="pp-dot" id="pp-1"></span>
+        <span class="pp-dot" id="pp-2"></span>
+        <span class="pp-dot" id="pp-3"></span>
+        <span class="pp-dot" id="pp-4"></span>
+      </div>
       <span id="form-err-summary">Fix the highlighted fields to generate.</span>
-      <button type="button" class="btn primary" id="btn-generate">Generate deck →</button>
+      <button type="button" class="btn primary" id="btn-generate">Generate deck <span class="arr" aria-hidden="true">→</span></button>
     </div>
   </footer>
 </div>
@@ -1094,11 +1391,11 @@
           </div>
         </div>
         <div class="mid">
-          <div class="g1-eyebrow">Foundation Program · <span data-bind="daterange"></span></div>
-          <h1>Congratulations, <span class="italic" data-bind="first_name"></span>.</h1>
-          <p class="sub">Over the past 12 weeks, you and Optimal built a treatment plan that's yours.</p>
+          <div class="g1-eyebrow ar" style="--d:.05s">Foundation Program · <span data-bind="daterange"></span></div>
+          <h1 class="ar" style="--d:.14s">Congratulations, <span class="italic" data-bind="first_name"></span>.</h1>
+          <p class="sub ar" style="--d:.24s">Over the past 12 weeks, you and Optimal built a treatment plan that's yours.</p>
         </div>
-        <div class="foot">
+        <div class="foot ar" style="--d:.42s">
           <div class="credits">
             <div>
               <div class="credit-label">Program</div>
@@ -1115,9 +1412,15 @@
           </div>
         </div>
       </div>
-      <div class="photo">
-        <img src="../assets/images/graduate-hero.jpg" alt="Woman, mid-life, smiling warmly" style="object-position: 62% center;">
-        <div class="photo-tag"><span class="dot"></span>Foundation Graduate</div>
+      <div class="photo-col">
+        <div class="photo hero ap" style="--d:.1s">
+          <img src="../assets/images/graduate-hero.jpg" alt="Woman, mid-life, smiling warmly" style="object-position: 62% center;">
+          <div class="photo-tag ar" style="--d:.6s"><span class="dot"></span>Foundation Graduate</div>
+        </div>
+        <div class="photo clinic ap" style="--d:.28s">
+          <img src="../assets/images/clinic-reception-desk.webp" alt="Optimal Clinic reception desk in Barrie">
+          <div class="photo-tag ar" style="--d:.72s"><span class="dot"></span>Your clinic &middot; Barrie, ON</div>
+        </div>
       </div>
     </div>
     <div class="print-foot" data-bind="print_foot"></div>
@@ -1127,14 +1430,14 @@
   <section class="g2" data-label="02 Where you started">
     <div class="slide-frame">
       <div class="title-block">
-        <div class="eyebrow" data-bind="s2_eyebrow">Where you started</div>
-        <h2 class="display display-md" data-bind-html="s2_display">It started with <span class="italic ring-word">your words</span>.</h2>
+        <div class="eyebrow ar" data-bind="s2_eyebrow">Where you started</div>
+        <h2 class="display display-md ar" style="--d:.08s" data-bind-html="s2_display">It started with <span class="italic ring-word">your words</span>.</h2>
       </div>
       <div class="cols">
-        <div class="photo-side">
-          <img src="../assets/images/portrait-forest-woman.png" alt="Woman in dappled light, eyes closed, remembering">
+        <div class="photo-side ap">
+          <img src="../assets/images/clinic-reception.webp" alt="Optimal Clinic reception — terrazzo desk, wood panelling, green-tile waiting room">
           <div class="photo-tag"><span class="dot"></span><span data-bind="s2_phototag">First visit</span></div>
-          <div class="quote-panel">
+          <div class="quote-panel ar" style="--d:.45s">
             <span class="qmark">&ldquo;</span>
             <blockquote data-bind="intake_quote"></blockquote>
             <div class="attr" data-bind="s2_attr">you, at your first visit</div>
@@ -1165,24 +1468,38 @@
   </section>
 
   <!-- 3 — Your symptoms, then and now ⭐ -->
+  <!-- imagery policy: photo-free — patients photograph this slide; data must own the frame -->
   <section class="g3" data-label="03 Then and now">
     <div class="slide-frame">
       <div class="top">
         <div class="title-block">
-          <div class="eyebrow">Then and now</div>
-          <h2 class="display display-md" data-bind-html="s3_headline">Where you are <span class="italic ring-word">now</span>.</h2>
+          <div class="eyebrow ar">Then and now</div>
+          <h2 class="display display-md ar" style="--d:.08s" data-bind-html="s3_headline">Where you are <span class="italic ring-word">now</span>.</h2>
         </div>
         <div class="delta-stat">
-          <div class="ds-num"><span data-bind="delta_from"></span><span class="ds-arrow">→</span><span data-bind="delta_to"></span></div>
+          <div class="ds-num"><span class="ds-from" data-bind="delta_from"></span><span class="ds-arrow">→</span><span class="ds-to" data-bind="delta_to"></span></div>
           <div class="ds-label" data-bind="ds_label">Symptoms moderate or worse</div>
         </div>
       </div>
       <div class="wins-head">
-        <span></span>
-        <span class="wh-scale"><span>Not present</span><span>Very severe</span></span>
+        <div class="wh-key" aria-hidden="true">
+          <span class="wk"><i class="wk-then"></i>Then</span>
+          <span class="wk"><i class="wk-now"></i>Today</span>
+        </div>
+        <div class="wh-scale">
+          <span class="lab start">Not present</span>
+          <span class="lab mid">Moderate</span>
+          <span class="lab end">Very severe</span>
+          <span class="tick" style="left:calc(9px + (100% - 18px) * 0.0)"></span>
+          <span class="tick" style="left:calc(9px + (100% - 18px) * 0.2)"></span>
+          <span class="tick" style="left:calc(9px + (100% - 18px) * 0.4)"></span>
+          <span class="tick" style="left:calc(9px + (100% - 18px) * 0.6)"></span>
+          <span class="tick" style="left:calc(9px + (100% - 18px) * 0.8)"></span>
+          <span class="tick" style="left:calc(9px + (100% - 18px) * 1.0)"></span>
+        </div>
       </div>
       <ul class="wins" data-bind-list="s3_wins"></ul>
-      <div class="callout">
+      <div class="callout ar" style="--d:1.5s">
         <div class="co-tag">From your provider</div>
         <div class="co-text">&ldquo;<span data-bind="headline_win"></span>&rdquo;</div>
       </div>
@@ -1195,11 +1512,12 @@
   </section>
 
   <!-- 4 — Your hormone picture (auto-skips: then-test / no category rows) -->
+  <!-- imagery policy: photo-free — the slope card is the visual -->
   <section class="g4" data-label="04 Your hormone picture">
     <div class="slide-frame">
       <div class="title-block">
-        <div class="eyebrow">The supporting picture</div>
-        <h2 class="display display-md">Your hormone <span class="italic ring-word">picture</span>.</h2>
+        <div class="eyebrow ar">The supporting picture</div>
+        <h2 class="display display-md ar" style="--d:.08s">Your hormone <span class="italic ring-word">picture</span>.</h2>
       </div>
       <div class="map-card" data-bind-svg="s4_slope"></div>
       <p class="caption">These categories share symptoms — the overall pattern matters more than any single number.</p>
@@ -1215,30 +1533,40 @@
   <section class="g5" data-label="05 What made this work">
     <div class="slide-frame">
       <div class="title-block">
-        <div class="eyebrow">The method</div>
-        <h2 class="display display-md">What made this <span class="italic ring-word">work</span>.</h2>
+        <div class="eyebrow ar">The method</div>
+        <h2 class="display display-md ar" style="--d:.08s">What made this <span class="italic ring-word">work</span>.</h2>
       </div>
-      <div class="pillars">
-        <div class="pillar">
-          <div class="ghost">01</div>
-          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></div>
-          <h3>The right regimen, found through titration</h3>
-          <p>Doses adjusted visit over visit until the plan fit you — not a template.</p>
+      <div class="method">
+        <div class="mcol">
+          <div class="spine"></div>
+          <div class="mrow ar" style="--d:.15s">
+            <div class="mnum">1</div>
+            <div class="mbody">
+              <h3>The right regimen, found through titration</h3>
+              <p>Doses adjusted visit over visit until the plan fit you — not a template.</p>
+            </div>
+          </div>
+          <div class="mrow ar" style="--d:.3s">
+            <div class="mnum">2</div>
+            <div class="mbody">
+              <h3>Regular monitoring</h3>
+              <p>Symptoms, labs, and body composition — tracked at every step.</p>
+            </div>
+          </div>
+          <div class="mrow ar" style="--d:.45s">
+            <div class="mnum">3</div>
+            <div class="mbody">
+              <h3>A team that knows your history</h3>
+              <p>Your chart, your patterns, your preferences — already understood.</p>
+            </div>
+          </div>
         </div>
-        <div class="pillar">
-          <div class="ghost">02</div>
-          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-          <h3>Regular monitoring</h3>
-          <p>Symptoms, labs, and body composition — tracked at every step.</p>
-        </div>
-        <div class="pillar">
-          <div class="ghost">03</div>
-          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-          <h3>A team that knows your history</h3>
-          <p>Your chart, your patterns, your preferences — already understood.</p>
-        </div>
+        <figure class="photo5 ap" style="--d:.12s">
+          <img src="../assets/images/clinic-hallway.webp" alt="The Optimal Clinic treatment corridor">
+          <span class="photo-tag"><span class="dot"></span>Ongoing care · Optimal Clinic</span>
+        </figure>
       </div>
-      <div class="bridge">
+      <div class="bridge ar" style="--d:.6s">
         <div class="b-tag">The road ahead</div>
         <div class="b-text" data-bind="s5_bridge"></div>
       </div>
@@ -1251,30 +1579,31 @@
   </section>
 
   <!-- 6 — What happens next (bucket variants) -->
+  <!-- imagery policy: photo-free — the drawn year-flow is the visual -->
   <section class="g6" data-label="06 What happens next">
     <div class="slide-frame">
       <div class="title-block">
-        <div class="eyebrow">After graduation</div>
-        <h2 class="display display-md">What happens <span class="italic ring-word">next</span>.</h2>
+        <div class="eyebrow ar">After graduation</div>
+        <h2 class="display display-md ar" style="--d:.08s">What happens <span class="italic ring-word">next</span>.</h2>
       </div>
 
       <!-- Standard bucket -->
       <div class="paths" id="paths-standard">
-        <div class="path hero">
+        <div class="path hero ar" style="--d:.16s">
           <div class="p-head"><h3>Ongoing Care</h3><span class="ptag">Membership</span></div>
           <div class="p-body">
             <div class="timeline">
               <div class="tl-step now">
                 <div class="tl-body">
-                  <div class="tl-num">First · Weeks 1–3</div>
+                  <div class="tl-num">Step 01 · Weeks 1–3</div>
                   <div class="tl-title">Transition Visit</div>
-                  <div class="tl-desc">Care Coordinator · 30 min · plan your year together.</div>
+                  <div class="tl-desc">Care Coordinator · plan your year together.</div>
                 </div>
                 <div class="tl-when">30 min</div>
               </div>
               <div class="tl-step">
                 <div class="tl-body">
-                  <div class="tl-num">Mid-year</div>
+                  <div class="tl-num">Step 02 · Mid-year</div>
                   <div class="tl-title">Mid-Year Review</div>
                   <div class="tl-desc">Nurse Practitioner · symptoms, labs, dose check.</div>
                 </div>
@@ -1282,7 +1611,7 @@
               </div>
               <div class="tl-step">
                 <div class="tl-body">
-                  <div class="tl-num">Year end</div>
+                  <div class="tl-num">Step 03 · Year end</div>
                   <div class="tl-title">Annual Optimization</div>
                   <div class="tl-desc">Nurse Practitioner · full review of the year.</div>
                 </div>
@@ -1290,9 +1619,12 @@
               </div>
             </div>
             <div class="inclusions">
-              <span>InBody at each visit</span>
-              <span>Bloods on-site</span>
-              <span>Prescriptions managed</span>
+              <div class="inc-label">Included all year</div>
+              <div class="inc-chips">
+                <span>InBody at each visit</span>
+                <span>Bloods on-site</span>
+                <span>Prescriptions managed</span>
+              </div>
             </div>
           </div>
         </div>
@@ -1310,7 +1642,7 @@
 
       <!-- Longevity bucket -->
       <div class="paths" id="paths-longevity" style="display:none;">
-        <div class="path hero">
+        <div class="path hero ar" style="--d:.16s">
           <div class="p-head"><h3>Optimal Women's</h3><span class="ptag">Membership</span></div>
           <div class="p-body">
             <div class="rec">Your provider's recommendation</div>
@@ -1340,14 +1672,15 @@
   </section>
 
   <!-- 7 — Your graduate offer -->
+  <!-- imagery policy: photo-free by design — the ask persuades by calm -->
   <section class="g7" data-label="07 Your graduate offer">
     <div class="wash"></div>
     <div class="ring"></div>
     <div class="slide-frame">
-      <div class="g7-eyebrow">Your graduate offer</div>
-      <div class="price"><span data-bind="ANNUAL"></span><small> / year</small></div>
-      <div class="early"><b><span data-bind="EARLY"></span></b><span>if you enrol by <span data-bind="deadline_date"></span></span></div>
-      <div class="locks">
+      <div class="g7-eyebrow ar" style="--d:.05s">Your graduate offer</div>
+      <div class="price ar" style="--d:.16s"><span class="cur">$</span><span data-bind="ANNUAL_NUM"></span><small> / year</small></div>
+      <div class="early ar" style="--d:.34s"><b><span data-bind="EARLY"></span></b><span>if you enrol by <span data-bind="deadline_date"></span></span></div>
+      <div class="locks ar" style="--d:.5s">
         <div class="lock">
           <div class="credit-label">Rate lock</div>
           <div class="credit-value">Locked in for as long as you stay enrolled</div>
@@ -1357,7 +1690,7 @@
           <div class="credit-value"><span data-bind="MEMBER_EXTRA"></span> each</div>
         </div>
       </div>
-      <p class="anchor">The two NP visits alone are <span data-bind="PRN_SUM"></span> pay-per-visit.</p>
+      <p class="anchor ar" style="--d:.66s">The two NP visits alone are <span data-bind="PRN_SUM"></span> pay-per-visit.</p>
     </div>
     <div class="footer-bar">
       <img src="../assets/logos/OptimalLogo-Green.png" class="logo" alt="">
@@ -1367,23 +1700,27 @@
   </section>
 
   <!-- 8 — Your first step: the Transition Visit -->
+  <!-- imagery policy: photo-free — the card illustration owns the right column; the reception photo lives on slide 1 -->
   <section class="g8" data-label="08 Your first step">
     <div class="slide-frame">
       <div class="title-block">
-        <div class="eyebrow">Your first step</div>
-        <h2 class="display display-md">The Transition <span class="italic ring-word">Visit</span>.</h2>
+        <div class="eyebrow ar">Your first step</div>
+        <h2 class="display display-md ar" style="--d:.08s">The Transition <span class="italic ring-word">Visit</span>.</h2>
       </div>
       <div class="cols">
         <div>
           <ul class="check">
-            <li>Build your <em>Your Optimal Year</em> card together</li>
-            <li>Book your Mid-Year and Annual visits</li>
-            <li>Fresh InBody scan</li>
-            <li>Your priorities list for your provider</li>
+            <li style="--d:.2s"><svg class="tick" viewBox="0 0 26 16" aria-hidden="true"><path d="M2 8.5l7 6L24 2" pathLength="1"/></svg>Build your <em>Your Optimal Year</em> card together</li>
+            <li style="--d:.36s"><svg class="tick" viewBox="0 0 26 16" aria-hidden="true"><path d="M2 8.5l7 6L24 2" pathLength="1"/></svg>Book your Mid-Year and Annual visits</li>
+            <li style="--d:.52s"><svg class="tick" viewBox="0 0 26 16" aria-hidden="true"><path d="M2 8.5l7 6L24 2" pathLength="1"/></svg>Fresh InBody scan</li>
+            <li style="--d:.68s"><svg class="tick" viewBox="0 0 26 16" aria-hidden="true"><path d="M2 8.5l7 6L24 2" pathLength="1"/></svg>Your priorities list for your provider</li>
           </ul>
-          <p class="booknow">We can book it right now — most patients schedule within 2–3 weeks.</p>
-          <div class="held" id="held-slot-box">
-            <span class="h-tag">Held for you</span>
+          <p class="booknow ar" style="--d:.6s">
+            <span class="bn-tag">Booking</span>
+            <span class="bn-text">We can book it right now — most patients schedule within 2–3 weeks.</span>
+          </p>
+          <div class="held ar" id="held-slot-box" style="--d:.72s">
+            <span class="h-tag"><span class="h-dot"></span>Held for you</span>
             <span>We're holding <b data-bind="held_slot"></b> for you.</span>
           </div>
         </div>
@@ -1433,27 +1770,31 @@
     <div class="slide-frame">
       <div class="cols9">
         <div class="left9">
-          <div class="eyebrow">Thank you</div>
-          <h1>We're proud of what you accomplished.</h1>
-          <p class="lead-dark">Whatever you choose, we're here.</p>
-          <div class="contact-bar">
-            <div class="contact-row">
-              <span data-bind="clinic_email"></span>
-              <span class="dot"></span>
-              <span data-bind="clinic_web"></span>
+          <div class="eyebrow ar" style="--d:.05s">Thank you</div>
+          <h1 class="ar" style="--d:.14s">We're proud of what you <span class="italic ring-word">accomplished</span>.</h1>
+          <p class="lead-dark ar" style="--d:.26s">Whatever you choose, we're here.</p>
+          <div class="contact-bar ar" style="--d:.44s">
+            <div class="c-col">
+              <div class="c-label">Email</div>
+              <div class="c-value" data-bind="clinic_email"></div>
             </div>
-            <div class="contact-row">
-              <span data-bind="clinic_address"></span>
+            <div class="c-col">
+              <div class="c-label">Online</div>
+              <div class="c-value" data-bind="clinic_web"></div>
+            </div>
+            <div class="c-col c-wide">
+              <div class="c-label">Visit us</div>
+              <div class="c-value" data-bind="clinic_address"></div>
             </div>
           </div>
-          <div class="footer-note">
+          <div class="footer-note ar" style="--d:.56s">
             <div class="fn-tag">No pressure</div>
             <div>Cheryl will check in with you on <strong data-bind="deadline_date2"></strong> if you'd like time to decide.</div>
           </div>
         </div>
-        <div class="photo9">
-          <img src="../assets/images/thankyou-candid.jpg" alt="Woman laughing, candid street portrait">
-          <div class="photo-tag"><span class="dot"></span>Here's to your year</div>
+        <div class="photo9 ap" style="--d:.1s">
+          <img src="../assets/images/clinic-waiting-green.webp" alt="The Optimal Clinic waiting room — green tile, olive chairs, bonsai">
+          <div class="photo-tag ar" style="--d:.65s"><span class="dot"></span>The door is always open</div>
         </div>
       </div>
     </div>

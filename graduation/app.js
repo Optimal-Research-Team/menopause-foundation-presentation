@@ -29,7 +29,7 @@
       email: 'care@beoptimal.ca',
       web: 'beoptimal.ca',
     },
-    TEMPLATE_VERSION: 'grad-deck v1.5.0',
+    TEMPLATE_VERSION: 'grad-deck v2.0.0',
   };
 
   /* §2 — the instrument */
@@ -258,6 +258,42 @@
   function refreshAddButtons() {
     $('#add-cat').disabled = catDataRows().length >= MAX_ROWS;
     $('#add-win').disabled = winDataRows().length >= MAX_ROWS;
+    refreshProgress();
+  }
+
+  /* Section-readiness dots (sticky bar). Passive — never marks .invalid.
+     Shares the completeness predicates below with collectAndValidate. */
+  const pctOk = (v) => v !== '' && !isNaN(parseFloat(v)) && parseFloat(v) >= 0 && parseFloat(v) <= 100;
+  const flaggedVal = (el) => {
+    const v = parseInt(el.value, 10);
+    return el.value !== '' && Number.isInteger(v) && String(v) === el.value.trim() && v >= 0 && v <= 54 ? v : null;
+  };
+  const catRowComplete = (row) => {
+    const [sel, inIntake, , inFinal] = row.children;
+    return !!sel.value && pctOk(inIntake.value) && pctOk(inFinal.value);
+  };
+  const winRowComplete = (row) => {
+    const sel = row.children[0].querySelector('select');
+    const other = row.children[0].querySelector('input');
+    const ri = row.children[1].querySelector('select');
+    const rf = row.children[2].querySelector('select');
+    const name = sel.value === '__other' ? other.value.trim() : sel.value;
+    return !!name && ri.value !== '' && rf.value !== '';
+  };
+
+  function refreshProgress() {
+    const s1 = !!(fFirst.value.trim() && fStart.value && fEnd.value && fEnd.value > fStart.value &&
+      fQuote.value.trim() && fWin.value.trim() && fDeadline.value && fDeadline.value >= todayIso());
+    const s2 = flaggedVal(fIntakeFlagged) !== null && flaggedVal(fFinalFlagged) !== null;
+    const nCats = catDataRows().filter(catRowComplete).length;
+    const s3 = nCats >= MIN_ROWS && nCats <= MAX_ROWS;
+    const nWins = winDataRows().filter(winRowComplete).length;
+    const s4 = nWins >= MIN_ROWS && nWins <= MAX_ROWS;
+    $('#pp-3').hidden = fThenTest.checked;
+    $('#pp-1').classList.toggle('done', s1);
+    $('#pp-2').classList.toggle('done', s2);
+    $('#pp-3').classList.toggle('done', s3);
+    $('#pp-4').classList.toggle('done', s4);
   }
 
   $('#add-cat').addEventListener('click', () => addCatRow());
@@ -273,10 +309,10 @@
     const a = parseInt(fIntakeFlagged.value, 10);
     const b = parseInt(fFinalFlagged.value, 10);
     const el = $('#delta-preview');
-    if (isNaN(a) || isNaN(b)) { el.style.visibility = 'hidden'; return; }
+    if (isNaN(a) || isNaN(b)) { el.classList.remove('on'); return; }
     el.textContent = `${a} → ${b}`;
     el.classList.toggle('neutral', b >= a);
-    el.style.visibility = 'visible';
+    el.classList.add('on');
   }
 
   function updateWorsenWarning() {
@@ -304,6 +340,7 @@
     $('#wins-hint').textContent = tt
       ? '3–6 biggest movers. "Then" ratings are the retrospective ones captured at the offboarding survey. Labels derive live.'
       : '3–6 biggest movers, biased toward the chief complaints. Ratings are the 0–5 questionnaire scale; labels derive live. One flat row is fine — honesty photographs well too.';
+    refreshProgress();
   }
   fThenTest.addEventListener('change', applyThenTest);
 
@@ -364,7 +401,7 @@
 
     $('#quote-count').textContent = String(fQuote.value.length);
     $('#win-count').textContent = String(fWin.value.length);
-    updateDeltaPreview(); updateWorsenWarning();
+    updateDeltaPreview(); updateWorsenWarning(); refreshProgress();
     $('#demo-tag').classList.add('show');
   }
 
@@ -472,9 +509,11 @@
   // clear invalid highlight as the operator fixes fields
   prep.addEventListener('input', (e) => {
     if (e.target.classList) e.target.classList.remove('invalid');
+    refreshProgress();
   });
   prep.addEventListener('change', (e) => {
     if (e.target.classList) e.target.classList.remove('invalid');
+    refreshProgress();
   });
 
   /* ════════════════════════════════════════════════════════════════════
@@ -499,7 +538,7 @@
     low:      { bg: '#E6EFE4', fg: '#3F6B3A' },
   };
 
-  function buildSlopeSVG(cats) {
+  function buildSlopeSVG(cats, startDate, endDate) {
     const W = 1660, H = 620;
     const xL = 620, xR = 1270, top = 84, plotH = 470;
     // dynamic ceiling: keep all three band lines visible, trim dead headroom
@@ -507,9 +546,11 @@
     const yMax = Math.max(80, Math.min(100, Math.ceil((maxVal + 8) / 10) * 10));
     const y = (pct) => top + ((yMax - Math.min(yMax, Math.max(0, pct))) / yMax) * plotH;
     const FF = 'Public Sans, Inter, system-ui, sans-serif';
-    const txt = (x, yy, str, size, weight, fill, anchor, ls = 0, opacity = 1, extra = '') =>
-      `<text x="${x}" y="${yy}" font-family="${FF}" font-size="${size}" font-weight="${weight}"` +
-      ` fill="${fill}" text-anchor="${anchor}" letter-spacing="${ls}" fill-opacity="${opacity}"${extra}>${str}</text>`;
+    const FD = 'Castoro, Iowan Old Style, Palatino Linotype, Georgia, serif';
+    const shortDate = (d) => (d || '').replace(/,\s*\d{4}$/, '').toUpperCase();
+    const txt = (x, yy, str, size, weight, fill, anchor, ls = 0, opacity = 1, family = FF) =>
+      `<text x="${x}" y="${yy}" font-family="${family}" font-size="${size}" font-weight="${weight}"` +
+      ` fill="${fill}" text-anchor="${anchor}" letter-spacing="${ls}" fill-opacity="${opacity}">${str}</text>`;
     const chip = (x, yy, bandKey, label, ghost) => {
       const w = label.length * 8.6 + 26;
       const st = CHIP_STYLE[bandKey];
@@ -522,15 +563,21 @@
     };
 
     let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Category severity, intake versus today">`;
-    svg += `<rect width="${W}" height="${H}" fill="#2C4E25"/>`;
+    svg += `<defs>` +
+      `<linearGradient id="slBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2C4E25"/><stop offset="1" stop-color="#1C3118"/></linearGradient>` +
+      `<linearGradient id="slSev" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C05A3C" stop-opacity="0.08"/><stop offset="1" stop-color="#C05A3C" stop-opacity="0"/></linearGradient>` +
+      `</defs>`;
+    svg += `<rect width="${W}" height="${H}" fill="url(#slBg)"/>`;
+    // faint severity wash over the upper (worse) region of the plot
+    svg += `<rect x="56" y="${top}" width="${W - 112}" height="${Math.max(0, y(20) - top)}" fill="url(#slSev)"/>`;
 
-    // in-card title + column headers + guides
+    // in-card title + dated column headers + guides
     svg += `<g class="sl-lab" style="--d:0.05s">` +
       txt(56, 50, 'SHARE OF CATEGORY SYMPTOMS FLAGGED', 12.5, 700, '#87A482', 'start', 2) + '</g>';
-    svg += txt(xL, 50, 'INTAKE', 15, 700, '#F4EFE4', 'middle', 2.5, 0.85);
-    svg += txt(xR, 50, 'TODAY', 15, 700, '#F4EFE4', 'middle', 2.5, 0.85);
+    svg += txt(xL, 50, `INTAKE<tspan fill="#87A482" font-weight="600" letter-spacing="1.6"> · ${shortDate(startDate)}</tspan>`, 15, 700, '#F4EFE4', 'middle', 2.5, 0.85);
+    svg += txt(xR, 50, `TODAY<tspan fill="#87A482" font-weight="600" letter-spacing="1.6"> · ${shortDate(endDate)}</tspan>`, 15, 700, '#F4EFE4', 'middle', 2.5, 0.85);
     svg += `<line x1="${xL}" y1="${top - 18}" x2="${xL}" y2="${top + plotH + 18}" stroke="#ffffff" stroke-opacity="0.08"/>`;
-    svg += `<line x1="${xR}" y1="${top - 18}" x2="${xR}" y2="${top + plotH + 18}" stroke="#ffffff" stroke-opacity="0.08"/>`;
+    svg += `<line x1="${xR}" y1="${top - 18}" x2="${xR}" y2="${top + plotH + 18}" stroke="#ffffff" stroke-opacity="0.16"/>`;
 
     // severity band guides
     [[60, 'HIGH'], [40, 'MOD-HIGH'], [20, 'MODERATE']].forEach(([pct, label], bi) => {
@@ -579,7 +626,7 @@
       if (Math.abs(e.ly - e.y) > 5) {
         svg += `<line x1="${xL - 30}" y1="${e.ly - 5}" x2="${xL - 12}" y2="${e.y}" stroke="#ffffff" stroke-opacity="0.25"/>`;
       }
-      svg += txt(xL - 38, e.ly + 2, `${e.c.name} <tspan fill="#87A482" font-weight="700"> · ${Math.round(e.c.intake)}%</tspan>`, 21, 500, '#F4EFE4', 'end');
+      svg += txt(xL - 38, e.ly + 3, `${e.c.name}<tspan font-family="${FF}" font-size="17" font-weight="700" fill="#87A482" letter-spacing="0.5"> · ${Math.round(e.c.intake)}%</tspan>`, 24, 400, '#F4EFE4', 'end', -0.4, 1, FD);
       svg += '</g>';
     });
 
@@ -618,11 +665,16 @@
   function renderDeck(s) {
     // ── merge fields ──
     bind('first_name', s.first);
+    // the ring-word ellipse stretches unflatteringly past ~10 characters
+    const nameEl = document.querySelector('.g1 h1 .italic');
+    if (nameEl) nameEl.classList.toggle('ring-word', s.first.length <= 10);
     bind('daterange', fmtRange(s.start, s.end));
     bind('grad_year', s.end.slice(0, 4));
     bind('intake_quote', s.quote);
     bind('headline_win', s.win);
     bind('intake_flagged', String(s.intakeFlagged));
+    // authoritative count-up target — never trust mid-animation textContent
+    $$('.g2 [data-bind="intake_flagged"]').forEach((el) => { el.dataset.final = String(s.intakeFlagged); });
     bind('delta_from', String(s.intakeFlagged));
     bind('delta_to', String(s.finalFlagged));
     bind('deadline_date', fmtDate(s.deadline));
@@ -633,6 +685,7 @@
 
     // §5.6 — prices always from constants; anchor is computed
     bind('ANNUAL', money(CONFIG.PRICE_ANNUAL));
+    bind('ANNUAL_NUM', Number(CONFIG.PRICE_ANNUAL).toLocaleString('en-CA'));
     bind('ANNUAL2', money(CONFIG.PRICE_ANNUAL));
     bind('EARLY', money(CONFIG.PRICE_EARLY));
     bind('MEMBER_EXTRA', money(CONFIG.PRICE_MEMBER_EXTRA));
@@ -722,7 +775,7 @@
     if (skipS4 && inDom) slideHormone.remove();
     if (!skipS4) {
       if (!inDom) deck.insertBefore(slideHormone, slideHormoneAnchor.nextSibling);
-      $('.g4 .map-card').innerHTML = buildSlopeSVG(s.categories);
+      $('.g4 .map-card').innerHTML = buildSlopeSVG(s.categories, fmtDate(s.start), fmtDate(s.end));
     }
 
     // ── slide 5 (§5.4 bridge) ──
@@ -750,6 +803,11 @@
     deck.classList.add('ready');
     window.__deckLocked = false;
     deck.goTo(0);
+    // goTo(0) fires no slidechange when the deck is already at index 0,
+    // so kick slide 1's entry animation manually.
+    $$('#deck > section.play').forEach((sec) => sec.classList.remove('play'));
+    const first = $('#deck > section.g1');
+    if (first) { void first.offsetWidth; first.classList.add('play'); }
   }
   function showPrep() {
     window.__deckLocked = true;
@@ -774,13 +832,32 @@
   navzones.querySelector('.nz-back').addEventListener('click', () => deck.prev());
   navzones.querySelector('.nz-fwd').addEventListener('click', () => deck.next());
 
-  // Replay infographic entry animations each time their slide becomes active.
+  // Count the slide-2 stat up from 0, synced to the waffle cascade.
+  let cuRaf = 0;
+  function countUpG2() {
+    const el = document.querySelector('.g2 [data-bind="intake_flagged"]');
+    if (!el) return;
+    const target = parseInt(el.dataset.final || el.textContent, 10) || 0;
+    if (!target || matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = String(target); return; }
+    cancelAnimationFrame(cuRaf);
+    const dur = Math.min(1100, target * 13 + 480);   // matches wfPop: i*13ms stagger + 180ms delay + 300ms pop
+    const t0 = performance.now() + 180;               // start with the first cell
+    const tick = (now) => {
+      const p = Math.min(1, Math.max(0, (now - t0) / dur));
+      el.textContent = String(Math.round(target * (1 - Math.pow(1 - p, 3)))); // ease-out cubic
+      if (p < 1) cuRaf = requestAnimationFrame(tick); else el.textContent = String(target);
+    };
+    cuRaf = requestAnimationFrame(tick);
+  }
+
+  // Replay entry animations each time a slide becomes active.
   deck.addEventListener('slidechange', (e) => {
     $$('#deck > section.play').forEach((sec) => sec.classList.remove('play'));
     const sec = e.detail.slide;
-    if (sec && /(^| )(g2|g3|g4)( |$)/.test(sec.className)) {
+    if (sec && /(^| )g\d( |$)/.test(sec.className)) {
       void sec.offsetWidth;  // restart CSS animations
       sec.classList.add('play');
+      if (sec.classList.contains('g2')) countUpG2();
     }
   });
 
