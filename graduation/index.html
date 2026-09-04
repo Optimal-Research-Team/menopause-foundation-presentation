@@ -375,9 +375,8 @@
     font-family: var(--font-display); font-size: 19px; line-height: 1.25;
     color: var(--forest-700); white-space: nowrap;
   }
-  .g1 .photo-col { flex: 0.92; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
   .g1 .photo {
-    flex: 1; min-width: 0;
+    flex: 0.92; min-width: 0;
     border-radius: 24px; overflow: hidden;
     background: var(--bone-100); position: relative;
     box-shadow: 0 1px 0 rgba(28,49,24,0.04);
@@ -386,13 +385,13 @@
     content: ""; position: absolute; inset: 0; border-radius: inherit;
     box-shadow: inset 0 0 0 1px rgba(28,49,24,0.10); pointer-events: none;
   }
-  .g1 .photo.hero::before {
+  .g1 .photo::before {
     content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 180px;
-    background: linear-gradient(to top, rgba(15,35,18,0.20), rgba(15,35,18,0));
+    background: linear-gradient(to top, rgba(15,35,18,0.22), rgba(15,35,18,0));
+    z-index: 1;
   }
-  .g1 .photo.clinic { flex: 0 0 296px; border-radius: 20px; }
-  .g1 .photo.clinic img { object-position: center 72%; }
-  .g1 .photo.clinic .photo-tag { left: 20px; bottom: 20px; padding: 7px 14px; font-size: 11px; }
+  .g1 .photo .photo-tag { z-index: 2; }
+  .g1 .photo img { object-position: 52% center; }
   .g1 .photo img {
     position: absolute; inset: 0; width: 100%; height: 100%;
     object-fit: cover; object-position: 65% center;
@@ -1412,15 +1411,9 @@
           </div>
         </div>
       </div>
-      <div class="photo-col">
-        <div class="photo hero ap" style="--d:.1s">
-          <img src="../assets/images/graduate-hero.jpg" alt="Woman, mid-life, smiling warmly" style="object-position: 62% center;">
-          <div class="photo-tag ar" style="--d:.6s"><span class="dot"></span>Foundation Graduate</div>
-        </div>
-        <div class="photo clinic ap" style="--d:.28s">
-          <img src="../assets/images/clinic-reception-desk.webp" alt="Optimal Clinic reception desk in Barrie">
-          <div class="photo-tag ar" style="--d:.72s"><span class="dot"></span>Your clinic &middot; Barrie, ON</div>
-        </div>
+      <div class="photo ap" style="--d:.1s">
+        <img src="../assets/images/clinic-reception-desk.webp" alt="Optimal Clinic reception desk in Barrie — brass bell and nameplate">
+        <div class="photo-tag ar" style="--d:.6s"><span class="dot"></span>Your clinic &middot; Barrie, ON</div>
       </div>
     </div>
     <div class="print-foot" data-bind="print_foot"></div>
