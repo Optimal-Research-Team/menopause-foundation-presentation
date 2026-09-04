@@ -29,7 +29,7 @@
       email: 'care@beoptimal.ca',
       web: 'beoptimal.ca',
     },
-    TEMPLATE_VERSION: 'grad-deck v2.1.0',
+    TEMPLATE_VERSION: 'grad-deck v2.2.0',
   };
 
   /* §2 — the instrument */
