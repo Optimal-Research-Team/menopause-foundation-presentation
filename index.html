@@ -1296,21 +1296,24 @@
   }
   .shold.in-view .fl-seg { stroke-dasharray: 100; stroke-dashoffset: 100; animation: fl-draw 0.5s ease both; }
   .shold.in-view .fl-seg.s-a { animation-delay: 0.05s; }
-  .shold.in-view .fl-seg.s-b { animation-delay: 0.45s; }
-  .shold.in-view .fl-seg.s-c { animation-delay: 0.90s; }
-  .shold.in-view .fl-seg.s-d { animation-delay: 1.50s; }
-  .shold.in-view .fl-seg.s-e { animation-delay: 2.05s; }
+  .shold.in-view .fl-seg.s-b { animation-delay: 0.40s; }
+  .shold.in-view .fl-seg.s-b2 { animation-delay: 0.80s; }
+  .shold.in-view .fl-seg.s-c { animation-delay: 1.20s; }
+  .shold.in-view .fl-seg.s-d { animation-delay: 1.80s; }
+  .shold.in-view .fl-seg.s-e { animation-delay: 2.30s; }
   .shold.in-view .fl-node { animation: fl-pop 0.4s cubic-bezier(.34,1.56,.64,1) both; }
-  .shold.in-view .fl-node.n-1 { animation-delay: 0.40s; }
-  .shold.in-view .fl-node.n-2 { animation-delay: 0.85s; }
-  .shold.in-view .fl-node.n-3 { animation-delay: 1.35s; }
-  .shold.in-view .fl-node.n-4 { animation-delay: 1.95s; }
+  .shold.in-view .fl-node.n-1 { animation-delay: 0.35s; }
+  .shold.in-view .fl-node.n-2 { animation-delay: 0.75s; }
+  .shold.in-view .fl-node.n-2b { animation-delay: 1.15s; }
+  .shold.in-view .fl-node.n-3 { animation-delay: 1.70s; }
+  .shold.in-view .fl-node.n-4 { animation-delay: 2.25s; }
   .shold.in-view .fl-tag, .shold.in-view .fl-refund { animation: rv-rise 0.55s var(--ease-standard) both; }
-  .shold.in-view .fl-tag.t-1 { animation-delay: 0.50s; }
-  .shold.in-view .fl-tag.t-2 { animation-delay: 0.95s; }
-  .shold.in-view .fl-tag.t-3 { animation-delay: 1.45s; }
-  .shold.in-view .fl-tag.t-4 { animation-delay: 2.05s; }
-  .shold.in-view .fl-refund { animation-delay: 2.30s; }
+  .shold.in-view .fl-tag.t-1 { animation-delay: 0.45s; }
+  .shold.in-view .fl-tag.t-2 { animation-delay: 0.85s; }
+  .shold.in-view .fl-tag.t-2b { animation-delay: 1.25s; }
+  .shold.in-view .fl-tag.t-3 { animation-delay: 1.80s; }
+  .shold.in-view .fl-tag.t-4 { animation-delay: 2.35s; }
+  .shold.in-view .fl-refund { animation-delay: 2.55s; }
 
   /* ================= Slide — Appendix divider ================= */
   .sappx .appx-grid {
@@ -2615,7 +2618,7 @@
 
       <div class="fl-wrap">
         <div class="fl-info">
-          <svg class="fl-svg" viewBox="0 0 1680 570" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Flow diagram: results reviewed, incidental finding, care routed to your family physician while the program is on hold, then you return and continue">
+          <svg class="fl-svg" viewBox="0 0 1680 570" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Flow diagram: results reviewed, incidental finding, your NP calls to notify you, care routed to your family physician while the program is on hold, then you return and continue">
             <defs>
               <marker id="fl-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
                 <path d="M 0 1 L 9 5 L 0 9 z" fill="#2C4E25"/>
@@ -2629,56 +2632,66 @@
             <text x="26" y="542" font-family="Public Sans, Inter, system-ui, sans-serif" font-size="13" font-weight="700" letter-spacing="2.6" fill="#6B8A4A">YOUR FAMILY PHYSICIAN</text>
 
             <!-- Route -->
-            <path class="fl-seg s-a" pathLength="100" d="M 60 178 H 231"/>
-            <path class="fl-seg s-b" pathLength="100" d="M 269 178 H 591"/>
-            <path class="fl-seg s-c" pathLength="100" d="M 629 178 C 750 178 715 400 821 400"/>
-            <path class="fl-seg s-d" pathLength="100" d="M 859 400 C 1005 400 1150 178 1311 178"/>
-            <path class="fl-seg s-e" pathLength="100" d="M 1349 178 H 1584" marker-end="url(#fl-arrow)"/>
+            <path class="fl-seg s-a" pathLength="100" d="M 60 178 H 181"/>
+            <path class="fl-seg s-b" pathLength="100" d="M 219 178 H 486"/>
+            <path class="fl-seg s-b2" pathLength="100" d="M 524 178 H 791"/>
+            <path class="fl-seg s-c" pathLength="100" d="M 829 178 C 950 178 920 400 1021 400"/>
+            <path class="fl-seg s-d" pathLength="100" d="M 1059 400 C 1200 400 1260 178 1381 178"/>
+            <path class="fl-seg s-e" pathLength="100" d="M 1419 178 H 1584" marker-end="url(#fl-arrow)"/>
 
             <!-- Nodes -->
             <g class="fl-node n-1">
-              <circle cx="250" cy="178" r="17" fill="#FFFFFF" stroke="#2C4E25" stroke-width="2.5"/>
-              <path d="M 243 178 l 5 5 l 9 -10" fill="none" stroke="#2C4E25" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="200" cy="178" r="17" fill="#FFFFFF" stroke="#2C4E25" stroke-width="2.5"/>
+              <path d="M 193 178 l 5 5 l 9 -10" fill="none" stroke="#2C4E25" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
             </g>
             <g class="fl-node n-2">
-              <circle cx="610" cy="178" r="17" fill="#FFFFFF" stroke="#A66B1F" stroke-width="2.5"/>
-              <line x1="610" y1="170" x2="610" y2="180" stroke="#A66B1F" stroke-width="2.5" stroke-linecap="round"/>
-              <circle cx="610" cy="186.5" r="1.8" fill="#A66B1F"/>
+              <circle cx="505" cy="178" r="17" fill="#FFFFFF" stroke="#A66B1F" stroke-width="2.5"/>
+              <line x1="505" y1="170" x2="505" y2="180" stroke="#A66B1F" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="505" cy="186.5" r="1.8" fill="#A66B1F"/>
+            </g>
+            <g class="fl-node n-2b">
+              <circle cx="810" cy="178" r="17" fill="#FFFFFF" stroke="#6B8A4A" stroke-width="2.5"/>
+              <path transform="translate(801.6,169.6) scale(0.7)" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" fill="none" stroke="#6B8A4A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
             </g>
             <g class="fl-node n-3">
-              <circle cx="840" cy="400" r="17" fill="#2C4E25"/>
-              <path d="M 833 400 H 847 M 840 393 V 407" stroke="#FFFCF7" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="1040" cy="400" r="17" fill="#2C4E25"/>
+              <path d="M 1033 400 H 1047 M 1040 393 V 407" stroke="#FFFCF7" stroke-width="2.5" stroke-linecap="round"/>
             </g>
             <g class="fl-node n-4">
-              <circle cx="1330" cy="178" r="17" fill="#FFFFFF" stroke="#6B8A4A" stroke-width="2.5"/>
-              <path d="M 1326 172 L 1336 178 L 1326 184 Z" fill="#6B8A4A"/>
+              <circle cx="1400" cy="178" r="17" fill="#FFFFFF" stroke="#6B8A4A" stroke-width="2.5"/>
+              <path d="M 1396 172 L 1406 178 L 1396 184 Z" fill="#6B8A4A"/>
             </g>
           </svg>
 
           <!-- Step labels -->
-          <div class="fl-tag centered t-1" style="left: 100px; top: 48px; width: 300px;">
+          <div class="fl-tag centered t-1" style="left: 60px; top: 48px; width: 280px;">
             <div class="k">Step 1</div>
             <h4>Results reviewed</h4>
             <p>Your NP reviews your complete panel first.</p>
           </div>
-          <div class="fl-tag centered t-2" style="left: 460px; top: 48px; width: 300px;">
+          <div class="fl-tag centered t-2" style="left: 365px; top: 48px; width: 280px;">
             <div class="k">Step 2</div>
             <h4>Incidental finding</h4>
             <p>Something unrelated needs attention before care begins.</p>
           </div>
-          <div class="fl-tag centered hold t-3" style="left: 680px; top: 432px; width: 320px;">
+          <div class="fl-tag centered t-2b" style="left: 670px; top: 48px; width: 280px;">
+            <div class="k">Step 3</div>
+            <h4>NP notifies you</h4>
+            <p>Your NP will give you a quick call to notify you.</p>
+          </div>
+          <div class="fl-tag centered hold t-3" style="left: 880px; top: 432px; width: 320px;">
             <div class="fl-hold-chip">Program on hold</div>
             <h4>Routed to your FP</h4>
             <p>Your family physician takes over, with a full copy of your results.</p>
           </div>
-          <div class="fl-tag centered t-4" style="left: 1180px; top: 48px; width: 300px;">
-            <div class="k">Step 4</div>
+          <div class="fl-tag centered t-4" style="left: 1260px; top: 48px; width: 280px;">
+            <div class="k">Step 5</div>
             <h4>You return</h4>
             <p>Resolved — you continue right where you left off.</p>
           </div>
 
           <!-- Refund aside (optional exit from the hold) -->
-          <div class="fl-refund" style="left: 1180px; top: 420px; width: 400px;">
+          <div class="fl-refund" style="left: 1280px; top: 420px; width: 360px;">
             <div class="k">Prefer a refund?</div>
             <p>We provide a <b>pro-rated refund minus $150</b>, covering your bloodwork analysis and initial onboarding.</p>
           </div>
