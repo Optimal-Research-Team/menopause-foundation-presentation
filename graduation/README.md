@@ -1,4 +1,7 @@
-# Foundation Graduation Deck
+# Ongoing Care Deck (Foundation graduation visit)
+
+The deck for the **Ongoing Care** Menopause & Perimenopause Program — presented at the
+Offboarding ("Graduation") visit that closes the Foundation Program.
 
 A presentation route for the Offboarding ("Graduation") visit: Cheryl transcribes ~25
 summary-level values from the two Hormone Questionnaire reports in the chart, generates a

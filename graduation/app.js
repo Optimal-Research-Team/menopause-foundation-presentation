@@ -29,7 +29,7 @@
       email: 'care@beoptimal.ca',
       web: 'beoptimal.ca',
     },
-    TEMPLATE_VERSION: 'grad-deck v2.4.0',
+    TEMPLATE_VERSION: 'ongoing-care-deck v2.5.0',
   };
 
   /* §2 — the instrument */
@@ -854,7 +854,7 @@
   exportFab.addEventListener('click', () => {
     const prev = document.title;
     const who = lastState ? lastState.first : 'Patient';
-    document.title = `Optimal Graduation Deck — ${who} — ${todayIso()}`;
+    document.title = `Optimal Ongoing Care Deck — ${who} — ${todayIso()}`;
     const cleanup = () => { document.title = prev; window.removeEventListener('afterprint', cleanup); };
     window.addEventListener('afterprint', cleanup);
     setTimeout(() => window.print(), 60);
