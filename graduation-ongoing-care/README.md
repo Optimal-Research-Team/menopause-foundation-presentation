@@ -71,23 +71,23 @@ Re-verifiable in ~5 minutes. Run quarterly.
   names if any are ever suspected):
 
   ```bash
-  git grep -in --all-match -e "" -- graduation | grep -iv "alex sample" | grep -iE "\b(dob|date of birth|ohip|health card)\b" ; \
-  git log --all -p -- graduation | grep -icE "\b(dob|ohip|health card)\b"
+  git grep -in --all-match -e "" -- graduation-ongoing-care | grep -iv "alex sample" | grep -iE "\b(dob|date of birth|ohip|health card)\b" ; \
+  git log --all -p -- graduation-ongoing-care | grep -icE "\b(dob|ohip|health card)\b"
   ```
 
   Both should return nothing / `0`. Also confirm `SAMPLE` in `app.js` still says
   `Alex Sample` and is commented `FAKE`.
 
 - [ ] **N2 — Zero network requests after page load; no runtime CDNs.**
-  DevTools → Network → load `/graduation/`, fill + generate + navigate all slides.
-  Every request must be same-origin (fonts come from `graduation/fonts/`). Filter by
+  DevTools → Network → load `/graduation-ongoing-care/`, fill + generate + navigate all slides.
+  Every request must be same-origin (fonts come from `graduation-ongoing-care/fonts/`). Filter by
   "3rd-party requests": must be empty.
 
 - [ ] **N3 — No storage.** DevTools → Application → Local Storage / Session Storage /
   IndexedDB / Cookies for this origin: all empty after a full prep+present run. Also:
 
   ```bash
-  grep -rniE "localStorage|sessionStorage|indexedDB|document\.cookie|serviceWorker|CacheStorage" graduation --include="*.js" --include="*.html"
+  grep -rniE "localStorage|sessionStorage|indexedDB|document\.cookie|serviceWorker|CacheStorage" graduation-ongoing-care --include="*.js" --include="*.html"
   ```
 
   Must return no matches (this README mentions the words; code must not).
@@ -96,7 +96,7 @@ Re-verifiable in ~5 minutes. Run quarterly.
   There is no `<form action>`, no `fetch`/`XMLHttpRequest`/`sendBeacon` anywhere:
 
   ```bash
-  grep -rniE "fetch\(|XMLHttpRequest|sendBeacon|action=" graduation --include="*.js" --include="*.html"
+  grep -rniE "fetch\(|XMLHttpRequest|sendBeacon|action=" graduation-ongoing-care --include="*.js" --include="*.html"
   ```
 
 - [ ] **N5 — All state in JS memory only; unload destroys it.** Refresh mid-prep: the form

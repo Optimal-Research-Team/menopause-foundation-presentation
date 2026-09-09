@@ -803,6 +803,7 @@
     prep.hidden = true;
     navzones.hidden = false;
     deckUtils.hidden = false;
+    surfaceUtils();   // visible immediately on entry, then fades on idle
     deck.classList.add('ready');
     window.__deckLocked = false;
     deck.goTo(0);
@@ -860,13 +861,16 @@
     setTimeout(() => window.print(), 60);
   });
 
-  // Surface the utilities on mouse activity while presenting; fade when idle.
+  // Surface the utilities on deck entry and mouse activity; fade when idle.
   let utilsTimer;
-  window.addEventListener('mousemove', () => {
-    if (prep.hidden === false) return;
+  function surfaceUtils() {
     deckUtils.classList.add('avail');
     clearTimeout(utilsTimer);
-    utilsTimer = setTimeout(() => deckUtils.classList.remove('avail'), 2600);
+    utilsTimer = setTimeout(() => deckUtils.classList.remove('avail'), 3400);
+  }
+  window.addEventListener('mousemove', () => {
+    if (prep.hidden === false) return;
+    surfaceUtils();
   }, { passive: true });
 
   // Desktop click zones: left ⅓ back, right ⅔ forward — §5.3

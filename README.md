@@ -6,10 +6,10 @@ Women's Hormone Optimization / Menopause Foundation Program patient briefing.
 This is a **static website** — no build step, no dependencies to install. Open `index.html`
 and it runs. It is ready to push to GitHub and serve via GitHub Pages.
 
-> **Also in this repo:** [`graduation/`](graduation/) — the Foundation **Graduation Deck**
+> **Also in this repo:** [`graduation-ongoing-care/`](graduation-ongoing-care/) — the **Ongoing Care Deck**
 > (offboarding visit, before/after results + Ongoing Care offer). It has strict PHIPA
 > constraints and its own README with an audit checklist. Note: `colors_and_type.css` no
-> longer imports Google Fonts — this page loads them via `<link>`; the graduation route
+> longer imports Google Fonts — this page loads them via `<link>`; the Ongoing Care route
 > self-hosts them.
 
 ## What's in here
