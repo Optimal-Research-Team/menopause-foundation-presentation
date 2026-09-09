@@ -1139,6 +1139,30 @@
   }
   .g9 .footer-note strong { color: var(--cream-50); font-weight: 700; }
 
+  /* ════════════ Deck utilities (top right): fullscreen + export PDF ════════════
+     Same pattern as the Foundation deck's floating export control:
+     hidden until presenting, surfaces on mouse activity, fades when idle. */
+  #deck-utils {
+    position: fixed; right: 22px; top: 20px; z-index: 2147483500;
+    display: flex; gap: 10px;
+  }
+  #deck-utils[hidden] { display: none; }
+  #deck-utils button {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-family: var(--font-sans); font-size: 13px; font-weight: 600; letter-spacing: 0.01em;
+    color: rgba(255,255,255,0.92);
+    background: rgba(18,32,12,0.66); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.20); border-radius: 999px;
+    padding: 10px 17px; cursor: pointer;
+    opacity: 0; transform: translateY(-6px); pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s, background 0.2s;
+  }
+  #deck-utils #fs-fab { padding: 10px 12px; }
+  #deck-utils.avail button { opacity: 0.5; transform: none; pointer-events: auto; }
+  #deck-utils.avail button:hover { opacity: 1; background: rgba(18,32,12,0.88); }
+  #deck-utils svg { width: 15px; height: 15px; }
+  #deck-utils svg[hidden] { display: none; }
+
   /* ════════════ Click zones (desktop): left ⅓ back, right ⅔ forward ════════════ */
   #navzones { position: fixed; inset: 0; z-index: 40; display: flex; }
   #navzones[hidden] { display: none; }
@@ -1154,7 +1178,7 @@
   }
   .g9 .print-foot { color: rgba(255,252,247,0.55); }
   @media print {
-    #prep, #navzones { display: none !important; }
+    #prep, #navzones, #deck-utils { display: none !important; }
     .print-foot { display: block; }
     deck-stage { visibility: visible; }
     /* animations must never hide content on paper */
@@ -1871,6 +1895,17 @@
 <div id="navzones" hidden>
   <div class="nz nz-back"></div>
   <div class="nz nz-fwd"></div>
+</div>
+
+<!-- Floating deck utilities: fullscreen + export PDF (top right, fade on idle) -->
+<div id="deck-utils" hidden>
+  <button id="fs-fab" type="button" aria-label="Toggle fullscreen" title="Fullscreen">
+    <svg class="ic-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+    <svg class="ic-compress" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden><path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/></svg>
+  </button>
+  <button id="export-fab" type="button" aria-label="Export presentation as PDF">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>Export PDF
+  </button>
 </div>
 
 <script src="app.js"></script>

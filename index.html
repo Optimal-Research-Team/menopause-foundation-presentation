@@ -1546,7 +1546,7 @@
   #welcome-screen.is-on .welcome-inner > *:nth-child(6) { animation-delay: 0.68s; }
 
   /* ── Floating export control (in-deck, fades like the nav) ── */
-  #export-fab {
+  #export-fab, #fs-fab {
     position: fixed; right: 22px; top: 20px; z-index: 2147483500;
     display: inline-flex; align-items: center; gap: 9px;
     font-family: var(--font-sans); font-size: 13px; font-weight: 600; letter-spacing: 0.01em;
@@ -1557,10 +1557,12 @@
     opacity: 0; transform: translateY(-6px); pointer-events: none;
     transition: opacity 0.3s, transform 0.3s, background 0.2s;
   }
-  #export-fab[hidden] { display: none; }
-  #export-fab.avail { opacity: 0.5; transform: none; pointer-events: auto; }
-  #export-fab.avail:hover { opacity: 1; background: rgba(18,32,12,0.88); }
-  #export-fab svg { width: 15px; height: 15px; }
+  #export-fab[hidden], #fs-fab[hidden] { display: none; }
+  #export-fab.avail, #fs-fab.avail { opacity: 0.5; transform: none; pointer-events: auto; }
+  #export-fab.avail:hover, #fs-fab.avail:hover { opacity: 1; background: rgba(18,32,12,0.88); }
+  #export-fab svg, #fs-fab svg { width: 15px; height: 15px; }
+  #fs-fab { right: 164px; padding: 10px 12px; }
+  #fs-fab svg[hidden] { display: none; }
 
   @media (prefers-reduced-motion: reduce) {
     .canopy::before { animation: none; transform: scale(1.0); }
@@ -1570,7 +1572,7 @@
 
   /* ── Print: prep hidden, welcome becomes the first PDF page ── */
   @media print {
-    #prep-screen, #export-fab { display: none !important; }
+    #prep-screen, #export-fab, #fs-fab { display: none !important; }
     #cover-stage {
       position: static !important; display: block !important;
       background: none !important; overflow: visible !important;
@@ -1639,6 +1641,12 @@
 
   </div>
 </div>
+
+<!-- Floating fullscreen control during the presentation -->
+<button id="fs-fab" type="button" aria-label="Toggle fullscreen" title="Fullscreen" hidden>
+  <svg class="ic-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+  <svg class="ic-compress" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden><path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/></svg>
+</button>
 
 <!-- Floating export control during the presentation -->
 <button id="export-fab" type="button" aria-label="Export presentation as PDF" hidden>
@@ -2873,6 +2881,17 @@
     const welcomeTtl  = welcome.querySelector('.welcome-title');
     const beginBtn    = document.getElementById('welcome-begin');
     const fab         = document.getElementById('export-fab');
+    const fsFab       = document.getElementById('fs-fab');
+    fsFab.addEventListener('click', () => {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen().catch(() => {});
+    });
+    document.addEventListener('fullscreenchange', () => {
+      const fs = !!document.fullscreenElement;
+      fsFab.querySelector('.ic-expand').hidden = fs;
+      fsFab.querySelector('.ic-compress').hidden = !fs;
+      fsFab.setAttribute('title', fs ? 'Exit fullscreen' : 'Fullscreen');
+    });
     const deck        = document.querySelector('deck-stage');
     const coverStage  = document.getElementById('cover-stage');
     const coverCanvas = document.getElementById('cover-canvas');
@@ -2952,6 +2971,7 @@
       coverTimer = setTimeout(() => { coverStage.hidden = true; }, 640);
       if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
       fab.hidden = false;
+      fsFab.hidden = false;
       // Always open on the title slide, then re-run its entrance now that it's
       // truly on screen (goTo(0) is a no-op if already there).
       if (deck && deck.index !== 0) deck.goTo(0);
@@ -2997,8 +3017,9 @@
     window.addEventListener('mousemove', () => {
       if (!started) return;
       fab.classList.add('avail');
+      fsFab.classList.add('avail');
       clearTimeout(fabTimer);
-      fabTimer = setTimeout(() => fab.classList.remove('avail'), 2600);
+      fabTimer = setTimeout(() => { fab.classList.remove('avail'); fsFab.classList.remove('avail'); }, 2600);
     }, { passive: true });
 
     // Land on the name field, ready to type.

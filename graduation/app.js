@@ -29,7 +29,7 @@
       email: 'care@beoptimal.ca',
       web: 'beoptimal.ca',
     },
-    TEMPLATE_VERSION: 'grad-deck v2.3.0',
+    TEMPLATE_VERSION: 'grad-deck v2.4.0',
   };
 
   /* §2 — the instrument */
@@ -130,6 +130,8 @@
   const prep = $('#prep');
   const deck = $('#deck');
   const navzones = $('#navzones');
+  const deckUtils = $('#deck-utils');
+  let lastState = null;   // last rendered deck state (memory only, wiped on refresh)
 
   const fFirst = $('#f-first'), fStart = $('#f-start'), fEnd = $('#f-end');
   const fQuote = $('#f-quote'), fWin = $('#f-win'), fDeadline = $('#f-deadline');
@@ -800,6 +802,7 @@
     fillPageNumbers();
     prep.hidden = true;
     navzones.hidden = false;
+    deckUtils.hidden = false;
     deck.classList.add('ready');
     window.__deckLocked = false;
     deck.goTo(0);
@@ -813,20 +816,58 @@
     window.__deckLocked = true;
     prep.hidden = false;
     navzones.hidden = true;
+    deckUtils.hidden = true;
     deck.classList.remove('ready');
   }
 
   $('#btn-generate').addEventListener('click', () => {
     const s = collectAndValidate();
     if (!s) return;
+    lastState = s;
     renderDeck(s);
     showDeck();
   });
 
   // Esc → back to the prep form (form state is preserved) — §5.3
+  // (when fullscreen, Esc only exits fullscreen — the deck stays up)
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && prep.hidden) showPrep();
+    if (e.key === 'Escape' && prep.hidden && !document.fullscreenElement) showPrep();
   });
+
+  /* ── Deck utilities: fullscreen + export PDF (Foundation-deck pattern) ── */
+  const fsFab = $('#fs-fab');
+  const exportFab = $('#export-fab');
+
+  fsFab.addEventListener('click', () => {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen().catch(() => {});
+  });
+  document.addEventListener('fullscreenchange', () => {
+    const fs = !!document.fullscreenElement;
+    fsFab.querySelector('.ic-expand').hidden = fs;
+    fsFab.querySelector('.ic-compress').hidden = !fs;
+    fsFab.setAttribute('title', fs ? 'Exit fullscreen' : 'Fullscreen');
+  });
+
+  // Export = print → Save as PDF (one slide per page, identifying footer).
+  // Title swap gives the saved file an identifiable name; restored right after.
+  exportFab.addEventListener('click', () => {
+    const prev = document.title;
+    const who = lastState ? lastState.first : 'Patient';
+    document.title = `Optimal Graduation Deck — ${who} — ${todayIso()}`;
+    const cleanup = () => { document.title = prev; window.removeEventListener('afterprint', cleanup); };
+    window.addEventListener('afterprint', cleanup);
+    setTimeout(() => window.print(), 60);
+  });
+
+  // Surface the utilities on mouse activity while presenting; fade when idle.
+  let utilsTimer;
+  window.addEventListener('mousemove', () => {
+    if (prep.hidden === false) return;
+    deckUtils.classList.add('avail');
+    clearTimeout(utilsTimer);
+    utilsTimer = setTimeout(() => deckUtils.classList.remove('avail'), 2600);
+  }, { passive: true });
 
   // Desktop click zones: left ⅓ back, right ⅔ forward — §5.3
   navzones.querySelector('.nz-back').addEventListener('click', () => deck.prev());
