@@ -1535,6 +1535,21 @@
   .welcome-back:hover .arr { transform: translateX(-3px); }
   #welcome-screen .welcome-back { opacity: 0; }
   #welcome-screen.is-on .welcome-back { animation: rv-rise 0.6s var(--ease-standard) 0.12s both; }
+  /* Full-screen toggle on the preparation screen (persists into the deck) */
+  .fs-toggle {
+    position: absolute; top: 38px; right: 44px; z-index: 2;
+    display: inline-flex; align-items: center; gap: 9px;
+    font-family: var(--font-sans); font-size: 14px; font-weight: 600; letter-spacing: 0.01em;
+    color: rgba(255,255,255,0.82);
+    background: rgba(18,32,12,0.42);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.22); border-radius: 999px;
+    padding: 10px 18px; cursor: pointer;
+    animation: rv-rise 0.6s var(--ease-standard) 0.2s both;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .fs-toggle:hover { background: rgba(18,32,12,0.72); color: #fff; border-color: rgba(255,255,255,0.5); }
+  .fs-toggle svg { width: 15px; height: 15px; }
   /* Welcome content rises in when the screen is shown */
   #welcome-screen .welcome-inner > * { opacity: 0; transform: translateY(20px); }
   #welcome-screen.is-on .welcome-inner > * { animation: rv-rise 0.7s var(--ease-standard) both; }
@@ -1590,7 +1605,7 @@
     #welcome-screen .welcome-inner > * { opacity: 1 !important; transform: none !important; animation: none !important; }
     /* The Begin button + keyboard hint are live affordances — drop them from
        the static record page. */
-    #welcome-screen .welcome-begin, #welcome-screen .welcome-hint, #welcome-screen .welcome-back { display: none !important; }
+    #welcome-screen .welcome-begin, #welcome-screen .welcome-hint, #welcome-screen .welcome-back, .fs-toggle { display: none !important; }
     .canopy::before { animation: none !important; transform: scale(1.0) !important; }
   }
 </style>
@@ -1603,6 +1618,9 @@
 
     <!-- Preparation screen (enter patient name) -->
     <div id="prep-screen" class="canopy">
+      <button type="button" id="fs-toggle" class="fs-toggle" aria-label="Toggle full screen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg><span>Full screen</span>
+      </button>
       <div class="prep-card">
         <img class="opt-logo" src="assets/logos/Optimal-Logo-Inverted.png" alt="Optimal">
         <div>
@@ -3021,6 +3039,27 @@
       setTimeout(() => window.print(), 60);
     };
     document.getElementById('prep-export').addEventListener('click', exportPDF);
+
+    // Full-screen toggle on the preparation screen (persists into the deck).
+    const fsBtn = document.getElementById('fs-toggle');
+    const fsLabel = fsBtn.querySelector('span');
+    const fsActive = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+    fsBtn.addEventListener('click', () => {
+      const root = document.documentElement;
+      try {
+        if (fsActive()) {
+          const p = (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+          if (p && p.catch) p.catch(() => {});
+        } else {
+          const req = root.requestFullscreen || root.webkitRequestFullscreen;
+          const p = req && req.call(root);
+          if (p && p.catch) p.catch(() => {});   // embedded hosts may deny; fail quietly
+        }
+      } catch (e) { /* fullscreen unavailable in this context */ }
+    });
+    const fsSync = () => { fsLabel.textContent = fsActive() ? 'Exit full screen' : 'Full screen'; };
+    document.addEventListener('fullscreenchange', fsSync);
+    document.addEventListener('webkitfullscreenchange', fsSync);
     fab.addEventListener('click', exportPDF);
 
     // Reveal the floating export control on mouse activity once presenting.
