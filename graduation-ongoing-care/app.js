@@ -29,7 +29,7 @@
       email: 'care@beoptimal.ca',
       web: 'beoptimal.ca',
     },
-    TEMPLATE_VERSION: 'ongoing-care-deck v3.0.0',
+    TEMPLATE_VERSION: 'ongoing-care-deck v4.0.0',
     /* Questionnaire/results section (slides 2–4 + their form fields).
        OFF until questionnaire data can be pulled directly — everything it
        gates is intact; flip to true to restore the full 9-slide deck.
@@ -682,6 +682,78 @@
     return svg + '</svg>';
   }
 
+  /* Year Orbit (slide 8) — the membership year as a self-drawing ring:
+     twelve months, three visit nodes, a "today" marker at graduation. */
+  const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+  const MONTHS_FULL = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+  function buildYearOrbitSVG(s) {
+    const cx = 370, cy = 340, R = 224;
+    const FF = 'Public Sans, Inter, system-ui, sans-serif';
+    const FD = 'Castoro, Iowan Old Style, Palatino Linotype, Georgia, serif';
+    const A = (f) => (f * 360 - 90) * Math.PI / 180;
+    const pt = (f, r) => [cx + r * Math.cos(A(f)), cy + r * Math.sin(A(f))];
+    const startM = Number(s.end.slice(5, 7)) - 1;
+    const txt = (x, y, str, size, weight, fill, anchor, ls = 0, family = FF, extra = '') =>
+      `<text x="${x.toFixed(1)}" y="${y.toFixed(1)}" font-family="${family}" font-size="${size}" font-weight="${weight}"` +
+      ` fill="${fill}" text-anchor="${anchor}" letter-spacing="${ls}"${extra}>${str}</text>`;
+
+    let svg = `<svg viewBox="0 0 740 660" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Your membership year — three visits">`;
+
+    // the ring (hair-open full circle so the dash draw runs clockwise from top)
+    svg += `<path class="yo-ring" pathLength="1" d="M 370 116 A 224 224 0 1 1 369.99 116" fill="none" stroke="#DFD7CA" stroke-width="1.6"/>`;
+
+    // month ticks + labels (skip the two label slots adjacent to the top seam)
+    for (let i = 0; i < 12; i++) {
+      const [x1, y1] = pt(i / 12, R), [x2, y2] = pt(i / 12, R + 9);
+      svg += `<g class="yo-lab" style="--d:${(0.5 + i * 0.05).toFixed(2)}s">` +
+        `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#DFD7CA" stroke-width="1.5"/>`;
+      if (i >= 1 && i <= 10) {
+        const [lx, ly] = pt((i + 0.5) / 12, R + 30);
+        svg += txt(lx, ly + 4, MONTHS[(startM + i) % 12], 12.5, 700, '#76736D', 'middle', 1.8);
+      }
+      svg += '</g>';
+    }
+
+    // visit nodes (fracs chosen for label clearance; the copy carries true timing)
+    const node = (f, d) => {
+      const [x, y] = pt(f, R);
+      return { x, y, markup: `<g class="yo-node" style="--d:${d}s">` +
+        `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="17" fill="#87A482" fill-opacity="0.22"/>` +
+        `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="10" fill="#2C4E25"/></g>` };
+    };
+    const n1 = node(0.07, 0.8), n2 = node(0.50, 1.35), n3 = node(0.96, 1.9);
+    svg += n1.markup + n2.markup + n3.markup;
+
+    // node labels with leader ticks
+    const transMeta = s.heldSlot ? 'WEEKS 1–3 · HELD FOR YOU' : 'WEEKS 1–3 · 30 MIN';
+    svg += `<g class="yo-lab" style="--d:0.95s">` +
+      `<line x1="${(n1.x + 14).toFixed(1)}" y1="${(n1.y - 9).toFixed(1)}" x2="497" y2="117" stroke="#DFD7CA" stroke-width="1.2"/>` +
+      txt(505, 112, 'Transition Visit', 25, 400, '#2C4E25', 'start', 0, FD) +
+      txt(505, 138, transMeta, 12, 700, '#76736D', 'start', 1.5) + '</g>';
+    if (s.heldSlot) svg += `<circle class="yo-pulse" cx="${n1.x.toFixed(1)}" cy="${n1.y.toFixed(1)}" r="16" stroke="#C05A3C" stroke-width="1.5" fill="none"/>`;
+    svg += `<g class="yo-lab" style="--d:1.5s">` +
+      txt(370, 604, 'Mid-Year Review', 25, 400, '#2C4E25', 'middle', 0, FD) +
+      txt(370, 628, 'NP · SYMPTOMS, LABS, DOSE CHECK', 12, 700, '#76736D', 'middle', 1.5) + '</g>';
+    svg += `<g class="yo-lab" style="--d:2.05s">` +
+      `<line x1="${(n3.x - 14).toFixed(1)}" y1="${(n3.y - 9).toFixed(1)}" x2="282" y2="117" stroke="#DFD7CA" stroke-width="1.2"/>` +
+      txt(274, 112, 'Annual Optimization', 25, 400, '#2C4E25', 'end', 0, FD) +
+      txt(274, 138, 'NP · FULL REVIEW · 45 MIN', 12, 700, '#76736D', 'end', 1.5) + '</g>';
+
+    // you-are-here at the top seam
+    svg += `<circle class="yo-here" style="--d:2.2s" cx="370" cy="116" r="7" fill="#C05A3C"/>`;
+    svg += `<circle class="yo-pulse" cx="370" cy="116" r="12" stroke="#C05A3C" stroke-width="1.3" fill="none"/>`;
+    svg += `<g class="yo-lab" style="--d:2.3s">` + txt(370, 66, 'TODAY · GRADUATION', 12, 700, '#C05A3C', 'middle', 2) + '</g>';
+
+    // center block
+    svg += `<g class="yo-lab" style="--d:.4s">` + txt(370, cy - 58, 'YOUR OPTIMAL YEAR', 12.5, 700, '#87A482', 'middle', 2.2) + '</g>';
+    svg += `<g class="yo-lab" style="--d:.5s">` + txt(370, cy - 8, 'Twelve months,', 42, 400, '#2C4E25', 'middle', 0, FD) + '</g>';
+    svg += `<g class="yo-lab" style="--d:.55s">` + txt(370, cy + 40, 'three visits.', 42, 400, '#2C4E25', 'middle', 0, FD, ' font-style="italic"') + '</g>';
+    svg += `<g class="yo-lab" style="--d:.65s">` + txt(370, cy + 86, `BEGINS ${MONTHS_FULL[startM].toUpperCase()} ${s.end.slice(0, 4)}`, 12, 700, '#76736D', 'middle', 1.8) + '</g>';
+
+    return svg + '</svg>';
+  }
+
   function fillPageNumbers() {
     const pad2 = (n) => String(n).padStart(2, '0');
     const sections = $$('#deck > section');
@@ -715,6 +787,8 @@
     // §5.6 — prices always from constants; anchor is computed
     bind('ANNUAL', money(CONFIG.PRICE_ANNUAL));
     bind('ANNUAL_NUM', Number(CONFIG.PRICE_ANNUAL).toLocaleString('en-CA'));
+    // authoritative count-up target — never trust mid-animation textContent
+    $$('.g7 [data-bind="ANNUAL_NUM"]').forEach((el) => { el.dataset.final = String(CONFIG.PRICE_ANNUAL); });
     bind('ANNUAL2', money(CONFIG.PRICE_ANNUAL));
     bind('EARLY', money(CONFIG.PRICE_EARLY));
     bind('MEMBER_EXTRA', money(CONFIG.PRICE_MEMBER_EXTRA));
@@ -820,10 +894,11 @@
     $('#paths-standard').style.display = s.bucket === 'standard' ? '' : 'none';
     $('#paths-longevity').style.display = s.bucket === 'longevity' ? '' : 'none';
 
-    // ── slide 8 (held slot) ──
+    // ── slide 8 (held slot + year orbit) ──
     const held = $('#held-slot-box');
     if (s.heldSlot) { bind('held_slot', fmtSlot(s.heldSlot)); held.classList.add('show'); }
     else held.classList.remove('show');
+    $('.g8 .orbit').innerHTML = buildYearOrbitSVG(s);
   }
 
   /* ════════════════════════════════════════════════════════════════════
@@ -842,7 +917,7 @@
     // so kick slide 1's entry animation manually.
     $$('#deck > section.play').forEach((sec) => sec.classList.remove('play'));
     const first = $('#deck > section.g1');
-    if (first) { void first.offsetWidth; first.classList.add('play'); }
+    if (first) { void first.offsetWidth; first.classList.add('play'); playBrandLogos(first); }
   }
   function showPrep() {
     window.__deckLocked = true;
@@ -926,6 +1001,40 @@
     cuRaf = requestAnimationFrame(tick);
   }
 
+  // Count the slide-7 annual price up from 0, synced to its .ar rise (--d:.16s).
+  let cuRaf7 = 0;
+  function countUpG7() {
+    const el = document.querySelector('.g7 [data-bind="ANNUAL_NUM"]');
+    if (!el) return;
+    const target = parseInt(el.dataset.final || '0', 10) || 0;
+    const fmt = (n) => Number(n).toLocaleString('en-CA');
+    if (!target || matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = fmt(target); return; }
+    cancelAnimationFrame(cuRaf7);
+    const dur = 900;                        // lands just after the riseIn settles
+    const t0 = performance.now() + 160;     // starts the frame the .ar rise begins
+    const tick = (now) => {
+      const p = Math.min(1, Math.max(0, (now - t0) / dur));
+      el.textContent = fmt(Math.round(target * (1 - Math.pow(1 - p, 3)))); // ease-out cubic
+      if (p < 1) cuRaf7 = requestAnimationFrame(tick); else el.textContent = fmt(target);
+    };
+    cuRaf7 = requestAnimationFrame(tick);
+  }
+
+  // The living brand mark replays with its slide.
+  const playBrandLogos = (root) => root.querySelectorAll('optimal-logo').forEach((el) => {
+    if (typeof el.play === 'function') el.play();
+  });
+
+  // Printing must never capture a mid-animation state the CSS blocks can't reach.
+  window.addEventListener('beforeprint', () => {
+    cancelAnimationFrame(cuRaf7); cancelAnimationFrame(cuRaf);
+    const p7 = document.querySelector('.g7 [data-bind="ANNUAL_NUM"]');
+    if (p7 && p7.dataset.final) p7.textContent = Number(p7.dataset.final).toLocaleString('en-CA');
+    const p2 = document.querySelector('.g2 [data-bind="intake_flagged"]');
+    if (p2 && p2.dataset.final) p2.textContent = p2.dataset.final;
+    document.querySelectorAll('optimal-logo').forEach((el) => { if (typeof el.finish === 'function') el.finish(); });
+  });
+
   // Replay entry animations each time a slide becomes active.
   deck.addEventListener('slidechange', (e) => {
     $$('#deck > section.play').forEach((sec) => sec.classList.remove('play'));
@@ -933,7 +1042,9 @@
     if (sec && /(^| )g\d( |$)/.test(sec.className)) {
       void sec.offsetWidth;  // restart CSS animations
       sec.classList.add('play');
+      playBrandLogos(sec);
       if (sec.classList.contains('g2')) countUpG2();
+      if (sec.classList.contains('g7')) countUpG7();
     }
   });
 
