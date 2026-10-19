@@ -29,7 +29,7 @@
       email: 'care@beoptimal.ca',
       web: 'beoptimal.ca',
     },
-    TEMPLATE_VERSION: 'ongoing-care-deck v5.0.1',
+    TEMPLATE_VERSION: 'ongoing-care-deck v5.0.2',
     /* Questionnaire/results section (slides 2–4 + their form fields).
        OFF until questionnaire data can be pulled directly — everything it
        gates is intact; flip to true to restore the full 9-slide deck.
