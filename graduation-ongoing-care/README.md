@@ -3,6 +3,14 @@
 The deck for the **Ongoing Care** Menopause & Perimenopause Program — presented at the
 Offboarding ("Graduation") visit that closes the Foundation Program.
 
+> **Current state (Oct 19, 2026):** the questionnaire-driven results section — slides 2–4
+> (quote / waffle, symptom tracks, slope chart) and all of their prep-form fields — is
+> **paused** so the deck needs no manual transcription. Everything is gated behind
+> `CONFIG.QUESTIONNAIRE_SECTION` in `app.js` (currently `false`); flip it to `true` and
+> uncomment the three paused cues in `cue-card.html` once questionnaire data can be pulled
+> directly. A reminder is scheduled for **Nov 18, 2026**. The deck presents as 6 slides
+> until then.
+
 A presentation route for the Offboarding ("Graduation") visit: Cheryl transcribes ~25
 summary-level values from the two Hormone Questionnaire reports in the chart, generates a
 personalized 9-slide before/after deck, presents it, optionally prints it to PDF for the

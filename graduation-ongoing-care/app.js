@@ -29,7 +29,12 @@
       email: 'care@beoptimal.ca',
       web: 'beoptimal.ca',
     },
-    TEMPLATE_VERSION: 'ongoing-care-deck v2.5.0',
+    TEMPLATE_VERSION: 'ongoing-care-deck v3.0.0',
+    /* Questionnaire/results section (slides 2–4 + their form fields).
+       OFF until questionnaire data can be pulled directly — everything it
+       gates is intact; flip to true to restore the full 9-slide deck.
+       (Reminder scheduled for Nov 18, 2026.) */
+    QUESTIONNAIRE_SECTION: false,
   };
 
   /* §2 — the instrument */
@@ -147,6 +152,22 @@
 
   // Lock deck navigation while the prep form is up (deck-stage honors this).
   window.__deckLocked = true;
+
+  /* ── Questionnaire section gate (see CONFIG.QUESTIONNAIRE_SECTION) ──
+     With the gate off: slides 2–4 leave the deck, and every form element
+     that needs chart transcription hides. Nothing is deleted — flipping
+     the flag restores all of it. */
+  if (!CONFIG.QUESTIONNAIRE_SECTION) {
+    ['.g2', '.g3', '.g4'].forEach((sel) => { const s = $(sel); if (s) s.remove(); });
+    ['#fs-summary', '#fs-categories', '#fs-wins'].forEach((sel) => { const s = $(sel); if (s) s.hidden = true; });
+    [fQuote, fWin, fThenTest, $('#m-strong')].forEach((el) => {
+      const wrap = el && el.closest('.f');
+      if (wrap) wrap.hidden = true;
+    });
+    ['#pp-2', '#pp-3', '#pp-4'].forEach((sel) => { const d = $(sel); if (d) d.hidden = true; });
+    const sub = $('.prep-sub');
+    if (sub) sub.innerHTML = 'Enter the patient details below, then <b>Generate</b>. Present the deck with the printed cue card in hand. <em>Before/after questionnaire results return once we can pull them directly.</em>';
+  }
 
   /* ════════════════════════════════════════════════════════════════════
      Dynamic rows
@@ -285,7 +306,8 @@
 
   function refreshProgress() {
     const s1 = !!(fFirst.value.trim() && fStart.value && fEnd.value && fEnd.value > fStart.value &&
-      fQuote.value.trim() && fWin.value.trim() && fDeadline.value && fDeadline.value >= todayIso());
+      (!CONFIG.QUESTIONNAIRE_SECTION || (fQuote.value.trim() && fWin.value.trim())) &&
+      fDeadline.value && fDeadline.value >= todayIso());
     const s2 = flaggedVal(fIntakeFlagged) !== null && flaggedVal(fFinalFlagged) !== null;
     const nCats = catDataRows().filter(catRowComplete).length;
     const s3 = nCats >= MIN_ROWS && nCats <= MAX_ROWS;
@@ -424,27 +446,32 @@
 
   function collectAndValidate() {
     let bad = false;
-    const tt = fThenTest.checked;
+    const Q = CONFIG.QUESTIONNAIRE_SECTION;
+    const tt = Q && fThenTest.checked;
 
     bad |= markInvalid(fFirst, $('#e-first'), !fFirst.value.trim());
     bad |= markInvalid(fStart, $('#e-start'), !fStart.value);
     const endBad = !fEnd.value || (fStart.value && fEnd.value <= fStart.value);
     bad |= markInvalid(fEnd, $('#e-end'), endBad);
-    bad |= markInvalid(fQuote, $('#e-quote'), !fQuote.value.trim());
-    bad |= markInvalid(fWin, $('#e-win'), !fWin.value.trim());
+    if (Q) {
+      bad |= markInvalid(fQuote, $('#e-quote'), !fQuote.value.trim());
+      bad |= markInvalid(fWin, $('#e-win'), !fWin.value.trim());
+    }
     bad |= markInvalid(fDeadline, $('#e-deadline'), !fDeadline.value || fDeadline.value < todayIso());
 
     const intVal = (el) => {
       const v = parseInt(el.value, 10);
       return el.value !== '' && Number.isInteger(v) && String(v) === el.value.trim() && v >= 0 && v <= 54 ? v : null;
     };
-    const a = intVal(fIntakeFlagged), b = intVal(fFinalFlagged);
-    bad |= markInvalid(fIntakeFlagged, $('#e-intake-flagged'), a === null);
-    bad |= markInvalid(fFinalFlagged, $('#e-final-flagged'), b === null);
+    const a = Q ? intVal(fIntakeFlagged) : 0, b = Q ? intVal(fFinalFlagged) : 0;
+    if (Q) {
+      bad |= markInvalid(fIntakeFlagged, $('#e-intake-flagged'), a === null);
+      bad |= markInvalid(fFinalFlagged, $('#e-final-flagged'), b === null);
+    }
 
     // §5.1 worsening guard: Strong over worsening numbers requires explicit override
     let guardBlocked = false;
-    if (a !== null && b !== null && b >= a && resultsMode() === 'strong' && !fOverride.checked) {
+    if (Q && a !== null && b !== null && b >= a && resultsMode() === 'strong' && !fOverride.checked) {
       guardBlocked = true;
       $('#worsen-warning').classList.add('show');
       $('#override-line').style.display = 'flex';
@@ -452,7 +479,7 @@
 
     // category rows (hidden + skipped in then-test)
     const cats = [];
-    if (!tt) {
+    if (Q && !tt) {
       catDataRows().forEach((row) => {
         const [sel, inIntake, , inFinal] = row.children;
         const cName = sel.value;
@@ -469,7 +496,7 @@
 
     // symptom win rows
     const wins = [];
-    winDataRows().forEach((row) => {
+    if (Q) winDataRows().forEach((row) => {
       const sel = row.children[0].querySelector('select');
       const other = row.children[0].querySelector('input');
       const ri = row.children[1].querySelector('select');
@@ -480,7 +507,7 @@
       if (complete) wins.push({ name, intake: Number(ri.value), final: Number(rf.value) });
       else if (filled) { sel.classList.add('invalid'); ri.classList.add('invalid'); rf.classList.add('invalid'); }
     });
-    const winBad = wins.length < MIN_ROWS || wins.length > MAX_ROWS;
+    const winBad = Q && (wins.length < MIN_ROWS || wins.length > MAX_ROWS);
     $('#e-wins').classList.toggle('show', winBad);
     bad |= winBad;
 
@@ -699,6 +726,8 @@
     // §5.8 — identifying print footer on every page
     bind('print_foot', `${s.first} · ${fmtDate(todayIso())} · ${CONFIG.TEMPLATE_VERSION}`);
 
+    // ── slides 2–4 (questionnaire-driven; skipped while the gate is off) ──
+    if (CONFIG.QUESTIONNAIRE_SECTION) {
     // ── slide 2 ──
     bind('s2_eyebrow', 'Where you started');
     bindHTML('s2_display', s.thenTest
@@ -779,9 +808,11 @@
       if (!inDom) deck.insertBefore(slideHormone, slideHormoneAnchor.nextSibling);
       $('.g4 .map-card').innerHTML = buildSlopeSVG(s.categories, fmtDate(s.start), fmtDate(s.end));
     }
+    }  // end questionnaire gate
 
+    const modestCopy = s.mode === 'modest';
     // ── slide 5 (§5.4 bridge) ──
-    bind('s5_bridge', modest
+    bind('s5_bridge', modestCopy
       ? 'Hormone care is iterative — the first 12 weeks tell us what to adjust next.'
       : 'Hormone needs shift through perimenopause, menopause, and beyond. The plan that works today gets adjusted over time.');
 
