@@ -182,6 +182,8 @@
     });
     const sub = $('.prep-sub');
     if (sub) sub.innerHTML = 'Type her first name, pick <b>Strong</b> or <b>Modest</b>, and hit <b>Generate</b> — everything else is automatic. Present with the printed cue card in hand.';
+    const hint = $('#fs-patient .hint');
+    if (hint) hint.textContent = 'Just her first name — spelled the way she should see it on screen.';
   }
 
   /* ════════════════════════════════════════════════════════════════════
