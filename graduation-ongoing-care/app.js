@@ -29,7 +29,7 @@
       email: 'care@beoptimal.ca',
       web: 'beoptimal.ca',
     },
-    TEMPLATE_VERSION: 'ongoing-care-deck v5.0.3',
+    TEMPLATE_VERSION: 'ongoing-care-deck v5.0.4',
     /* Questionnaire/results section (slides 2–4 + their form fields).
        OFF until questionnaire data can be pulled directly — everything it
        gates is intact; flip to true to restore the full 9-slide deck.
@@ -729,7 +729,9 @@
       const [x1, y1] = pt(i / 12, R), [x2, y2] = pt(i / 12, R + 9);
       svg += `<g class="yo-lab" style="--d:${(0.5 + i * 0.05).toFixed(2)}s">` +
         `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#DFD7CA" stroke-width="1.5"/>`;
-      if (i >= 1 && i <= 10) {
+      // skip the two slots flanking the bottom node too — the Mid-Year
+      // label owns that zone (mirrors the top-seam treatment)
+      if (i >= 1 && i <= 10 && i !== 5 && i !== 6) {
         const [lx, ly] = pt((i + 0.5) / 12, R + 30);
         svg += txt(lx, ly + 4, MONTHS[(startM + i) % 12], 12.5, 700, '#76736D', 'middle', 1.8);
       }
