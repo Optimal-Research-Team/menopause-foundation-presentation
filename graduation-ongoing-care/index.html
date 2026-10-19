@@ -115,6 +115,7 @@
 
   .fgrid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px 24px; }
   .f { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+  .f[hidden], .fgrid [hidden] { display: none; }
   .f label {
     font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
     color: var(--grey-600);
