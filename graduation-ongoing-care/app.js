@@ -29,7 +29,7 @@
       email: 'care@beoptimal.ca',
       web: 'beoptimal.ca',
     },
-    TEMPLATE_VERSION: 'ongoing-care-deck v4.1.0',
+    TEMPLATE_VERSION: 'ongoing-care-deck v5.0.0',
     /* Questionnaire/results section (slides 2–4 + their form fields).
        OFF until questionnaire data can be pulled directly — everything it
        gates is intact; flip to true to restore the full 9-slide deck.
@@ -818,6 +818,10 @@
     bind('PRN30', money(CONFIG.PRICE_PRN30));
     bind('PRN45', money(CONFIG.PRICE_PRN45));
     bind('PRN_SUM', money(CONFIG.PRICE_PRN30 + CONFIG.PRICE_PRN45));
+    bind('PRN30_B', money(CONFIG.PRICE_PRN30));
+    // value stack: Transition (30 min) + Mid-Year (30 min) + Annual (45 min), all from CONFIG
+    bind('STACK_SUM', money(CONFIG.PRICE_PRN30 * 2 + CONFIG.PRICE_PRN45));
+    bind('DAY_RATE', '$' + (CONFIG.PRICE_ANNUAL / 365).toFixed(2));
     bind('WOMENS_MONTHLY', money(CONFIG.PRICE_WOMENS_MONTHLY));
 
     // §5.8 — identifying print footer on every page
