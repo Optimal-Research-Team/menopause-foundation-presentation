@@ -29,12 +29,17 @@
       email: 'care@beoptimal.ca',
       web: 'beoptimal.ca',
     },
-    TEMPLATE_VERSION: 'ongoing-care-deck v4.0.0',
+    TEMPLATE_VERSION: 'ongoing-care-deck v4.1.0',
     /* Questionnaire/results section (slides 2–4 + their form fields).
        OFF until questionnaire data can be pulled directly — everything it
        gates is intact; flip to true to restore the full 9-slide deck.
        (Reminder scheduled for Nov 18, 2026.) */
     QUESTIONNAIRE_SECTION: false,
+    /* Minimal prep: the form asks for the first name + Strong/Modest only.
+       Program dates, offer deadline, bucket, and held slot derive
+       automatically (graduation day = today; 12-week program; deadline
+       today+7; Standard bucket; no held slot). */
+    MINIMAL_PREP: true,
   };
 
   /* §2 — the instrument */
@@ -160,13 +165,23 @@
   if (!CONFIG.QUESTIONNAIRE_SECTION) {
     ['.g2', '.g3', '.g4'].forEach((sel) => { const s = $(sel); if (s) s.remove(); });
     ['#fs-summary', '#fs-categories', '#fs-wins'].forEach((sel) => { const s = $(sel); if (s) s.hidden = true; });
-    [fQuote, fWin, fThenTest, $('#m-strong')].forEach((el) => {
+    [fQuote, fWin, fThenTest].forEach((el) => {
       const wrap = el && el.closest('.f');
       if (wrap) wrap.hidden = true;
     });
     ['#pp-2', '#pp-3', '#pp-4'].forEach((sel) => { const d = $(sel); if (d) d.hidden = true; });
+  }
+
+  /* ── Minimal prep (see CONFIG.MINIMAL_PREP) ──
+     Name + Strong/Modest only. Dates, deadline, bucket, and the held slot
+     derive automatically; their fields hide but stay in the DOM. */
+  if (CONFIG.MINIMAL_PREP) {
+    [fStart, fEnd, fDeadline, fSlot, $('#b-std')].forEach((el) => {
+      const wrap = el && el.closest('.f');
+      if (wrap) wrap.hidden = true;
+    });
     const sub = $('.prep-sub');
-    if (sub) sub.innerHTML = 'Enter the patient details below, then <b>Generate</b>. Present the deck with the printed cue card in hand. <em>Before/after questionnaire results return once we can pull them directly.</em>';
+    if (sub) sub.innerHTML = 'Type her first name, pick <b>Strong</b> or <b>Modest</b>, and hit <b>Generate</b> — everything else is automatic. Present with the printed cue card in hand.';
   }
 
   /* ════════════════════════════════════════════════════════════════════
@@ -305,9 +320,11 @@
   };
 
   function refreshProgress() {
-    const s1 = !!(fFirst.value.trim() && fStart.value && fEnd.value && fEnd.value > fStart.value &&
-      (!CONFIG.QUESTIONNAIRE_SECTION || (fQuote.value.trim() && fWin.value.trim())) &&
-      fDeadline.value && fDeadline.value >= todayIso());
+    const s1 = CONFIG.MINIMAL_PREP
+      ? !!fFirst.value.trim()
+      : !!(fFirst.value.trim() && fStart.value && fEnd.value && fEnd.value > fStart.value &&
+        (!CONFIG.QUESTIONNAIRE_SECTION || (fQuote.value.trim() && fWin.value.trim())) &&
+        fDeadline.value && fDeadline.value >= todayIso());
     const s2 = flaggedVal(fIntakeFlagged) !== null && flaggedVal(fFinalFlagged) !== null;
     const nCats = catDataRows().filter(catRowComplete).length;
     const s3 = nCats >= MIN_ROWS && nCats <= MAX_ROWS;
@@ -447,17 +464,20 @@
   function collectAndValidate() {
     let bad = false;
     const Q = CONFIG.QUESTIONNAIRE_SECTION;
+    const M = CONFIG.MINIMAL_PREP;
     const tt = Q && fThenTest.checked;
 
     bad |= markInvalid(fFirst, $('#e-first'), !fFirst.value.trim());
-    bad |= markInvalid(fStart, $('#e-start'), !fStart.value);
-    const endBad = !fEnd.value || (fStart.value && fEnd.value <= fStart.value);
-    bad |= markInvalid(fEnd, $('#e-end'), endBad);
+    if (!M) {
+      bad |= markInvalid(fStart, $('#e-start'), !fStart.value);
+      const endBad = !fEnd.value || (fStart.value && fEnd.value <= fStart.value);
+      bad |= markInvalid(fEnd, $('#e-end'), endBad);
+      bad |= markInvalid(fDeadline, $('#e-deadline'), !fDeadline.value || fDeadline.value < todayIso());
+    }
     if (Q) {
       bad |= markInvalid(fQuote, $('#e-quote'), !fQuote.value.trim());
       bad |= markInvalid(fWin, $('#e-win'), !fWin.value.trim());
     }
-    bad |= markInvalid(fDeadline, $('#e-deadline'), !fDeadline.value || fDeadline.value < todayIso());
 
     const intVal = (el) => {
       const v = parseInt(el.value, 10);
@@ -524,12 +544,13 @@
 
     return {
       first: fFirst.value.trim(),
-      start: fStart.value, end: fEnd.value,
+      start: M ? isoFrom(daysFromToday(-84)) : fStart.value,   // 12-week program
+      end: M ? todayIso() : fEnd.value,                        // graduation day = today
       quote: fQuote.value.trim(),
       win: fWin.value.trim(),
-      deadline: fDeadline.value,
-      bucket: bucket(), mode: resultsMode(), thenTest: tt,
-      heldSlot: fSlot.value || null,
+      deadline: M ? isoFrom(daysFromToday(7)) : fDeadline.value,
+      bucket: M ? 'standard' : bucket(), mode: resultsMode(), thenTest: tt,
+      heldSlot: M ? null : (fSlot.value || null),
       intakeFlagged: a, finalFlagged: b,
       categories: cats, wins,
     };
@@ -769,7 +790,9 @@
     // the ring-word ellipse stretches unflatteringly past ~10 characters
     const nameEl = document.querySelector('.g1 h1 .italic');
     if (nameEl) nameEl.classList.toggle('ring-word', s.first.length <= 10);
-    bind('daterange', fmtRange(s.start, s.end));
+    // minimal prep derives approximate dates — the eyebrow says "Complete"
+    // rather than printing fabricated-precise ones
+    bind('daterange', CONFIG.MINIMAL_PREP ? 'Complete' : fmtRange(s.start, s.end));
     bind('grad_year', s.end.slice(0, 4));
     bind('intake_quote', s.quote);
     bind('headline_win', s.win);
