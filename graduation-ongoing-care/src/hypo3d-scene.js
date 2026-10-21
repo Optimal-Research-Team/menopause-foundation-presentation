@@ -113,12 +113,11 @@ function physMat(o) {
   const sss = !!o.sss && SSS_PATCHED;
   const core = !!o.core;
   const nb = (o.bump ?? 0) > 0 || (o.mottle ?? 0) > 0;
+  // Defines go on the material before it first compiles (setting them inside onBeforeCompile changed
+  // the program key after the first compile, so every material compiled twice, the second on frame one).
+  m.defines = { ...(m.defines || {}), ...(sss ? { USE_SSS: "" } : {}), ...(core ? { USE_CORE: "" } : {}), ...(nb ? { USE_NBUMP: "" } : {}) };
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, U);
-    sh.defines = sh.defines || {};
-    if (sss) sh.defines.USE_SSS = "";
-    if (core) sh.defines.USE_CORE = "";
-    if (nb) sh.defines.USE_NBUMP = "";
     sh.vertexShader = sh.vertexShader
       .replace("#include <common>", "#include <common>\n#ifdef USE_NBUMP\nvarying vec3 vNPos;\n#endif")
       .replace("#include <begin_vertex>", "#include <begin_vertex>\n#ifdef USE_NBUMP\nvNPos = position;\n#endif");

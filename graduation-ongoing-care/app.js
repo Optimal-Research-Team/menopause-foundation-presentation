@@ -29,7 +29,7 @@
       email: 'care@beoptimal.ca',
       web: 'beoptimal.ca',
     },
-    TEMPLATE_VERSION: 'ongoing-care-deck v6.2.0',
+    TEMPLATE_VERSION: 'ongoing-care-deck v6.2.1',
     /* Questionnaire/results section (slides 2–4 + their form fields).
        OFF until questionnaire data can be pulled directly — everything it
        gates is intact; flip to true to restore the full 9-slide deck.
@@ -976,6 +976,8 @@
     $$('#deck > section.play').forEach((sec) => sec.classList.remove('play'));
     const first = $('#deck > section.g1');
     if (first) { void first.offsetWidth; first.classList.add('play'); playBrandLogos(first); forestVideo.start(); }
+    const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 0));
+    setTimeout(() => idle(() => stages35.warm(), { timeout: 2000 }), 3500);
   }
   function showPrep() {
     forestVideo.stop();
@@ -1196,7 +1198,7 @@
      ════════════════════════════════════════════════════════════════════ */
   const stages35 = (() => {
     const sec = document.querySelector('.g35');
-    if (!sec) return { enter() {}, leave() {}, print() {} };
+    if (!sec) return { enter() {}, leave() {}, print() {}, warm() {} };
     const hypo = sec.querySelector('hypo-3d');
     const KEYS = ['before', 'after', 'therapy', 'nonhormonal'];
     const READ = {
@@ -1209,7 +1211,7 @@
     sec.style.setProperty('--tour', `${TOUR}s`);
     const items = [...sec.querySelectorAll('.stages35 li')];
     const reads = [...sec.querySelectorAll('.read35 b')];
-    let current = 'before', timer = 0, active = false;
+    let current = 'before', timer = 0, active = false, warmed = false;
 
     function show(key, instant) {
       current = key;
@@ -1255,6 +1257,13 @@
         active = false;
         clearTimeout(timer);
         if (modelLive()) hypo.pause();
+      },
+      // Compile the model's shaders once, early, while slide 1 is up (one hidden frame), so entering
+      // slide 3 doesn't stall on the first compile. play() on entry resumes the live loop.
+      warm() {
+        if (warmed || !modelLive() || typeof hypo.renderAt !== 'function' || active) return;
+        warmed = true;
+        hypo.renderAt(0);
       },
       print(on) {
         if (!modelLive()) return;
