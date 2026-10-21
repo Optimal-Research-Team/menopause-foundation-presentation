@@ -29,7 +29,7 @@
       email: 'care@beoptimal.ca',
       web: 'beoptimal.ca',
     },
-    TEMPLATE_VERSION: 'ongoing-care-deck v6.0.0',
+    TEMPLATE_VERSION: 'ongoing-care-deck v6.1.0',
     /* Questionnaire/results section (slides 2–4 + their form fields).
        OFF until questionnaire data can be pulled directly — everything it
        gates is intact; flip to true to restore the full 9-slide deck.
@@ -823,6 +823,7 @@
     // rather than printing fabricated-precise ones
     bind('daterange', CONFIG.MINIMAL_PREP ? 'Complete' : fmtRange(s.start, s.end));
     bind('grad_year', s.end.slice(0, 4));
+    bind('grad_date', fmtDate(todayIso()));
     bind('intake_quote', s.quote);
     bind('headline_win', s.win);
     bind('intake_flagged', String(s.intakeFlagged));
@@ -973,10 +974,10 @@
     // so kick slide 1's entry animation manually.
     $$('#deck > section.play').forEach((sec) => sec.classList.remove('play'));
     const first = $('#deck > section.g1');
-    if (first) { void first.offsetWidth; first.classList.add('play'); playBrandLogos(first); }
+    if (first) { void first.offsetWidth; first.classList.add('play'); playBrandLogos(first); forestHalftone.start(); }
   }
   function showPrep() {
-    dayNight.stop();
+    forestHalftone.stop();
     stages35.leave();
     window.__deckLocked = true;
     prep.hidden = false;
@@ -1084,174 +1085,120 @@
   });
 
   /* ════════════════════════════════════════════════════════════════════
-     Slide 2 — the day/night visualizer: one day every 28 s, from 5 AM.
-     Everything is computed from the hour h, so print and reduced motion
-     simply render one still hour (8:30, morning light).
+     Slide 1 — the path forward: the brand forest plate (fog → sun) printed
+     live through a halftone screen. A fragment shader samples the footage
+     at each dot's centre and sizes the dot by luminance, over a forest
+     duotone of the same frame, with a sun bloom that rises with the clip.
+     No WebGL, print and reduced motion show the still
+     (assets/images/forest-dawn-halftone.webp).
      ════════════════════════════════════════════════════════════════════ */
-  const dayNight = (() => {
-    const card = document.querySelector('.g5 .dn-card');
-    if (!card) return { start() {}, stop() {}, still() {} };
-    const svg = card.querySelector('.dn-svg');
-    const q = (sel) => card.querySelector(sel);
-    const skyStops = [...svg.querySelectorAll('#dnSky stop')];
-    const sun = q('.dn-sun'), moon = q('.dn-moon'), glow = q('.dn-glow'), stars = q('.dn-stars');
-    const clouds = [...svg.querySelectorAll('.dn-cloud')];
-    const hills = [q('.dn-h1'), q('.dn-h2'), q('.dn-h3')];
-    const timeEl = q('.dn-time'), ampmEl = q('.dn-ampm'), phaseEl = q('.dn-phase'), lineEl = q('.dn-line');
-    const pathEl = q('.dn-path'), arcTicks = q('.dn-ticks-arc');
-    // the path of the day: sun and moon ride one arc; ticks mark 6, 9, noon, 3, 6
-    const ARC = { cx: 430, cy: 760, rx: 390, ry: 560 };
-    const onArc = (u) => { const a = Math.PI * (1 - u); return [ARC.cx + ARC.rx * Math.cos(a), ARC.cy - ARC.ry * Math.sin(a), Math.sin(a)]; };
-    [6, 9, 12, 15, 18].forEach((hr) => {
-      const [x, y] = onArc((hr - 5.5) / 13.5);
-      const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      c.setAttribute('cx', x.toFixed(1)); c.setAttribute('cy', y.toFixed(1)); c.setAttribute('r', hr === 12 ? '5' : '3.5');
-      c.setAttribute('fill', '#FFFFFF');
-      arcTicks.appendChild(c);
-    });
-
-    let seed = 11;
-    const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-    for (let i = 0; i < 56; i++) {
-      const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      c.setAttribute('cx', (rnd() * 860).toFixed(1));
-      c.setAttribute('cy', (rnd() * 580).toFixed(1));
-      c.setAttribute('r', (0.6 + rnd() * 1.6).toFixed(2));
-      c.style.setProperty('--tw', `${(rnd() * 3).toFixed(2)}s`);
-      c.style.setProperty('--tw-d', `${(2 + rnd() * 2.6).toFixed(2)}s`);
-      stars.appendChild(c);
-    }
-
-    const rgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
-    const mix = (a, b, t) => a.map((v, i) => v + (b[i] - v) * t);
-    const css = (c, a) => a === undefined
-      ? `rgb(${c.map((v) => Math.round(v)).join(',')})`
-      : `rgba(${c.map((v) => Math.round(v)).join(',')},${a.toFixed(3)})`;
-    const clamp = (v, lo = 0, hi = 1) => Math.min(hi, Math.max(lo, v));
-    const smooth = (a, b, v) => { const t = clamp((v - a) / (b - a)); return t * t * (3 - 2 * t); };
-
-    // hour → sky [top, middle, horizon]; night is forest-tinted to sit in the brand
-    const SKY = [
-      [0,    '#0B1712', '#11221A', '#1A3024'],
-      [4.6,  '#0E1B17', '#16271F', '#23392C'],
-      [5.6,  '#263848', '#5E5E73', '#C98E7A'],
-      [6.4,  '#5A7E9E', '#D3A994', '#F5C08E'],
-      [7.5,  '#9FC1D6', '#D6E2DF', '#F6E2C6'],
-      [12,   '#A7CADB', '#D5E5E6', '#F3F1E8'],
-      [16.5, '#A9C6D6', '#DCE5DE', '#F5E6CC'],
-      [18.2, '#7F95B5', '#DDB09A', '#F3A975'],
-      [19.2, '#3B4A6A', '#9E6C7E', '#E08A68'],
-      [20.3, '#18283A', '#2C3A4E', '#4C4A5A'],
-      [21.5, '#0D1914', '#13241B', '#1E3426'],
-      [24,   '#0B1712', '#11221A', '#1A3024'],
-    ].map(([h, ...c]) => [h, c.map(rgb)]);
-    const skyAt = (h) => {
-      let i = 0;
-      while (i < SKY.length - 2 && h > SKY[i + 1][0]) i++;
-      const [h0, c0] = SKY[i], [h1, c1] = SKY[i + 1];
-      const t = clamp((h - h0) / (h1 - h0));
-      return c0.map((c, k) => mix(c, c1[k], t));
-    };
-    const HILL_DAY = ['#A9BFA2', '#87A27F', '#5F7F58'].map(rgb);
-    const HILL_NIGHT = ['#1E3326', '#16281C', '#0F1D14'].map(rgb);
-    const WARM = rgb('#E0A07A');
-    const INK_DAY = rgb('#1F3A1A'), INK_NIGHT = rgb('#FFFCF7');
-    const CLOUD_DAY = rgb('#FFFFFF'), CLOUD_DUSK = rgb('#F6C3A2'), CLOUD_NIGHT = rgb('#3A4A44');
-
-    const PHASES = [
-      { from: 5,  to: 11, name: 'Morning', line: 'Cortisol peaks soon after you wake — energy comes up.' },
-      { from: 11, to: 17, name: 'Daytime', line: 'Energy and mood hold steady through the day.' },
-      { from: 17, to: 22, name: 'Evening', line: 'Cortisol eases off as the body starts to wind down.' },
-      { from: 22, to: 29, name: 'Night',   line: 'Melatonin rises for deep, restoring sleep.' },
-    ];
-    let phaseNow = null, swapTimer = 0;
-
-    function render(h, instant) {
-      const sky = skyAt(h);
-      skyStops.forEach((st, i) => st.setAttribute('stop-color', css(sky[i])));
-
-      // sun: up 5:30 → 19:00 on a wide arc; moon: 18:30 → 6:00 next morning
-      let sunEl = 0;
-      if (h >= 5.5 && h <= 19) {
-        const [x, y, el] = onArc((h - 5.5) / 13.5);
-        sunEl = el;
-        sun.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)})`);
-        sun.setAttribute('opacity', '1');
-      } else sun.setAttribute('opacity', '0');
-      const hm = h < 12 ? h + 24 : h;
-      if (hm >= 18.5 && hm <= 30) {
-        const [x, y, el] = onArc((hm - 18.5) / 11.5);
-        moon.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(-18)`);
-        moon.setAttribute('opacity', smooth(0.04, 0.22, el).toFixed(3));
-      } else moon.setAttribute('opacity', '0');
-
-      const L = smooth(0.0, 0.42, sunEl);                                       // daylight
-      const T = clamp(Math.exp(-((h - 6.3) ** 2) / 0.7) + Math.exp(-((h - 18.9) ** 2) / 0.7)); // twilight
-      const N = clamp(1 - L * 1.7 - T * 0.6);                                   // night
-      stars.setAttribute('opacity', N.toFixed(3));
-      pathEl.setAttribute('stroke-opacity', (0.62 * L + 0.2 * (1 - L)).toFixed(3));
-      arcTicks.setAttribute('opacity', (0.7 * L + 0.22 * (1 - L)).toFixed(3));
-      glow.setAttribute('opacity', (T * 0.85).toFixed(3));
-      glow.setAttribute('cx', h < 12 ? '250' : '610');
-
-      hills.forEach((el, i) => {
-        const c = mix(mix(HILL_NIGHT[i], HILL_DAY[i], L), WARM, T * (0.22 - i * 0.05));
-        el.style.fill = css(c);
-      });
-      const cloud = mix(mix(CLOUD_NIGHT, CLOUD_DAY, L), CLOUD_DUSK, T * 0.7);
-      card.style.setProperty('--dn-cloud', css(cloud));
-      clouds.forEach((g, i) => {
-        const sp = Number(g.dataset.s), span = 860 + 360;
-        const x = ((h / 24) * span * sp * 1.6 + i * 410) % span - 180;
-        g.setAttribute('transform', `translate(${x.toFixed(1)} ${g.dataset.y})`);
-        g.setAttribute('opacity', (0.22 + 0.62 * L + 0.2 * T).toFixed(3));
-      });
-
-      const inkT = smooth(0.25, 0.6, L);
-      const ink = mix(INK_NIGHT, INK_DAY, inkT);
-      card.style.setProperty('--dn-ink', css(ink));
-      card.style.setProperty('--dn-ink-soft', css(ink, 0.64));
-      card.style.setProperty('--dn-glass', inkT > 0.5 ? css(rgb('#FFFCF7'), 0.4 + 0.2 * inkT) : css(rgb('#0C1A12'), 0.46 - 0.2 * inkT));
-      card.style.setProperty('--dn-glass-line', css([255, 255, 255], 0.14 + 0.42 * inkT));
-      card.style.setProperty('--dn-p', (h / 24).toFixed(4));
-
-      const hh = Math.floor(h), mm = Math.floor((h - hh) * 6) * 10;
-      timeEl.textContent = `${((hh + 11) % 12) + 1}:${String(mm).padStart(2, '0')}`;
-      ampmEl.textContent = hh < 12 ? 'AM' : 'PM';
-
-      const ph = PHASES.find((p) => (h < 5 ? h + 24 : h) >= p.from && (h < 5 ? h + 24 : h) < p.to);
-      if (ph !== phaseNow) {
-        phaseNow = ph;
-        phaseEl.textContent = ph.name;
-        clearTimeout(swapTimer);
-        if (instant) { lineEl.textContent = ph.line; lineEl.classList.remove('swap'); }
-        else {
-          lineEl.classList.add('swap');
-          swapTimer = setTimeout(() => { lineEl.textContent = ph.line; lineEl.classList.remove('swap'); }, 380);
-        }
+  const forestHalftone = (() => {
+    const box = document.querySelector('.g1 .g1-forest');
+    if (!box) return { start() {}, stop() {}, snapshot() { return null; } };
+    const video = box.querySelector('.g1-video');
+    const cv = box.querySelector('.g1-dots');
+    const gl = cv.getContext('webgl', { antialias: false, alpha: false, preserveDrawingBuffer: true });
+    if (!gl) { box.classList.add('still'); return { start() {}, stop() {}, snapshot() { return null; } }; }
+    const VS = 'attribute vec2 p; varying vec2 v; void main(){ v = p * 0.5 + 0.5; gl_Position = vec4(p, 0.0, 1.0); }';
+    const FS = `precision highp float;
+      uniform sampler2D uV; uniform vec2 uRes; uniform float uCell, uT, uSun, uS;
+      varying vec2 v;
+      float lum(vec3 c){ return dot(c, vec3(0.2126, 0.7152, 0.0722)); }
+      vec3 ramp(float l){
+        vec3 a = vec3(0.031, 0.078, 0.043), b = vec3(0.110, 0.192, 0.094), c = vec3(0.310, 0.420, 0.270), d = vec3(0.725, 0.780, 0.651);
+        return l < 0.35 ? mix(a, b, l / 0.35) : l < 0.65 ? mix(b, c, (l - 0.35) / 0.3) : mix(c, d, (l - 0.65) / 0.35);
       }
-    }
+      float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+      void main(){
+        vec2 px = vec2(v.x, 1.0 - v.y) * uRes;                    // pixels, y down
+        const float A = 0.5235988;
+        mat2 R = mat2(cos(A), sin(A), -sin(A), cos(A));
+        mat2 Ri = mat2(cos(A), -sin(A), sin(A), cos(A));
+        vec2 q = R * px;
+        vec2 cc = (floor(q / uCell) + 0.5) * uCell;
+        vec2 cuv = (Ri * cc) / uRes;
+        float l = lum(texture2D(uV, clamp(cuv, 0.0, 1.0)).rgb);
+        float lc = smoothstep(0.08, 1.0, l);
+        float wave = 1.0 + 0.07 * sin(px.y * 0.011 / uS + px.x * 0.004 / uS - uT * 1.3);
+        float r = uCell * 0.47 * sqrt(lc) * wave;
+        float dot_ = 1.0 - smoothstep(r - 0.9 * uS, r + 0.9 * uS, length(q - cc));
+        vec3 ink = lc < 0.3 ? vec3(0.55, 0.71, 0.53) : lc < 0.55 ? vec3(0.75, 0.85, 0.67) : lc < 0.8 ? vec3(0.91, 0.925, 0.776) : vec3(1.0, 0.925, 0.775);
+        float inkA = lc < 0.3 ? 0.32 : lc < 0.55 ? 0.54 : lc < 0.8 ? 0.76 : 0.9;
+        vec3 base = ramp(pow(lum(texture2D(uV, vec2(v.x, 1.0 - v.y)).rgb), 1.3)) * 0.5;
+        vec3 col = 1.0 - (1.0 - base) * (1.0 - ink * inkA * dot_);
+        vec2 s = (vec2(v.x, 1.0 - v.y) - vec2(0.5, 0.40)) / vec2(0.60, 0.42);
+        float glow = uSun * (0.34 * exp(-dot(s, s) * 2.6) + 0.1 * exp(-dot(s, s) * 0.7));
+        col = 1.0 - (1.0 - col) * (1.0 - vec3(1.0, 0.86, 0.6) * glow);
+        col *= 1.0 - 0.08 * step(mod(px.y, 3.0 * uS), uS);
+        col += (hash(px + uT) - 0.5) * 0.035;
+        gl_FragColor = vec4(col, 1.0);
+      }`;
+    const sh = (type, src) => { const o = gl.createShader(type); gl.shaderSource(o, src); gl.compileShader(o); return o; };
+    const prog = gl.createProgram();
+    gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { box.classList.add('still'); return { start() {}, stop() {}, snapshot() { return null; } }; }
+    gl.useProgram(prog);
+    const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    const tex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    const U = (n) => gl.getUniformLocation(prog, n);
+    const uRes = U('uRes'), uCell = U('uCell'), uT = U('uT'), uSun = U('uSun'), uS = U('uS');
+    const CELL = 9, S = 2;
+    const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+    let raf = 0, t0 = 0, frame = 0, ready = false;
 
-    const CYCLE = 28000, H0 = 5;
-    let raf = 0, t0 = 0;
-    const frame = (now) => {
-      render((H0 + (((now - t0) % CYCLE) / CYCLE) * 24) % 24);
-      raf = requestAnimationFrame(frame);
-    };
-    render(8.5, true);
+    function size() {
+      const W = box.offsetWidth, H = box.offsetHeight;
+      if (!W || !H) return false;
+      if (cv.width !== W * S || cv.height !== H * S) { cv.width = W * S; cv.height = H * S; }
+      gl.viewport(0, 0, cv.width, cv.height);
+      return true;
+    }
+    function render(now) {
+      if (video.readyState >= 2) { gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, video); ready = true; }
+      if (!ready) return;
+      const p = video.duration ? video.currentTime / video.duration : 0;
+      gl.uniform2f(uRes, cv.width, cv.height); gl.uniform1f(uCell, CELL * S); gl.uniform1f(uS, S);
+      gl.uniform1f(uT, (now - t0) / 1000); gl.uniform1f(uSun, 0.3 + 0.7 * smooth(0.2, 0.85, p));
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    }
+    function loop(now) {
+      raf = requestAnimationFrame(loop);
+      if ((video.ended || video.paused) && (frame++ & 1)) return;   // the sun is up: 30 fps is plenty
+      render(now);
+    }
+    video.addEventListener('error', () => box.classList.add('still'));
     return {
       start() {
         cancelAnimationFrame(raf);
-        phaseNow = null;
-        if (matchMedia('(prefers-reduced-motion: reduce)').matches) { render(8.5, true); return; }
-        render(H0, true);
-        t0 = performance.now();
-        raf = requestAnimationFrame(frame);
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) { box.classList.add('still'); return; }
+        if (!size()) { box.classList.add('still'); return; }
+        try { video.currentTime = 0; } catch (_) {}
+        const go = video.play();
+        if (go && go.catch) go.catch(() => box.classList.add('still'));
+        t0 = performance.now(); frame = 0;
+        raf = requestAnimationFrame(loop);
       },
-      stop() { cancelAnimationFrame(raf); },
-      still(h = 8.5) { cancelAnimationFrame(raf); phaseNow = null; render(h, true); },
+      stop() { cancelAnimationFrame(raf); video.pause(); },
+      // tooling: one finished frame as a data URL (used to make the print still)
+      snapshot() { render(performance.now()); return ready ? cv.toDataURL('image/png') : null; },
     };
   })();
+
+  /* Slide 2 — the receipt's count runs 0 → 6 in step with the ticks
+     (CSS: first tick at 2.05 s, then every 0.2 s). */
+  let rcTimers = [];
+  function countReceipt() {
+    const el = document.querySelector('.g5 .rc-count');
+    if (!el) return;
+    rcTimers.forEach(clearTimeout); rcTimers = [];
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = '6'; return; }
+    el.textContent = '0';
+    for (let i = 1; i <= 6; i++) rcTimers.push(setTimeout(() => { el.textContent = String(i); }, 2050 + (i - 1) * 200 + 260));
+  }
 
   /* ════════════════════════════════════════════════════════════════════
      Slide 3 — the stage stepper follows the 3-D model's tour (hypo3d.js).
@@ -1336,12 +1283,12 @@
     const p2 = document.querySelector('.g2 [data-bind="intake_flagged"]');
     if (p2 && p2.dataset.final) p2.textContent = p2.dataset.final;
     document.querySelectorAll('optimal-logo').forEach((el) => { if (typeof el.finish === 'function') el.finish(); });
-    dayNight.still(8.5);
+    rcTimers.forEach(clearTimeout);
+    const rc = document.querySelector('.g5 .rc-count'); if (rc) rc.textContent = '6';
     stages35.print(true);
   });
   window.addEventListener('afterprint', () => {
     stages35.print(false);
-    if (document.querySelector('.g5.play')) dayNight.start();
   });
 
   // Replay entry animations each time a slide becomes active.
@@ -1354,9 +1301,11 @@
       playBrandLogos(sec);
       if (sec.classList.contains('g2')) countUpG2();
       if (sec.classList.contains('g7')) countUpG7();
+      if (sec.classList.contains('g5')) countReceipt();
     }
-    if (sec && sec.classList.contains('g5')) dayNight.start(); else dayNight.stop();
-    if (sec && sec.classList.contains('g35')) stages35.enter(); else stages35.leave();
+    const live = prep.hidden;   // nothing plays behind the prep form
+    if (live && sec && sec.classList.contains('g1')) forestHalftone.start(); else forestHalftone.stop();
+    if (live && sec && sec.classList.contains('g35')) stages35.enter(); else stages35.leave();
   });
 
   /* init */

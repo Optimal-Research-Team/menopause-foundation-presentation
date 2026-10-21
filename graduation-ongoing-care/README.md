@@ -3,9 +3,10 @@
 The deck for the **Ongoing Care** Menopause & Perimenopause Program — presented at the
 Offboarding ("Graduation") visit that closes the Foundation Program.
 
-> **Current state (Oct 21, 2026) — v6, "The Graduate Close", seven slides:**
-> 1 Congratulations · 2 None of this was luck (three receipts + an animated day/night
-> visualizer) · 3 The moving target (the A2 hypothalamus rebuilt in real-time 3-D, touring
+> **Current state (Oct 21, 2026) — v6.1, "The Graduate Close", seven slides:**
+> 1 Congratulations (the brand forest plate printed live through a halftone screen — fog to
+> sun) · 2 None of this was luck (three receipts + her Foundation Program receipt, six of six
+> steps, stamped) · 3 The moving target (the A2 hypothalamus rebuilt in real-time 3-D, touring
 > before → after → hormone therapy → non-hormonal) · 4 Your choice (fork: Ongoing Care vs
 > pay-per-visit) · 5 Your graduate offer (price, graduate rate, value stack) · 6 The
 > Transition Visit (year dial) · 7 Thank you.
@@ -26,7 +27,7 @@ Lives inside the `menopause-foundation-presentation` project and reuses its slid
 | File | Purpose |
 |---|---|
 | `index.html` | Prep form ("slide 0") + the deck slides (markup and all CSS) |
-| `app.js` | Form logic, derivations, deck rendering, the day/night visualizer (`dayNight`), the slide-3 stepper sync (`stages35`), the year dial (`buildYearOrbitSVG`). `CONFIG` at the top is the single source of truth for prices, clinic contact, and the template version |
+| `app.js` | Form logic, derivations, deck rendering, the slide-1 halftone shader (`forestHalftone`, WebGL), the slide-2 receipt count, the slide-3 stepper sync (`stages35`), the year dial (`buildYearOrbitSVG`). `CONFIG` at the top is the single source of truth for prices, clinic contact, and the template version |
 | `hypo3d.js` | The 3-D hypothalamus (`<hypo-3d>` custom element) — a self-contained, tree-shaken Three.js r186.1 bundle. Built from `src/` by `tools/build-hypo3d.sh`; see `HYPO3D.md` |
 | `cue-card.html` | Printable presenter cue card (static, no PHI). **Presenter notes never render on the deck screen — it is shared with the patient** |
 | `optimal-logo.js` | Vendored `<optimal-logo>` brand mark (zero network) |
@@ -96,7 +97,8 @@ Re-verifiable in ~5 minutes. Run quarterly.
 - [ ] **N2 — Zero network requests after page load; no runtime CDNs.**
   DevTools → Network → load `/graduation-ongoing-care/`, fill + generate + navigate all slides.
   Every request must be same-origin (fonts come from `graduation-ongoing-care/fonts/`; the 3-D
-  model is the single local file `hypo3d.js` and generates every texture in code). Filter by
+  model is the single local file `hypo3d.js` and generates every texture in code; slide 1's
+  footage is `../assets/video/forest-dawn.mp4`, a crop of the logo sting's forest plate). Filter by
   "3rd-party requests": must be empty.
 
 - [ ] **N3 — No storage.** DevTools → Application → Local Storage / Session Storage /
