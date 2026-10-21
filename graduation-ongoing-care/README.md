@@ -3,13 +3,13 @@
 The deck for the **Ongoing Care** Menopause & Perimenopause Program — presented at the
 Offboarding ("Graduation") visit that closes the Foundation Program.
 
-> **Current state (Oct 21, 2026) — v6.1, "The Graduate Close", seven slides:**
-> 1 Congratulations (the brand forest plate printed live through a halftone screen — fog to
-> sun) · 2 None of this was luck (three receipts + her Foundation Program receipt, six of six
-> steps, stamped) · 3 The moving target (the A2 hypothalamus rebuilt in real-time 3-D, touring
-> before → after → hormone therapy → non-hormonal) · 4 Your choice (fork: Ongoing Care vs
-> pay-per-visit) · 5 Your graduate offer (price, graduate rate, value stack) · 6 The
-> Transition Visit (year dial) · 7 Thank you.
+> **Current state (Oct 21, 2026) — v6.2, "The Graduate Close", seven slides:**
+> 1 Congratulations (the brand forest plate plays once, fog to sun) · 2 None of this was luck
+> (three receipts + her Foundation Program receipt, six of six steps, stamped) · 3 The moving
+> target (the A2 hypothalamus in real-time 3-D) · 4 Your choice (fork: Ongoing Care vs
+> pay-per-visit) · 5 The Transition Visit (year dial) · 6 Your graduate offer (price, graduate
+> rate with a "Save $380" sticker, value stack) · 7 Thank you (a living dot-matrix over the
+> green gradient). The year comes before the price, then the close (Peter, Oct 21).
 >
 > Prep needs only **her first name + Strong/Modest** (`CONFIG.MINIMAL_PREP`). The
 > questionnaire-driven results slides and their transcription fields are **paused** behind
@@ -27,7 +27,7 @@ Lives inside the `menopause-foundation-presentation` project and reuses its slid
 | File | Purpose |
 |---|---|
 | `index.html` | Prep form ("slide 0") + the deck slides (markup and all CSS) |
-| `app.js` | Form logic, derivations, deck rendering, the slide-1 halftone shader (`forestHalftone`, WebGL), the slide-2 receipt count, the slide-3 stepper sync (`stages35`), the year dial (`buildYearOrbitSVG`). `CONFIG` at the top is the single source of truth for prices, clinic contact, and the template version |
+| `app.js` | Form logic, derivations, deck rendering, the slide-1 forest video (`forestVideo`), the slide-2 receipt count, the slide-3 stepper sync (`stages35`), the year dial (`buildYearOrbitSVG`), the closing dot-matrix shader (`closingTexture`, WebGL; decorative, hidden in print). `CONFIG` at the top is the single source of truth for prices, clinic contact, and the template version |
 | `hypo3d.js` | The 3-D hypothalamus (`<hypo-3d>` custom element) — a self-contained, tree-shaken Three.js r186.1 bundle. Built from `src/` by `tools/build-hypo3d.sh`; see `HYPO3D.md` |
 | `cue-card.html` | Printable presenter cue card (static, no PHI). **Presenter notes never render on the deck screen — it is shared with the patient** |
 | `optimal-logo.js` | Vendored `<optimal-logo>` brand mark (zero network) |
@@ -37,7 +37,7 @@ Lives inside the `menopause-foundation-presentation` project and reuses its slid
 
 1. Before the visit, open the route → prep form
 2. Type her first name; pick **Strong** or **Modest** (Modest softens the road-ahead line)
-3. **Generate** → present slides 1–7 with the printed cue card in hand
+3. **Generate** → present slides 1–7 with the printed cue card in hand (the savings sticker on slide 6 is computed from `CONFIG`: visit-by-visit total − graduate rate)
 4. Optional: `Cmd/Ctrl+P` → Save as PDF → file into the chart → **delete the local copy immediately**
 5. Record the patient's decision in the booking system (this tool records nothing)
 6. Clear & close — refresh also wipes everything

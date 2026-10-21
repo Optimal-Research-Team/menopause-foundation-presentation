@@ -29,7 +29,7 @@
       email: 'care@beoptimal.ca',
       web: 'beoptimal.ca',
     },
-    TEMPLATE_VERSION: 'ongoing-care-deck v6.1.0',
+    TEMPLATE_VERSION: 'ongoing-care-deck v6.2.0',
     /* Questionnaire/results section (slides 2–4 + their form fields).
        OFF until questionnaire data can be pulled directly — everything it
        gates is intact; flip to true to restore the full 9-slide deck.
@@ -852,6 +852,7 @@
     // value stack: Transition (30 min) + Mid-Year (30 min) + Annual (45 min), all from CONFIG
     bind('STACK_SUM', money(CONFIG.PRICE_PRN30 * 2 + CONFIG.PRICE_PRN45));
     bind('DAY_RATE', '$' + (CONFIG.PRICE_ANNUAL / 365).toFixed(2));
+    bind('SAVE_EARLY', money(CONFIG.PRICE_PRN30 * 2 + CONFIG.PRICE_PRN45 - CONFIG.PRICE_EARLY));
     bind('WOMENS_MONTHLY', money(CONFIG.PRICE_WOMENS_MONTHLY));
 
     // §5.8 — identifying print footer on every page
@@ -974,10 +975,11 @@
     // so kick slide 1's entry animation manually.
     $$('#deck > section.play').forEach((sec) => sec.classList.remove('play'));
     const first = $('#deck > section.g1');
-    if (first) { void first.offsetWidth; first.classList.add('play'); playBrandLogos(first); forestHalftone.start(); }
+    if (first) { void first.offsetWidth; first.classList.add('play'); playBrandLogos(first); forestVideo.start(); }
   }
   function showPrep() {
-    forestHalftone.stop();
+    forestVideo.stop();
+    closingTexture.stop();
     stages35.leave();
     window.__deckLocked = true;
     prep.hidden = false;
@@ -1084,112 +1086,99 @@
     if (typeof el.play === 'function') el.play();
   });
 
-  /* ════════════════════════════════════════════════════════════════════
-     Slide 1 — the path forward: the brand forest plate (fog → sun) printed
-     live through a halftone screen. A fragment shader samples the footage
-     at each dot's centre and sizes the dot by luminance, over a forest
-     duotone of the same frame, with a sun bloom that rises with the clip.
-     No WebGL, print and reduced motion show the still
-     (assets/images/forest-dawn-halftone.webp).
-     ════════════════════════════════════════════════════════════════════ */
-  const forestHalftone = (() => {
+  /* Slide 1 — the brand forest plate plays once (fog → sun) and holds on the
+     sunlit frame. Print, reduced motion and playback failure show the still. */
+  const forestVideo = (() => {
     const box = document.querySelector('.g1 .g1-forest');
-    if (!box) return { start() {}, stop() {}, snapshot() { return null; } };
+    if (!box) return { start() {}, stop() {} };
     const video = box.querySelector('.g1-video');
-    const cv = box.querySelector('.g1-dots');
-    const gl = cv.getContext('webgl', { antialias: false, alpha: false, preserveDrawingBuffer: true });
-    if (!gl) { box.classList.add('still'); return { start() {}, stop() {}, snapshot() { return null; } }; }
+    video.addEventListener('error', () => box.classList.add('still'));
+    return {
+      start() {
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) { box.classList.add('still'); return; }
+        try { video.currentTime = 0; } catch (_) {}
+        const go = video.play();
+        if (go && go.catch) go.catch(() => box.classList.add('still'));
+      },
+      stop() { video.pause(); },
+    };
+  })();
+
+  /* ════════════════════════════════════════════════════════════════════
+     Closing slide — a living dot-matrix over the green gradient: an LED-
+     style grid whose dots breathe with drifting noise, a slow light band
+     sweeping through. Confined to the gradient (it fades out before the
+     photo). Decorative only: hidden in print, one still frame for reduced
+     motion, nothing without WebGL.
+     ════════════════════════════════════════════════════════════════════ */
+  const closingTexture = (() => {
+    const cv = document.querySelector('.g9 .g9-tex');
+    const none = { start() {}, stop() {} };
+    if (!cv) return none;
+    const gl = cv.getContext('webgl', { antialias: false, premultipliedAlpha: true, alpha: true });
+    if (!gl) return none;
     const VS = 'attribute vec2 p; varying vec2 v; void main(){ v = p * 0.5 + 0.5; gl_Position = vec4(p, 0.0, 1.0); }';
     const FS = `precision highp float;
-      uniform sampler2D uV; uniform vec2 uRes; uniform float uCell, uT, uSun, uS;
+      uniform vec2 uRes; uniform float uT, uCell, uS;
       varying vec2 v;
-      float lum(vec3 c){ return dot(c, vec3(0.2126, 0.7152, 0.0722)); }
-      vec3 ramp(float l){
-        vec3 a = vec3(0.031, 0.078, 0.043), b = vec3(0.110, 0.192, 0.094), c = vec3(0.310, 0.420, 0.270), d = vec3(0.725, 0.780, 0.651);
-        return l < 0.35 ? mix(a, b, l / 0.35) : l < 0.65 ? mix(b, c, (l - 0.35) / 0.3) : mix(c, d, (l - 0.65) / 0.35);
-      }
-      float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+      float h(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+      float n2(vec2 p){ vec2 i = floor(p), f = fract(p); vec2 u = f * f * (3.0 - 2.0 * f);
+        return mix(mix(h(i), h(i + vec2(1, 0)), u.x), mix(h(i + vec2(0, 1)), h(i + vec2(1, 1)), u.x), u.y); }
+      float fbm(vec2 p){ float s = 0.0, a = 0.5; for (int i = 0; i < 4; i++){ s += a * n2(p); p *= 2.03; a *= 0.5; } return s; }
       void main(){
-        vec2 px = vec2(v.x, 1.0 - v.y) * uRes;                    // pixels, y down
-        const float A = 0.5235988;
-        mat2 R = mat2(cos(A), sin(A), -sin(A), cos(A));
-        mat2 Ri = mat2(cos(A), -sin(A), sin(A), cos(A));
-        vec2 q = R * px;
-        vec2 cc = (floor(q / uCell) + 0.5) * uCell;
-        vec2 cuv = (Ri * cc) / uRes;
-        float l = lum(texture2D(uV, clamp(cuv, 0.0, 1.0)).rgb);
-        float lc = smoothstep(0.08, 1.0, l);
-        float wave = 1.0 + 0.07 * sin(px.y * 0.011 / uS + px.x * 0.004 / uS - uT * 1.3);
-        float r = uCell * 0.47 * sqrt(lc) * wave;
-        float dot_ = 1.0 - smoothstep(r - 0.9 * uS, r + 0.9 * uS, length(q - cc));
-        vec3 ink = lc < 0.3 ? vec3(0.55, 0.71, 0.53) : lc < 0.55 ? vec3(0.75, 0.85, 0.67) : lc < 0.8 ? vec3(0.91, 0.925, 0.776) : vec3(1.0, 0.925, 0.775);
-        float inkA = lc < 0.3 ? 0.32 : lc < 0.55 ? 0.54 : lc < 0.8 ? 0.76 : 0.9;
-        vec3 base = ramp(pow(lum(texture2D(uV, vec2(v.x, 1.0 - v.y)).rgb), 1.3)) * 0.5;
-        vec3 col = 1.0 - (1.0 - base) * (1.0 - ink * inkA * dot_);
-        vec2 s = (vec2(v.x, 1.0 - v.y) - vec2(0.5, 0.40)) / vec2(0.60, 0.42);
-        float glow = uSun * (0.34 * exp(-dot(s, s) * 2.6) + 0.1 * exp(-dot(s, s) * 0.7));
-        col = 1.0 - (1.0 - col) * (1.0 - vec3(1.0, 0.86, 0.6) * glow);
-        col *= 1.0 - 0.08 * step(mod(px.y, 3.0 * uS), uS);
-        col += (hash(px + uT) - 0.5) * 0.035;
-        gl_FragColor = vec4(col, 1.0);
+        vec2 px = vec2(v.x, 1.0 - v.y) * uRes;
+        float x = px.x / uRes.x;
+        float fade = 1.0 - smoothstep(0.26, 0.64, x);
+        if (fade <= 0.0) { gl_FragColor = vec4(0.0); return; }
+        vec2 cell = floor(px / uCell);
+        vec2 cc = (cell + 0.5) * uCell;
+        vec2 q = cc / uS;
+        float n = fbm(q * 0.0042 + vec2(uT * 0.035, -uT * 0.022));
+        float m = fbm(q * 0.011 - vec2(uT * 0.05, uT * 0.03));
+        float d = (q.x * 0.62 + q.y * 0.38) / 1500.0;
+        float band = exp(-pow(d - fract(uT * 0.055) * 1.7 + 0.35, 2.0) * 60.0);
+        float lit = smoothstep(0.42, 0.78, n * 0.75 + m * 0.35);
+        float r = uCell * (0.12 + 0.24 * lit + 0.12 * band);
+        float dotA = 1.0 - smoothstep(r - 0.8 * uS, r + 0.8 * uS, length(px - cc));
+        float a = dotA * (0.10 + 0.26 * lit + 0.30 * band) * fade;
+        vec3 col = mix(vec3(0.62, 0.75, 0.60), vec3(0.95, 0.97, 0.88), band);
+        gl_FragColor = vec4(col * a, a);
       }`;
-    const sh = (type, src) => { const o = gl.createShader(type); gl.shaderSource(o, src); gl.compileShader(o); return o; };
+    const sh = (t, src) => { const o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; };
     const prog = gl.createProgram();
     gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(prog);
-    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { box.classList.add('still'); return { start() {}, stop() {}, snapshot() { return null; } }; }
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return none;
     gl.useProgram(prog);
     const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
     const loc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    const tex = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tex);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    const U = (n) => gl.getUniformLocation(prog, n);
-    const uRes = U('uRes'), uCell = U('uCell'), uT = U('uT'), uSun = U('uSun'), uS = U('uS');
-    const CELL = 9, S = 2;
-    const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
-    let raf = 0, t0 = 0, frame = 0, ready = false;
-
-    function size() {
-      const W = box.offsetWidth, H = box.offsetHeight;
-      if (!W || !H) return false;
-      if (cv.width !== W * S || cv.height !== H * S) { cv.width = W * S; cv.height = H * S; }
+    const uRes = gl.getUniformLocation(prog, 'uRes'), uT = gl.getUniformLocation(prog, 'uT');
+    const uCell = gl.getUniformLocation(prog, 'uCell'), uS = gl.getUniformLocation(prog, 'uS');
+    const S = 1.5, CELL = 8;
+    let raf = 0, t0 = 0;
+    function frame(now) {
+      const W = cv.offsetWidth, H = cv.offsetHeight;
+      if (!W || !H) return;
+      if (cv.width !== Math.round(W * S)) { cv.width = Math.round(W * S); cv.height = Math.round(H * S); }
       gl.viewport(0, 0, cv.width, cv.height);
-      return true;
-    }
-    function render(now) {
-      if (video.readyState >= 2) { gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, video); ready = true; }
-      if (!ready) return;
-      const p = video.duration ? video.currentTime / video.duration : 0;
-      gl.uniform2f(uRes, cv.width, cv.height); gl.uniform1f(uCell, CELL * S); gl.uniform1f(uS, S);
-      gl.uniform1f(uT, (now - t0) / 1000); gl.uniform1f(uSun, 0.3 + 0.7 * smooth(0.2, 0.85, p));
+      gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.uniform2f(uRes, cv.width, cv.height); gl.uniform1f(uT, (now - t0) / 1000 + 6);
+      gl.uniform1f(uCell, CELL * S); gl.uniform1f(uS, S);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     }
-    function loop(now) {
-      raf = requestAnimationFrame(loop);
-      if ((video.ended || video.paused) && (frame++ & 1)) return;   // the sun is up: 30 fps is plenty
-      render(now);
-    }
-    video.addEventListener('error', () => box.classList.add('still'));
+    const loop = (now) => { frame(now); raf = requestAnimationFrame(loop); };
     return {
       start() {
-        cancelAnimationFrame(raf);
-        if (matchMedia('(prefers-reduced-motion: reduce)').matches) { box.classList.add('still'); return; }
-        if (!size()) { box.classList.add('still'); return; }
-        try { video.currentTime = 0; } catch (_) {}
-        const go = video.play();
-        if (go && go.catch) go.catch(() => box.classList.add('still'));
-        t0 = performance.now(); frame = 0;
+        cancelAnimationFrame(raf); t0 = performance.now();
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) { frame(t0); return; }
         raf = requestAnimationFrame(loop);
       },
-      stop() { cancelAnimationFrame(raf); video.pause(); },
-      // tooling: one finished frame as a data URL (used to make the print still)
-      snapshot() { render(performance.now()); return ready ? cv.toDataURL('image/png') : null; },
+      stop() { cancelAnimationFrame(raf); },
     };
   })();
 
   /* Slide 2 — the receipt's count runs 0 → 6 in step with the ticks
-     (CSS: first tick at 2.05 s, then every 0.2 s). */
+     (CSS: first tick at 1.9 s, then every 0.22 s). */
   let rcTimers = [];
   function countReceipt() {
     const el = document.querySelector('.g5 .rc-count');
@@ -1197,7 +1186,7 @@
     rcTimers.forEach(clearTimeout); rcTimers = [];
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = '6'; return; }
     el.textContent = '0';
-    for (let i = 1; i <= 6; i++) rcTimers.push(setTimeout(() => { el.textContent = String(i); }, 2050 + (i - 1) * 200 + 260));
+    for (let i = 1; i <= 6; i++) rcTimers.push(setTimeout(() => { el.textContent = String(i); }, 1900 + (i - 1) * 220 + 300));
   }
 
   /* ════════════════════════════════════════════════════════════════════
@@ -1304,8 +1293,9 @@
       if (sec.classList.contains('g5')) countReceipt();
     }
     const live = prep.hidden;   // nothing plays behind the prep form
-    if (live && sec && sec.classList.contains('g1')) forestHalftone.start(); else forestHalftone.stop();
+    if (live && sec && sec.classList.contains('g1')) forestVideo.start(); else forestVideo.stop();
     if (live && sec && sec.classList.contains('g35')) stages35.enter(); else stages35.leave();
+    if (live && sec && sec.classList.contains('g9')) closingTexture.start(); else closingTexture.stop();
   });
 
   /* init */
