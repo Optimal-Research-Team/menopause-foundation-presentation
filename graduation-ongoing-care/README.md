@@ -3,34 +3,40 @@
 The deck for the **Ongoing Care** Menopause & Perimenopause Program — presented at the
 Offboarding ("Graduation") visit that closes the Foundation Program.
 
-> **Current state (Oct 19, 2026):** the questionnaire-driven results section — slides 2–4
-> (quote / waffle, symptom tracks, slope chart) and all of their prep-form fields — is
-> **paused** so the deck needs no manual transcription. Everything is gated behind
-> `CONFIG.QUESTIONNAIRE_SECTION` in `app.js` (currently `false`); flip it to `true` and
-> uncomment the three paused cues in `cue-card.html` once questionnaire data can be pulled
-> directly. A reminder is scheduled for **Nov 18, 2026**. The deck presents as 6 slides
-> until then.
+> **Current state (Oct 21, 2026) — v6, "The Graduate Close", seven slides:**
+> 1 Congratulations · 2 None of this was luck (three receipts + an animated day/night
+> visualizer) · 3 The moving target (the A2 hypothalamus rebuilt in real-time 3-D, touring
+> before → after → hormone therapy → non-hormonal) · 4 Your choice (fork: Ongoing Care vs
+> pay-per-visit) · 5 Your graduate offer (price, graduate rate, value stack) · 6 The
+> Transition Visit (year dial) · 7 Thank you.
+>
+> Prep needs only **her first name + Strong/Modest** (`CONFIG.MINIMAL_PREP`). The
+> questionnaire-driven results slides and their transcription fields are **paused** behind
+> `CONFIG.QUESTIONNAIRE_SECTION` (currently `false`); flip it to `true` and uncomment the three
+> paused cues in `cue-card.html` once questionnaire data can be pulled directly. A reminder is
+> scheduled for **Nov 18, 2026**.
 
-A presentation route for the Offboarding ("Graduation") visit: Cheryl transcribes ~25
-summary-level values from the two Hormone Questionnaire reports in the chart, generates a
-personalized 9-slide before/after deck, presents it, optionally prints it to PDF for the
-chart, and closes the tab. **Nothing is ever saved by this tool.**
+The deck for the Offboarding ("Graduation") visit: Cheryl types the patient's first name,
+picks Strong or Modest, generates a personalized deck, presents it, optionally prints it to
+PDF for the chart, and closes the tab. **Nothing is ever saved by this tool.**
 
 Lives inside the `menopause-foundation-presentation` project and reuses its slide engine
 (`../deck-stage.js`) and brand tokens (`../colors_and_type.css`).
 
 | File | Purpose |
 |---|---|
-| `index.html` | Prep form ("slide 0") + the 9 deck slides |
-| `app.js` | Form logic, live derivations, validation, deck rendering. `CONFIG` at the top is the single source of truth for prices, clinic contact, and the template version |
+| `index.html` | Prep form ("slide 0") + the deck slides (markup and all CSS) |
+| `app.js` | Form logic, derivations, deck rendering, the day/night visualizer (`dayNight`), the slide-3 stepper sync (`stages35`), the year dial (`buildYearOrbitSVG`). `CONFIG` at the top is the single source of truth for prices, clinic contact, and the template version |
+| `hypo3d.js` | The 3-D hypothalamus (`<hypo-3d>` custom element) — a self-contained, tree-shaken Three.js r186.1 bundle. Built from `src/` by `tools/build-hypo3d.sh`; see `HYPO3D.md` |
 | `cue-card.html` | Printable presenter cue card (static, no PHI). **Presenter notes never render on the deck screen — it is shared with the patient** |
+| `optimal-logo.js` | Vendored `<optimal-logo>` brand mark (zero network) |
 | `fonts/` | Self-hosted Castoro + Public Sans (this route may not touch a CDN) |
 
 ## Operator flow (Cheryl)
 
-1. ~10 min before the visit, open the route → prep form
-2. Transcribe summary values from the two chart reports (side-by-side)
-3. **Generate** → present slides 1–9 with the printed cue card in hand
+1. Before the visit, open the route → prep form
+2. Type her first name; pick **Strong** or **Modest** (Modest softens the road-ahead line)
+3. **Generate** → present slides 1–7 with the printed cue card in hand
 4. Optional: `Cmd/Ctrl+P` → Save as PDF → file into the chart → **delete the local copy immediately**
 5. Record the patient's decision in the booking system (this tool records nothing)
 6. Clear & close — refresh also wipes everything
@@ -43,9 +49,10 @@ prep form (form state kept until refresh/close).
 - **Then-test** (no intake questionnaire on file): intake-side values are the retrospective
   ratings captured at the offboarding survey. Labels change, category rows hide, and the
   hormone-picture slide auto-skips. The deck stays complete-feeling — 8 slides, no gaps.
-- **Strong / Modest** (§5.4): Modest changes copy only — slide 3 headline becomes
-  "Your progress — and what's next", the delta chip goes neutral, and slide 5's bridge leads
-  with "Hormone care is iterative — the first 12 weeks tell us what to adjust next."
+- **Strong / Modest** (§5.4): Modest changes copy only — the road-ahead line on slide 3
+  ("The moving target") leads with "Hormone care is iterative — the first 12 weeks tell us
+  what to adjust next." (With the questionnaire section restored, Modest also retitles the
+  results slide and neutralises its delta chip.)
 - **Worsening guard**: if final flagged ≥ intake flagged, the form warns and suggests
   Modest; presenting Strong anyway requires ticking an explicit override.
 - **Bucket** (§5.5): Standard → Ongoing Care vs pay-per-visit. Longevity → Optimal
@@ -88,7 +95,8 @@ Re-verifiable in ~5 minutes. Run quarterly.
 
 - [ ] **N2 — Zero network requests after page load; no runtime CDNs.**
   DevTools → Network → load `/graduation-ongoing-care/`, fill + generate + navigate all slides.
-  Every request must be same-origin (fonts come from `graduation-ongoing-care/fonts/`). Filter by
+  Every request must be same-origin (fonts come from `graduation-ongoing-care/fonts/`; the 3-D
+  model is the single local file `hypo3d.js` and generates every texture in code). Filter by
   "3rd-party requests": must be empty.
 
 - [ ] **N3 — No storage.** DevTools → Application → Local Storage / Session Storage /
@@ -101,11 +109,14 @@ Re-verifiable in ~5 minutes. Run quarterly.
   Must return no matches (this README mentions the words; code must not).
 
 - [ ] **N4 — No analytics, error-reporting SDKs, or form POST targets on this route.**
-  There is no `<form action>`, no `fetch`/`XMLHttpRequest`/`sendBeacon` anywhere:
+  There is no `<form action>`, no `fetch`/`XMLHttpRequest`/`sendBeacon`/`WebSocket` anywhere:
 
   ```bash
-  grep -rniE "fetch\(|XMLHttpRequest|sendBeacon|action=" graduation-ongoing-care --include="*.js" --include="*.html"
+  grep -rniE "\bfetch\(|XMLHttpRequest|sendBeacon|WebSocket|EventSource|action=" graduation-ongoing-care --include="*.js" --include="*.html"
   ```
+
+  (`\b` matters: Three.js's shader strings contain the GLSL function `texelFetch(`, which reads a
+  texture on the GPU and is not a network call.)
 
 - [ ] **N5 — All state in JS memory only; unload destroys it.** Refresh mid-prep: the form
   must come back empty (deadline reset to today+7).
